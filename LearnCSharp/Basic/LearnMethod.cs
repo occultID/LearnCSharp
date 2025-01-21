@@ -16,7 +16,7 @@
 
  * 方法的声明与调用
 	• 方法
-		○ 方法使包含一系列语句的代码块
+		○ 方法是包含一系列语句的代码块
 		○ 程序通过调用方法并指定方法所需的参数使语句得以执行
 	• 声明方法的语法详解
 		○ 访问级别 有效的方法修饰符组合 partial 返回类型 方法名称<泛型参数列表>(参数列表) 泛型约束 { 实现代码 }
@@ -80,7 +80,7 @@
 		○ 然后系统计算实例所需要的内存空间，并在heap上分配实例所需的空间
 		○ 如果构造器带参数，就在分配的内存空间中存入相应的数据
 		○ 把实例在heap上的起点地值存储到引用变量的储存空间
-		○ Ps:如果参数列表中含有引用类型的参数，那么久在实例分配的内存空间中再申请一块4字节的空间存储引用参数的实例地址，然后在heap中再找一块区域存放引用参数的实例
+		○ Ps:如果参数列表中含有引用类型的参数，那么就在实例分配的内存空间中再申请一块4字节的空间存储引用参数的实例地址，然后在heap中再找一块区域存放引用参数的实例
 
  * 方法的重载
 	• 声明带有重载的方法
@@ -104,102 +104,70 @@
 		○ stack frame ：一个方法被调用时，其在栈内存中的布局
 		○ 调用一个带参方法，其参数在内存中归主调者管理
 			§ 举例：比如main方法调用带参方法c(var),择压栈时先把var压入栈，然后才调用c方法
-		○ 主调者对被调方法参数压栈时，顺序为从左到又，即按顺序从第一个参数开始压栈
+		○ 主调者对被调方法参数压栈时，顺序为从左到右，即按顺序从第一个参数开始压栈
 		○ 被调方法的返回值一般存在CPU的寄存器中，当寄存器无法存储返回值时再在栈上申请空间存储
 		○ 当返回值返回主调者后，被调函数占用的栈内存空间即被系统释放
  */
 
+using System;
+
 namespace LearnCSharp.Basic
 {
+    /// <summary>
+    /// 本示例用于演示一般方法的声明、重载与调用
+	/// 构造器内容代码示例请参考LearnClass.cs
+	/// 本地函数内容代码示例请参考LearnLocalFunction.cs
+	/// 匿名函数内容代码示例请参考LearnAnonymousFunction.cs
+    /// </summary>
     internal class LearnMethod
     {
-		public static void TestMethod()
+		public static void PrintString()
 		{
-			string outputString = "这是使用如下代码创建的一个无参无返回类型的静态方法，方法名TestMethod：\n" +
-				"public static void TestMethod()\n" +
-				"{\n" +
-                "    Console.Write(\"请输入您的姓名：\");\n" +
-				"    string name = Console.ReadLine();\n" +
-				"    Console.WriteLine($\"欢迎测试本方法，{name}。\");\n" +
-				"}\n";
-
-			Console.WriteLine(outputString);
-
-			Console.Write("请输入您的姓名：");
-			string name = Console.ReadLine();
-			Console.WriteLine($"欢迎测试本方法，{name}。");
+            Console.WriteLine($"【方法输出】\n方法名：PrintString\n返回类型：void\n参数：无\n");
 		}
 
-		public static void TestMethod(string inputString)
-		{
-            string outputString = "这是使用如下代码创建的一个有一个string类型参数但无返回类型的静态方法，方法名TestMethod：\n" +
-                "public static void TestMethod(string inputString)\n" +
-                "{\n" +
-                "    if (string.IsNullOrWhiteSpace(inputString))\n" +
-				"        throw new ArgumentException(message: \"请勿输入空字符串\", paramName: nameof(inputString));\n\n" +
-				"    Console.WriteLine($\"输入本方法的字符串为：{inputString}\");\n" +
-                "}\n";
+        //重载方法决策不包含返回类型，故不能以此作为重载依据
+        //public static string PrintString() { }
 
-            Console.WriteLine(outputString);
-
-            if (string.IsNullOrWhiteSpace(inputString))
-                throw new ArgumentException(message: "请勿输入空字符串", paramName: nameof(inputString));
-
-            Console.WriteLine($"输入本方法的字符串为：{inputString}");
+		public static void PrintString(string str)
+        {
+            Console.WriteLine($"【方法输出】\n方法名：PrintString\n返回类型：void\n参数：[形参类型：{str.GetType()} | 形参名：str | 实参值：{str}]\n");
         }
 
-		public static int TestMethod(int a,int b)
-		{
-            string outputString = "这是使用如下代码创建的一个有两个int类型参数并返回一个int类型的静态方法，方法名TestMethod：\n" +
-                "public static int TestMethod(int a, int b)\n" +
-                "{\n" +
-                "    if (a == b)\n" +
-				"        return a + b;\n" +
-				"    else\n" +
-				"        return a - b;\n" +
-                "}\n";
+        public static void PrintString(string str, int num)
+        {
+            Console.WriteLine($"【方法输出】\n方法名：PrintString\n返回类型：void\n参数1：[形参类型：{str.GetType()} | 形参名：str | 实参值：{str}]\n参数2：[形参类型：{num.GetType()} | 形参名：num | 实参值：{num}]\n");
+        }
 
-            Console.WriteLine(outputString);
-
-			if (a == b)
-				return a + b;
+		public static bool PrintString(string str, uint cutStartIndex, uint cutEndIndex)
+        {
+            bool result = false;
+			string cutStr = "";
+			if (cutStartIndex < cutEndIndex && cutEndIndex < str.Length)
+            {
+                cutStr = str.Substring((int)cutStartIndex, (int)(cutEndIndex - cutStartIndex));
+                result = true;
+            }
 			else
-				return a - b;
-		}
+			{
+				result = false;
+            }
+            Console.WriteLine($"【方法输出】\n方法名：PrintString\n返回类型：bool\n" +
+				$"参数1：[形参类型：{str.GetType()} | 形参名：str | 实参值：{str}]\n" +
+                $"参数2：[形参类型：{cutStartIndex.GetType()} | 形参名：cutStartIndex | 实参值：{cutStartIndex}]\n" +
+                $"参数3：[形参类型：{cutEndIndex.GetType()} | 形参名：cutEndIndex | 实参值：{cutEndIndex}]\n" +
+				$"输出值：{cutStr}\n返回值：{result}\n");
+            return result;
+        }
 
-		public static void StartLearnMethod()
-		{
-			Console.WriteLine("【学习方法--代码示例】");
-			Console.WriteLine("已创建三个同名（TestMethod）方法，它们通过不同的签名实现了重载，接下来将依次调用这三个方法");
-			Console.WriteLine();
-
-			Console.WriteLine("使用如下代码调用TestMethod()方法：\nTestMethod();\n--output:");
-			
-			TestMethod();
-
-			Console.WriteLine();
-			Console.WriteLine("按击回车键继续调用下一个方法");
-			Console.ReadKey();
-			Console.WriteLine();
-			Console.WriteLine("使用如下代码调用TestMethod(string inputString)方法\n" +
-                "Console.Write(\"请输入任意字符串：\");\nstring inputString = Console.ReadLine();\nTestMethod(inputString);\n" +
-				"--output:");
-
-			Console.Write("请输入任意字符串：");
-			string inputString = Console.ReadLine();
-			TestMethod(inputString);
-
-			Console.WriteLine();
-            Console.WriteLine("按击回车键继续调用下一个方法");
-            Console.ReadKey();
-            Console.WriteLine();
-            Console.WriteLine("使用如下代码调用int TestMethod(int a, int b)方法\n" +
-                "int a = 5, b = 7;\nint result = TestMethod(a, b);\nConsole.WriteLine($\"方法返回结果：{result}\");" +
-				"--output:");
-
-			int a = 5, b = 7;
-			int result = TestMethod(a, b);
-			Console.WriteLine($"方法返回结果：{result}");
-		}
+        public static void StartLearnMethod()
+        {
+            Console.WriteLine("【学习方法--代码示例】");
+			Console.WriteLine("已创建四个同名（PrintString）方法，它们通过不同的签名实现了重载，接下来将依次调用这四个方法：");
+			PrintString();
+            PrintString("Hello, World!");
+            PrintString("Hello, World!", 5);
+            PrintString("Hello, World!", 5, 10);
+        }
     }
 }

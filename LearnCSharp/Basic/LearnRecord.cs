@@ -209,34 +209,27 @@ namespace LearnCSharp.Basic
     {
 		public static void StartLearnRecord()
 		{
-			string outputString = "根据已经定义好的三个记录来创建三个不同的记录实例：\n" +
-				"Point2DWithParams p2dPara = new Point2DWithParams(10, 20);\n" +
-				"Point2DWithBody p2dBody = new Point2DWithBody(15, 25);\n" +
-				"Point2DWithParamsAndBody p2dFull = new Point2DWithParamsAndBody(30, 40);\n";
-
-			Console.WriteLine(outputString) ;
-
+            //声明三个记录实例
             Point2DWithParams p2dPara = new Point2DWithParams(10, 20);
 			Point2DWithBody p2dBody = new Point2DWithBody(15, 25);
 			Point2DWithParamsAndBody p2dFull = new Point2DWithParamsAndBody(30, 40);
 
-			Console.WriteLine("分别输出三个记录，可以发现记录内部重写的ToString方法输出：");
-			Console.WriteLine(p2dPara);
-			Console.WriteLine(p2dBody);
-			Console.WriteLine(p2dFull);
-			Console.WriteLine();
+            Console.WriteLine("已创建三个记录实例 p2dPara，p2dBody，p2dFull，自动调用记录内部重写的ToString方法输出：");
+			Console.WriteLine($"【Point2DWithParams记录】\n实例：p2dPara\n类型：{p2dPara.GetType()}\n哈希值：{p2dPara.GetHashCode()}\n内容：{p2dPara}\n");
+            Console.WriteLine($"【Point2DWithBody记录】\n实例：p2dBody\n类型：{p2dBody.GetType()}\n哈希值：{p2dBody.GetHashCode()}\n内容：{p2dBody}\n");
+            Console.WriteLine($"【Point2DWithParamsAndBody记录】\n实例：p2dFull\n类型：{p2dFull.GetType()}\n哈希值：{p2dFull.GetHashCode()}\n内容：{p2dFull}\n");
+            Console.WriteLine();
 
-			Console.WriteLine("以p2dFull为例使用with表达式非破坏性拷贝出两个不同实例，前者不作属性改变，后者改变属性Y值。\n" +
-                "var p2dFullCopy1 = p2dFull with { };\nvar p2dFullCopy2 = p2dFull with { Y=30 };\n");
+			Console.WriteLine("以p2dFull为例使用with表达式非破坏性拷贝出两个不同实例，前者不作属性改变，后者改变属性Y值。\n");
 
 			var p2dFullCopy1 = p2dFull with { };
             var p2dFullCopy2 = p2dFull with { Y=30 };
 
 			Console.WriteLine("分别输出实例p2dFull、p2dFullCopy1、p2dFullCopy2的ToString字符串：");
-            Console.WriteLine(p2dFull);
-			Console.WriteLine(p2dFullCopy1);
-			Console.WriteLine(p2dFullCopy2);
-			Console.WriteLine();
+            Console.WriteLine($"【Point2DWithParamsAndBody记录】\n实例：p2dFull\n类型：{p2dFull.GetType()}\n哈希值：{p2dFull.GetHashCode()}\n内容：{p2dFull}\n");
+            Console.WriteLine($"【Point2DWithParamsAndBody记录】\n实例：p2dFullCopy1\n类型：{p2dFullCopy1.GetType()}\n哈希值：{p2dFullCopy1.GetHashCode()}\n内容：{p2dFullCopy1}\n");
+            Console.WriteLine($"【Point2DWithParamsAndBody记录】\n实例：p2dFullCopy2\n类型：{p2dFullCopy2.GetType()}\n哈希值：{p2dFullCopy2.GetHashCode()}\n内容：{p2dFullCopy2}\n");
+            Console.WriteLine();
 
 			Console.WriteLine("以上三个实例对比展示值相等性：");
 			Console.WriteLine($"p2dFull == p2dFullCopy1 --output:{p2dFull == p2dFullCopy1}");

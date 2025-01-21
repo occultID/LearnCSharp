@@ -22,7 +22,7 @@
 				□ async：声明该本地函数为异步方法
 				□ unsafe：声明该本地函数为不安全方法，其返回类型或内部实现会使用非托管类型
 				□ static：声明该方法为静态本地函数，其内部无法捕获局部变量或实例状态
-				□ extern：外部本地函数必须为static
+				□ extern：外部本地函数必须同时使用static
 			§ 返回类型：该项为必选配置
 				□ 要求同常规方法
 			§ 方法名称：该项为必选配置
@@ -113,14 +113,15 @@ namespace LearnCSharp.Basic
 
 			void PrintString(string aString)
 			{
-				Console.WriteLine("这个本地函数捕获了一个外部变量title1：{0}", title1);
-				Console.WriteLine("这是一个本地函数输出：{0}",aString);
+                Console.WriteLine("这是一个本地函数输出：{0}", aString);
+                Console.WriteLine("这个本地函数捕获了一个外部变量title1：{0}", title1);
 			}
 
 			static void DoSomething()
 			{
-				Console.WriteLine("静态本地函数不能捕获外部局部变量，但是可以捕获外部局部常量title2：{0}",title2);
-				Console.WriteLine("这是一个静态本地函数的输出");
+
+                Console.WriteLine("这是一个静态本地函数的输出");
+                Console.WriteLine("静态本地函数不能捕获外部局部变量，但是可以捕获外部局部常量title2：{0}",title2);
 			}
 
 			Console.WriteLine();

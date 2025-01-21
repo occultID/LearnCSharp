@@ -57,14 +57,14 @@ namespace LearnCSharp.Basic
 		 *	所有整型数值类型都支持算术、位逻辑、比较和相等运算符。*/
         public static void LearnIntegerType()
         {
-			Console.WriteLine($"sbyte类型，对应.NET的{typeof(sbyte)}类型，它表示内存占用{sizeof(sbyte) * 8}位整数，范围包含[{sbyte.MinValue},{sbyte.MaxValue}]");
-            Console.WriteLine($"short类型，对应.NET的{typeof(short)}类型，它表示内存占用{sizeof(short) * 8}位整数，范围包含[{short.MinValue},{short.MaxValue}]");
-            Console.WriteLine($"int类型，对应.NET的{typeof(int)}类型，它表示内存占用{sizeof(int) * 8}位整数，范围包含[{int.MinValue},{int.MaxValue}]");
-            Console.WriteLine($"long类型，对应.NET的{typeof(long)}类型，它表示内存占用{sizeof(long) * 8}位整数，范围包含[{long.MinValue},{long.MaxValue}]");
-            Console.WriteLine($"byte类型，对应.NET的{typeof(byte)}类型，它表示内存占用{sizeof(byte) * 8}位整数，范围包含[{byte.MinValue},{byte.MaxValue}]");
-            Console.WriteLine($"ushort类型，对应.NET的{typeof(ushort)}类型，它表示内存占用{sizeof(ushort) * 8}位整数，范围包含[{ushort.MinValue},{ushort.MaxValue}]");
-            Console.WriteLine($"uint类型，对应.NET的{typeof(uint)}类型，它表示内存占用{sizeof(uint) * 8}位整数，范围包含[{uint.MinValue},{uint.MaxValue}]");
-            Console.WriteLine($"ulong类型，对应.NET的{typeof(ulong)}类型，它表示内存占用{sizeof(ulong) * 8}位整数，范围包含[{ulong.MinValue},{ulong.MaxValue}]");
+			Console.WriteLine($"【sbyte类型】	对应.NET的 {{{typeof(sbyte),14}}} 类型 | 它表示内存占用{sizeof(sbyte) * 8:00}位的整数 | 范围包含[{sbyte.MinValue},{sbyte.MaxValue}]");
+            Console.WriteLine($"【short类型】	对应.NET的 {{{typeof(short),14}}} 类型 | 它表示内存占用{sizeof(short) * 8:00}位的整数 | 范围包含[{short.MinValue},{short.MaxValue}]");
+            Console.WriteLine($"【int类型】	对应.NET的 {{{typeof(int),14}}} 类型 | 它表示内存占用{sizeof(int) * 8:00}位的整数 | 范围包含[{int.MinValue},{int.MaxValue}]");
+            Console.WriteLine($"【long类型】	对应.NET的 {{{typeof(long),14}}} 类型 | 它表示内存占用{sizeof(long) * 8:00}位的整数 | 范围包含[{long.MinValue},{long.MaxValue}]");
+            Console.WriteLine($"【byte类型】	对应.NET的 {{{typeof(byte),14}}} 类型 | 它表示内存占用{sizeof(byte) * 8:00}位的整数 | 范围包含[{byte.MinValue},{byte.MaxValue}]");
+            Console.WriteLine($"【ushort类型】	对应.NET的 {{{typeof(ushort),14}}} 类型 | 它表示内存占用{sizeof(ushort) * 8:00}位的整数 | 范围包含[{ushort.MinValue},{ushort.MaxValue}]");
+            Console.WriteLine($"【uint类型】	对应.NET的 {{{typeof(uint),14}}} 类型 | 它表示内存占用{sizeof(uint) * 8:00}位的整数 | 范围包含[{uint.MinValue},{uint.MaxValue}]");
+            Console.WriteLine($"【ulong类型】	对应.NET的 {{{typeof(ulong),14}}} 类型 | 它表示内存占用{sizeof(ulong) * 8:00}位的整数 | 范围包含[{ulong.MinValue},{ulong.MaxValue}]");
 			Console.WriteLine();
 
 			//nint、nuint是“native sized integer”，其大小是和运行时的平台CPU架构决定的
@@ -72,10 +72,26 @@ namespace LearnCSharp.Basic
 			unsafe
 			{
 				Console.WriteLine("当前平台CPU架构：{0}", RuntimeInformation.OSArchitecture);
-                Console.WriteLine($"nint类型，对应.NET的{typeof(nint)}类型，它当前表示内存占用{sizeof(nint) * 8}位整数，范围包含[{nint.MinValue},{nint.MaxValue}]");
-                Console.WriteLine($"nuint类型，对应.NET的{typeof(nuint)}类型，它当前表示内存占用{sizeof(nuint) * 8}位整数，范围包含[{nuint.MinValue},{nuint.MaxValue}]");
-            }		
-		}
+                Console.WriteLine($"【nint类型】	对应.NET的 {{{typeof(nint),14}}} 类型 | 它当前表示内存占用{sizeof(nint) * 8:00}位的整数 | 范围包含[{nint.MinValue},{nint.MaxValue}]");
+                Console.WriteLine($"【nuint类型】	对应.NET的 {{{typeof(nuint),14}}} 类型 | 它当前表示内存占用{sizeof(nuint) * 8:00}位的整数 | 范围包含[{nuint.MinValue},{nuint.MaxValue}]");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("------示例------");
+
+			//举例，声明一个整型变量
+			int integer = 123456;
+			Console.WriteLine($"变量：integer\n类型：{integer.GetType()}\n数值：{integer}\n");
+
+			unsafe
+			{
+				unchecked
+				{
+                    nint nintInteger = (nint)2147483648;//32位平台下，报错；64位平台下，正常
+                    Console.WriteLine($"变量：nintInteger\n类型：{nintInteger.GetType()}\n数值：{nintInteger}\n");
+                }
+            }
+        }
 
         /*【学习浮点数值类型】
          *	浮点数值类型：表示实数。 
@@ -84,9 +100,16 @@ namespace LearnCSharp.Basic
          *	所有浮点数值类型都支持算术、比较和相等运算符。*/
         public static void LearnFloating_pointType()
         {
-            Console.WriteLine($"float类型，对应.NET的{typeof(float)}类型，该类型内存占用{sizeof(float)}字节，精度约6~9位有效数字，范围包含[{float.MinValue},{float.MaxValue}]");
-            Console.WriteLine($"double类型，对应.NET的{typeof(double)}类型，该类型内存占用{sizeof(double)}字节，精度约15~17位有效数字，范围包含[{double.MinValue},{double.MaxValue}]");
-            Console.WriteLine($"decimal类型，对应.NET的{typeof(decimal)}类型，该类型内存占用{sizeof(decimal)}字节，精度约28~29位有效数字，范围包含[{decimal.MinValue},{decimal.MaxValue}]");
+            Console.WriteLine($"【float类型】	对应.NET的 {{{typeof(float),14}}} 类型 | 该类型内存占用{sizeof(float):00}字节 | 精度约 6~9 位有效数字 | 范围包含[{float.MinValue},{float.MaxValue}]");
+            Console.WriteLine($"【double类型】	对应.NET的 {{{typeof(double),14}}} 类型 | 该类型内存占用{sizeof(double):00}字节 | 精度约15~17位有效数字 | 范围包含[{double.MinValue},{double.MaxValue}]");
+            Console.WriteLine($"【decimal类型】	对应.NET的 {{{typeof(decimal),14}}} 类型 | 该类型内存占用{sizeof(decimal):00}字节 | 精度约28~29位有效数字 | 范围包含[{decimal.MinValue},{decimal.MaxValue}]");
+            
+			Console.WriteLine();
+            Console.WriteLine("------示例------");
+
+            //举例，声明一个双精度浮点变量
+            double doubleNum = Math.PI;
+            Console.WriteLine($"变量：doubleNum\n类型：{doubleNum.GetType()}\n数值：{doubleNum}\n");
         }
 
         /*【学习字符类型】
@@ -97,7 +120,14 @@ namespace LearnCSharp.Basic
          */
         public static void LearnCharacterType()
 		{
-            Console.WriteLine($"char类型，对应.NET的{typeof(char)}类型，该类型内存占用{sizeof(char)}字节，它表示UTF-16字符，范围包含[{char.MinValue},{char.MaxValue}]");
+            Console.WriteLine($"【char类型】	对应.NET的 {{{typeof(char),14}}} 类型 | 该类型内存占用{sizeof(char):00}字节 | 它表示UTF-16字符 | 范围包含[{char.MinValue},{char.MaxValue}]");
+
+            Console.WriteLine();
+            Console.WriteLine("------示例------");
+
+            //举例，声明一个字符型变量
+            char charValue = '\u0fee';
+            Console.WriteLine($"变量：charValue\n类型：{charValue.GetType()}\n字符：{charValue}\n");
         }
 
         /*【学习布尔类型】 
@@ -111,32 +141,14 @@ namespace LearnCSharp.Basic
 		 */
         public static void LearnBooleanType()
 		{
-            Console.WriteLine($"bool类型，对应.NET的{typeof(bool)}类型，该类型内存占用{sizeof(bool)}字节，它表示一个布尔值，可为[{bool.TrueString} 或 {bool.FalseString}]\n");
+            Console.WriteLine($"【bool类型】	对应.NET的 {{{typeof(bool),14}}} 类型 | 该类型内存占用{sizeof(bool):00}字节 | 它表示一个布尔值 | 可为[{bool.TrueString} 或 {bool.FalseString}]");
 
-			//举例，声明一个bool类型变量，其接收表达式3.67 is int返回的bool值，表示3.67是否是一个整数
-			bool isInteger = 3.67 is int;
+            Console.WriteLine();
+            Console.WriteLine("------示例------");
 
-			string outputString = "声明一个bool类型变量，其接收表达式3.67 is int返回的bool值，表示3.67是否是一个整数:\n\n" +
-				"bool isInteger = 3.67 is int;\n\n" +
-				$"isInteger值为：{isInteger}\n";
-
-			Console.WriteLine(outputString);
-        }
-
-        /*【学习object类型】 
-         *	object 类型是 System.Object 在 .NET 中的别名。 
-		 *	在 C# 的统一类型系统中，所有类型（预定义类型、用户定义类型、引用类型和值类型）都是直接或间接从 System.Object 继承的。 
-		 *	可以将任何类型的值赋给 object 类型的变量。 可以使用文本 null 将任何 object 变量赋值给其默认值。 
-		 *	将值类型的变量转换为对象的过程称为装箱。 将 object 类型的变量转换为值类型的过程称为取消装箱。*/
-		public static void LearnObjectType()
-		{
-            Console.WriteLine($"object类型，对应.NET的{typeof(object)}类型，它是.NET类型系统中所有类型的最终基类");
-			//可以将任何类型的值赋给object对象，可使用文本null对其赋予默认值
-			object? o1 = null;
-
-			object? o2 = new String("你好");
-			object? o3 = 5; //装箱
-			int number = (int)o3; //拆箱			
+            //举例，声明一个布尔型变量
+            bool isInteger = 3.67 is int;
+            Console.WriteLine($"变量：isInteger\n类型：{isInteger.GetType()}\n布尔值：{isInteger}\n");
         }
 
         /*【学习字符串类型】 
@@ -151,45 +163,51 @@ namespace LearnCSharp.Basic
 		 */
         public static void LearnStringType()
 		{
-            Console.WriteLine($"string类型，对应.NET的{typeof(string)}类型，它是预定义好的用于表示零个或多个char值序列的引用类型");
+            Console.WriteLine($"【string类型】  对应.NET的 {{{typeof(string),14}}} 类型 | 它是预定义好的用于表示零个或多个char值序列的引用类型");
 
-			string s1 = "这是一个字符串";
+            Console.WriteLine();
+            Console.WriteLine("------示例------");
+
+            //示例：声明并初始化四个字符串
+            string s1 = "这是一个字符串";
 			string s2 = "这是一个";
 			string s3 = "这是一个字符串";
 			string s4 = "这是一个新字符串";
 
-			string outputString = "下面声明并初始化四个字符串：\n\n" +
-				"string s1 = \"这是一个字符串\";\n" +
-				"string s2 = \"这是一个\";\n" +
-				"string s3 = \"这是一个字符串\";\n" +
-				"string s4 = \"这是一个新字符串\";\n" +
-				"\n代码执行之后观察结果：\n" +
+			string outputString = "下面声明并初始化四个字符串实例s1、s2、s3、s4：\n" +
+				"s1 = 这是一个字符串\n" +
+				"s2 = 这是一个\n" +
+				"s3 = 这是一个字符串\n" +
+				"s4 = 这是一个新字符串\n" +
+				"\n观察结果：\n" +
 				$"s1与s2比较--是否指向同一对象：{object.ReferenceEquals(s1, s2)} | 是否值相等：{s1 == s2}\n" +
 				$"s1与s3比较--是否指向同一对象：{object.ReferenceEquals(s1, s3)} | 是否值相等：{s1 == s3}\n" +
 				$"s1与s4比较--是否指向同一对象：{object.ReferenceEquals(s1, s4)} | 是否值相等：{s1 == s4}\n";
 
 			s2 = s2 + "字符串";
 
-            outputString = outputString + "\n我们重新为s2连接一个“字符串”使其值和s1值一样后再重新比较一次：\n\n" +
-				"s2 = s2 + \"字符串\";\n\n" +
+            outputString ="\n我们重新为s2连接一个“字符串”使其值和s1值一样后再重新比较一次：\n" +
 				$"此时s2的值：{s2}\n" +
 				$"s1与s2比较--是否指向同一对象：{object.ReferenceEquals(s1, s2)} | 是否值相等：{s1 == s2}\n";
 
 			Console.WriteLine(outputString);
 
-            outputString = "由于string类型是零个或多个char值序列，所以我们可以如同访问数组元素一样访问每一个char值：\n" +
-				"以s1为例，我们可以用以下代码访问其第四个char值或遍历输出每一个char值：\n\n" +
-				"Console.WriteLine(\"s1中第四个char值为：{0}\", s1[3]);\n" +
-				"for (int i = 0; i < s1.Length; i++)\n" +
-				"{\n    Console.WriteLine(\"这是s1中第{0}个char值：{1}\", i + 1, s1[i]);\n}\n";
-
-			Console.WriteLine(outputString);
-			Console.WriteLine("s1中第四个char值为：{0}\n", s1[3]);
+			Console.WriteLine("由于string类型是零个或多个char值序列，所以以s1为例，可以用索引访问器遍历输出每一个char值：");
 			for (int i = 0; i < s1.Length; i++)
 			{
 				Console.WriteLine("这是s1中第{0}个char值：{1}", i + 1, s1[i]);
 
             }
+        }
+
+        /*【学习object类型】 
+         *	object 类型是 System.Object 在 .NET 中的别名。 
+		 *	在 C# 的统一类型系统中，所有类型（预定义类型、用户定义类型、引用类型和值类型）都是直接或间接从 System.Object 继承的。 
+		 *	可以将任何类型的值赋给 object 类型的变量。 可以使用文本 null 将任何 object 变量赋值给其默认值。 
+		 *	将值类型的变量转换为对象的过程称为装箱。 将 object 类型的变量转换为值类型的过程称为取消装箱。*/
+        public static void LearnObjectType()
+        {
+			LearnDataType.LearnObject();		
         }
 
         /*【学习动态类型】 
@@ -204,31 +222,8 @@ namespace LearnCSharp.Basic
 				因此，dynamic 类型只在编译时存在，在运行时则不存在。*/
         public static void LearnDynamicType()
 		{
-            Console.WriteLine($"dynamic类型，它表示变量的使用和对其成员的引用绕过编译时类型检查。 改为在运行时解析这些操作。");
-
-			//分别声明并初始化一个dynamic变量和objec变量
-			dynamic dyn = 100d;
-			object obj = 100d;
-			
-			//重新进行赋值操作
-			dyn = dyn + 3;   //动态类型不会在编译时进行类型检查，所以这样写可以通过编译
-			//obj = obj + 3; //这里注释了该语句是因为会编译不通过，因为object类型在编译时已经确定类型，其不支持+运算符
-
-			string outputString = "分别声明并初始化一个dynamic变量和objec变量：\n" +
-				"dynamic dyn = 100d\n" +
-				"object obj = 100d\n" +
-				$"执行代码后获取变量实际类型--dyn：{dyn.GetType()}  obj：{obj.GetType()}\n" +
-				"如果进行如下重新赋值操作，dynamic能通过编译，object则无法：\n" +
-				"dyn = dyn + 3\n" +
-				"obj = obj + 3\n" +
-				$"dyn运行时确定类型后可成功计算并得到结果:{dyn}\n";
-
-			Console.WriteLine(outputString);
+            LearnDataType.LearnDynamic();
         }
-
-
-
-
 		
 		public static void StartLearnSimpleType()
 		{

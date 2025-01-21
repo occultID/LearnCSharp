@@ -678,7 +678,7 @@ namespace LearnCSharp.Basic
 			NovelBook novelBook1 = new NovelBook("鬼吹灯", "天下霸唱");
 			NovelBook novelBook2 = new NovelBook("鬼吹灯", "天下霸唱", Color.Red);
 			NovelBook novelBook3 = new NovelBook(novelBook2);
-			NovelBook novelBook4 = new NovelBook("鬼吹灯", "天下霸唱", "./cover.jpg", Color.Red, DateTime.Now);
+			NovelBook novelBook4 = new NovelBook("鬼吹灯", "天下霸唱", "./cover.jpg", Color.Blue, new DateTime(2006,1,1));
 			NovelBook novelBook5 = novelBook4;
 
 			Console.WriteLine("已声明并初始化5个NovelBook类的实例，接下来显示实例信息：");
@@ -697,17 +697,18 @@ namespace LearnCSharp.Basic
 			NovelBook.BookMakerVersion[1] = "1";//可以通过集合类型的只读属性去更改封装的只读集合字段的元素，但不能为封装字段重新初始化一个新集合
 
 			Console.WriteLine("通过修改可读写成员数据输出如下：");
-			novelBook1.ShowBook();//查看更改后的信息
+			PrintNovelInfo(novelBook1);//查看更改后的信息
 
 			Console.WriteLine();
 
 			//类是一种引用类型,所以实例novelBook4和实例novelBook5指向的是同一对象
-			Console.WriteLine($"snovelBook4和novelBook5指向同一引用对象：{object.ReferenceEquals(novelBook4, novelBook5)}\n");
+			Console.WriteLine($"snovelBook4和novelBook5指向同一引用对象：{object.ReferenceEquals(novelBook4, novelBook5)}");
             
 			//使用以下代码修改novelBook5的可读写属性值，然后查看novelBook4实例的输出"
             novelBook5.BookName = "迷踪之国";
             novelBook5.PublishTime = new DateTime(2009,5,1);
-            novelBook4.ShowBook();
+            PrintNovelInfo(novelBook4);
+			PrintNovelInfo(novelBook5);
 
             Console.WriteLine();
 
@@ -718,7 +719,7 @@ namespace LearnCSharp.Basic
 
             //实例novelBook2和实例novelBook3按照现实中的意义实际也是表示的同一对象
             //它们数据相同，但是在程序中又是不同的实例，因为实例students3是使用其复制构造函数将实例student2作为参数传入来构建的
-            Console.WriteLine($"novelBook2和novelBook3指向同一引用对象：{object.ReferenceEquals(novelBook2, novelBook3)}\n");
+            Console.WriteLine($"novelBook2和novelBook3指向同一引用对象：{object.ReferenceEquals(novelBook2, novelBook3)}");
             
 			//这样的好处是在需要的时候，我们可以去修改一个实例的数据进行操作而不影响原实例，具体可根据编程时的实际需求来决定如何使用
 
@@ -732,9 +733,10 @@ namespace LearnCSharp.Basic
 
         private static void PrintNovelInfo(NovelBook novelBook, [CallerArgumentExpression("novelBook")] string? argumentName = null)
         {
-            Console.WriteLine($"NovelBook类\n" +
+            Console.WriteLine($"【NovelBook类】\n" +
 				$"实例：[{argumentName}]\n" +
-				$"信息：");
+				$"哈希值：[{novelBook.GetHashCode()}]\n" +
+				$"------成员信息------");
 			novelBook.ShowBook();
         }
     }

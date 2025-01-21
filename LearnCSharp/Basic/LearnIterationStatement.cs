@@ -131,7 +131,7 @@ namespace LearnCSharp.Basic
         /*【使用goto和带标签的语句实现循环】
             一般情况下不建议滥用 goto语句，除非有必要
             滥用goto语句容易造成逻辑出错或代码混淆难懂
-            这里指示作为示例展示了解
+            这里作为示例展示了解
          */
         private static uint Sum0ToMaxByGoto(uint max)
         {
@@ -182,52 +182,29 @@ namespace LearnCSharp.Basic
         //以给定的循环方式计算从零到给定的最大正整数的和-直接输出结果
         public static void OutputSum0ToMax(uint max, Loops loops)
         {
-            Console.WriteLine("当前使用{0}循环计算[ 0 ]至[ {1} ]的和为：{2}", loops, max, Sum0ToMax(max, loops));
+            Console.WriteLine($"使用[ {loops,-9} ]循环计算[ 0 ]至[ {max} ]的和为：{Sum0ToMax(max, loops)}");
         }
         public static void StartLearnIterationStatement()
         {
-            string title = "001 Foreach语句 循环\n" +
-                "002 For语句 循环\n" +
-                "003 Do-While语句 循环\n" +
-                "004 While语句 循环\n" +
-                "005 递归方法循环\n" +
-                "006 goto方式的循环\n";
+            Console.WriteLine("【循环语句(或方法)--计算0到给定正整数的和】");
 
-            do
+            Input:
+            Console.Write("请输入一个正整数：");
+
+            if (uint.TryParse(Console.ReadLine(), out uint max))
             {
-                Console.WriteLine("【学习循环语句(或方法)】");
-                Console.WriteLine(title);
-                Console.Write("请输入上列编号（如001）查看对应知识点代码运行：");
-
-                string? input = Console.ReadLine();
-
-                Console.Write("计算0到给定正整数的值，请输入一个正整数：");
-                
-                if(uint.TryParse(Console.ReadLine(),out uint max))
-                {
-                    Console.WriteLine();
-                    switch (input)
-                    {
-                        case "001": OutputSum0ToMax(max, Loops.Foreach); break;
-                        case "002": OutputSum0ToMax(max, Loops.For); break;
-                        case "003": OutputSum0ToMax(max, Loops.DoWhile); break;
-                        case "004": OutputSum0ToMax(max, Loops.While); break;
-                        case "005": OutputSum0ToMax(max, Loops.Recursion); break;
-                        case "006": OutputSum0ToMax(max, Loops.Goto); break;
-                        default: Console.WriteLine("输入错误！"); break;
-                    }
-                }
-                else
-                    Console.WriteLine("请输入一个整数！");
-
                 Console.WriteLine();
-                Console.WriteLine("是否继续查询和运行本章节其他代码：直接按下Enter继续，否则即退出");
-
-                if (Console.ReadKey(true).Key != ConsoleKey.Enter)
-                    break;
-                Console.WriteLine("\n");
+                OutputSum0ToMax(max, Loops.Foreach);
+                OutputSum0ToMax(max, Loops.For);
+                OutputSum0ToMax(max, Loops.DoWhile);
+                OutputSum0ToMax(max, Loops.While);
+                OutputSum0ToMax(max, Loops.Recursion);
+                OutputSum0ToMax(max, Loops.Goto);
             }
-            while (true);
+            else
+                goto Input;
+
+            Console.WriteLine();
         }
     }
 

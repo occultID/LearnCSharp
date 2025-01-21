@@ -50,50 +50,54 @@ namespace LearnCSharp.Basic
     internal class LearnExpressionBodied
     {
         /*【实践表达式主体定义】
-		 * 根据上述知识，这里将Student类作为本类的内部类来定义用于学习表达式主体定义
+		 * 根据上述知识，这里将NovelBook类作为本类的内部类来定义用于学习表达式主体定义
 		 */
-        private class Student
+        private class NovelBook
 		{
-			private int stuID;
-			private string? name;
-			private static readonly int latestAdmissionYear = DateTime.Now.Year;
+			private string? bookName;
+			private string? author;
+			private readonly Guid bookID;
+            private static readonly string[] bookMakerVersion = new[] {"NM","0","0","1" };
+			public const string BookMaker = "NovelMaker";
 
-			//使用表达式主体定义属性
-			public int StuID
-			{
-				get => LatestAdmissionYear*1_0000 + stuID;
-				private set
-				{
-					if (value > LatestAdmissionYear * 1_0000 && value <= LatestAdmissionYear * 1_0000 + 9999)
-					{
-						stuID = value % 1_0000;
-					}
-					else
-						throw new ArgumentOutOfRangeException(nameof(value));
-				}	
+            //使用表达式主体定义属性访问器
+            public string BookName
+            {
+				get => bookName!;
+				set => bookName = value;	
 			}
 
-			//使用表达式主体定义属性
-			public string Name
+            //使用表达式主体定义属性访问器
+            public string Author
+            {
+                get => author!;
+				set => author = !string.IsNullOrWhiteSpace(value) ? value : "未知";
+            }
+
+            //使用表达式主体定义只读属性访问器
+            public Guid BookID
 			{
-				get => name!;
-				set => name = !string.IsNullOrWhiteSpace(value) ? value : "无名氏";
-			}
+                get => bookID;
+                init => bookID = value;
+            }
 
-			//使用表达式主体定义只读属性
-			public static int LatestAdmissionYear => latestAdmissionYear;
-
-			//使用表达式主体定义构造函数
-			private Student() => StuID = LatestAdmissionYear * 1_0000 + Random.Shared.Next(1, 1_0000);
+            //使用表达式主体定义只读属性
+			public string BookMakerVersion => string.Join(".", bookMakerVersion);
 
             //使用表达式主体定义构造函数
-            public Student(string name) : this() => Name = name;
+            private NovelBook() => BookID = Guid.NewGuid();
+
+            public NovelBook(string name, string author) : this()
+			{
+                BookName = name;
+                Author = author;
+            }
 
 			//使用表达式主体定义方法
-			public void IntroduceSelf() => Console.WriteLine($"大家好，我是{Name}，学号{StuID}，入学年份是{latestAdmissionYear}年");
+			public void ShowBook() => Console.WriteLine($"【图书信息】\n书名：{BookName}\n作者：{Author}\n书籍唯一编码：{BookID}\n");
 
 			//使用表达式主体定义解构方法
-			public void Deconstruct(out int stuID, out string name) => (stuID, name) = (StuID, Name);
+			public void Deconstruct(out string bookName, out string author) => (bookName, author) = (BookName, Author);
         }
 
 		public static void StartLearnExpressionBodied()
@@ -103,18 +107,13 @@ namespace LearnCSharp.Basic
 			  对于编译器来说，最终的实现和成员原本的默认实现是一样的
 			  实例化内部成员使用表达式主体定义的Student类，对成员的访问依然如旧，不受影响*/
 
-            //输出示例代码
-            string outputString = "Student student = new Student(\"张三\");\n" +
-				"student.IntroduceSelf(); //访问方法\n" +
-				"(int StuID, string Name) = student; //解构实例\n" +
-				"Console.WriteLine($\"解构实例({StuID}, {Name})\");\n";
-
-			Console.WriteLine(outputString);
-
-            Student student = new Student("张三");
-			student.IntroduceSelf(); //访问方法
-			(int StuID, string Name) = student; //解构实例
-			Console.WriteLine($"解构实例({StuID}, {Name})");
+            //示例代码
+            Console.WriteLine("-----测试使用表达式主体定义成员的NovelBook类-----");
+            NovelBook book = new NovelBook("三体", "刘慈欣");
+			book.ShowBook(); //访问方法
+			
+			(string bookName, string Author) = book; //解构实例
+			Console.WriteLine($"解构实例：({bookName}, {Author})");
 		}
     }
 }

@@ -144,7 +144,7 @@
 using LearnCSharp.Basic.LearnInterfaceSpace;
 
 /*【接口代码示例】
- * 下面命名空间中设计了一个接口IMove和两个实现该接口的类Student和Car
+ * 下面命名空间中设计了一个接口IMove和两个实现该接口的类Box和Car
  * IMove接口提供了一系列协定，表示某个事物能进行移动的动作，且需要有速度、时间和路程
  * Box类实现IMove接口采用了显示实现，因为Box表示的箱子本身不具有移动的功能，但可以被移动，故接口成员只做辅助
  * Car类实现IMove接口采用了隐式实现，因为Car表示的车子的核心功能之一就是移动
@@ -155,7 +155,7 @@ namespace LearnCSharp.Basic.LearnInterfaceSpace
 	public interface IMove
 	{
 		public double Velocity { get; set; }
-		public double Distance { get;}
+		public abstract double Distance { get;}
 		public double Time { get; set; }
 
 		public virtual void Move()
@@ -166,19 +166,30 @@ namespace LearnCSharp.Basic.LearnInterfaceSpace
 
 	public class Box : IMove
 	{
-		public string BoxID { get; set; }
+        private double velocity;
+        private double time;
+		private double Distance => velocity * time;
 
-		public Box(string boxID)
+        public string BoxID { get; set; }
+        public Box(string boxID)
 		{
 			BoxID = boxID;
-		}
+        }
 		//显示实现接口IMove
-		double IMove.Distance { get; }
-		double IMove.Velocity { get; set; }
-		double IMove.Time { get; set; }
-		void IMove.Move()
+		double IMove.Distance => Distance;
+        double IMove.Velocity
 		{
-			Console.WriteLine($"箱子被移动了");			
+            get => velocity;
+            set => velocity = value;
+        }
+		double IMove.Time
+        {
+            get => time;
+            set => time = value;
+        }
+        void IMove.Move()
+		{
+            Console.WriteLine($"箱子{BoxID}被以速度{velocity}移动了时间{time}，共移动距离{Distance}");			
 		}
 	}
 
@@ -192,12 +203,12 @@ namespace LearnCSharp.Basic.LearnInterfaceSpace
 		}
 
 		//隐式实现接口IMove
-		public double Distance { get => Velocity * Time; }
+		public double Distance => Velocity * Time;
 		public double Velocity { get; set; }
 		public double Time { get; set; }
 		public void Move()
 		{
-			Console.WriteLine($"车牌号为{CarID}的车子正以速度{Velocity}行驶了时间{Time}，移动距离{Distance}");
+            Console.WriteLine($"车牌号为{CarID}的车子正以速度{Velocity}行驶了时间{Time}，移动距离{Distance}");
 		}
 	}
 }
@@ -208,17 +219,7 @@ namespace LearnCSharp.Basic
 	{
 		public static void StartLearnInterface()
 		{
-			string outputString = "以下代码用于实践访问Box类显示实现的接口成员\n\n" +
-				"Box box = new Box(\"Box No.0001\");\n" +
-				"//student.Move();   //无法访问接口成员，因为Box类中接口是被显示实现的\n" +
-				"IMove boxMove = box;\n" +
-				"boxMove.Velocity = 5;\n" +
-				"boxMove.Time = 6;\n" +
-				"boxMove.Move();\n\n" +
-				"输出：\n";
-
-			Console.WriteLine(outputString);
-
+            //以下代码用于实践访问Box类显示实现的接口成员
             Box box = new Box("Box No.0001");
 			//student.Move();   //无法访问接口成员，因为Student类中接口是被显示实现的
 			IMove boxMove = box;
@@ -228,18 +229,8 @@ namespace LearnCSharp.Basic
 
 			Console.WriteLine();
 
-			outputString = "以下代码用于实践访问Car类隐式实现的接口成员\n\n" +
-                "Car car = new Car(\"No.00001\");\n" +
-				"car.Velocity = 80;  //隐式实现的接口成员也是实现类的成员，故可通过类实例访问\n" +
-				"car.Time = 5;\n" +
-				"car.Move();\n\n" +
-				"IMove carMove = car;\n" +
-				"carMove.Move();     //隐式实现的接口成员也可通过将实例赋值给接口变量再通过接口实例访问\n\n" +
-				"输出：\n";
-
-			Console.WriteLine(outputString);
-
-			Car car = new Car("No.00001");
+            //以下代码用于实践访问Car类隐式实现的接口成员
+            Car car = new Car("No.00001");
 			car.Velocity = 80;  //隐式实现的接口成员也是实现类的成员，故可通过类实例访问
 			car.Time = 5;
 			car.Move();
