@@ -32,6 +32,9 @@
 			§ var 变量名 = new[]{ 匿名类型, 匿名类型, …, 匿名类型 }
 				□ 每个匿名类型应该结构相同，即公共属性的顺序和名称相同
  */
+using System;
+using System.Reflection.Metadata.Ecma335;
+
 namespace LearnCSharp.Basic
 {
     internal class LearnAnonymousType
@@ -55,14 +58,10 @@ namespace LearnCSharp.Basic
 				new { Name = "Person04", Age = 35, Gender = '女' }
             };
 
-			Console.WriteLine($"使用GetType方法获取匿名类型实例person01的类型：{person01.GetType().Name}\n");
-
             //遍历输出匿名类型数组persons的数据，对于其元素实例，直接采取C#为匿名类型重写的ToString方法输出
-            Console.WriteLine($"遍历输出匿名类型数组persons的数据：");
-			foreach (var person in persons)
-			{
-				Console.WriteLine(person);
-			}
+            Console.WriteLine($"【匿名类型数组】\n数组名：persons\n类型：{persons.GetType()}\n元素数量：{persons.Length}\n");
+			for( int i = 0; i < persons.Length; i++ )
+				Console.WriteLine($"【匿名类型】\n元素序号：{i}\n类型：{persons[i].GetType()}\n成员信息：{persons[i]}\n");
         }
     }
 }

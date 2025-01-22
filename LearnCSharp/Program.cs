@@ -1,5 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
+using System.Collections;
+using System.Numerics;
 
 namespace LearnCSharp
 {
@@ -24,6 +26,7 @@ namespace LearnCSharp
         }
 
         #endregion
+
         private static void Initialize()
         {
             //如果当前系统默认代码页不是UTF8，则将输入编码更改为UTF8以支持简体中文输入。

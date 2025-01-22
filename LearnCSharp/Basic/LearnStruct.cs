@@ -78,7 +78,7 @@
 	• 继承
 		○ 所有结构类型都隐式继承自类 System.ValueType，后者又继承自类object
 		○ 结构类型永远不会是抽象类型，并且始终隐式密封。
-			§ 不能使用abstract和sealed修饰符不允许用于修饰结构
+			§ 不能使用abstract和sealed修饰符修饰结构
 			§ 不能使用abstract、sealed和virtual修饰符修饰结构成员
 			§ 不能使用protected和protected internal来作为结构成员的访问级别
 			§ override修饰符只允许重写结构从System.ValueType继承的方法
@@ -371,7 +371,7 @@ namespace LearnCSharp.Basic
 			Console.WriteLine("声明并初始化了两个Vector结构实例用于表示两个向量\n" +
 				"vector1:(12, 10)\nvector2(-15,6)\n");
 			Console.WriteLine($"通过隐式转换将vector1赋值给了一个元组变量vector3--output:({vector3.X},{vector3.Y})");
-			Console.WriteLine($"通过结构函数将vector1解构成一个(int x, int y)元组--output：({x}, {y})");
+			Console.WriteLine($"通过解构函数将vector1解构成一个(int x, int y)元组--output：{(x,y)}");
 			Console.WriteLine($"通过Vector重载操作符==来计算vector1和vector2相等性--output：{vector1 == vector2}");
             Console.WriteLine($"通过Vector重载操作符!=来计算vector1和vector2相等性--output：{vector1 != vector2}");
 			Console.WriteLine($"通过Vector重载操作符+来计算vector1+vector2的和--output：({(vector1 + vector2).VectorX},{(vector1 + vector2).VectorY})");

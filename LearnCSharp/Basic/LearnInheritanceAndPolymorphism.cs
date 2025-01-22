@@ -223,7 +223,8 @@ namespace LearnCSharp.Basic.LearnInheritanceAndPolymorphismSpace
 			set { id = value; }
 		}
 
-		public Student()
+
+        public Student()
 		{
 			Console.WriteLine("【Student类】派生自Human类 | 无参构造函数");
 		}
