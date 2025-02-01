@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections;
 using System.Numerics;
+using LearnCSharp.Basic;
 
 namespace LearnCSharp
 {
@@ -47,7 +48,32 @@ namespace LearnCSharp
             Initialize();
 
             if (args.Length == 0)
-                Menus.ShowMenu(MenuType.Project);
+            {
+                while (true)
+                {
+                    Console.WriteLine("-------请输入各章节注释标注代码直接运行对应代码-------");
+                    Console.WriteLine("【如需目录模式请输入“menu”；如需退出请输入“exit”】");
+                    Console.WriteLine("【输入完成后按下“Enter”键确认】");
+
+                    Console.WriteLine();
+                    Console.Write("输入：");
+
+                    string input = Console.ReadLine();
+
+                    switch (input)
+                    {
+                        case "menu" or "Menu" or "MENU":
+                            Menus.ShowMenu(MenuType.Project);
+                            break;
+                        case "exit" or "Exit" or "EXIT":
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            DirectNavigation.DirectNavigate(input);
+                            break;
+                    }
+                }
+            }
             else
             {
                 foreach (var item in args)

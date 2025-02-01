@@ -29,19 +29,24 @@ namespace LearnCSharp.Basic
 {
     internal class LearnLiteralsAndOthers
     {
+        /*【10301：字面量、标点、空白和注释】
+         * 这是带分隔符的多行注释
+         */
+        /// <summary>
+        /// 这是一个xml注释，通常用于注释整个方法的作用。
+        /// </summary>
         public static void StartLearnLiteralsAndOthers()
         {
-            int number = 5; //;：结束语句 5：是一个字面量
-            string words = "你好啊！";//“你好啊！”：是一个字面量
+            Console.WriteLine("------示例：字面量、标点、空白和注释------\n");
+            //下列语句都使用标点“;”结束语句
+            //下列语句都是用标点“=”进行赋值操作
+            int number = 5;             //5：是一个数值字面量
+            char @char = 'a';               //'a'：是一个字符字面量
+            string words = "你好啊！";  //“你好啊！”：是一个字符窜字面量
 
-            string output = @"以下代码中，int、string是关键字；number、words是标识符；=是运算符；;是标点；5、""你好啊""是字面量
-                            int number = 5; 
-                            string words = ""你好啊！"";";
-            
             //空白用于格式化代码
-            Console.WriteLine(output);//.|()都是运算符
-
-            Console.WriteLine($"\n输出局部变量值--number：{number}，words：{words}");
+            //.和()都是运算符
+            Console.WriteLine($"\n输出存储于局部变量的字面量：\n--number：{number}\n--char：{@char}\n--words：{words}\n");
         }
     }
 }
