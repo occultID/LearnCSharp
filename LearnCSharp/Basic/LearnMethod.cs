@@ -121,7 +121,19 @@ namespace LearnCSharp.Basic
     /// </summary>
     internal class LearnMethod
     {
-		public static void PrintString()
+
+        public static void StartLearnMethod()
+        {
+            Console.WriteLine("\n------示例：方法------\n");
+
+            Console.WriteLine("已创建四个同名（PrintString）方法，它们通过不同的签名实现了重载，接下来将依次调用这四个方法：");
+            PrintString();
+            PrintString("Hello, World!");
+            PrintString("Hello, World!", 5);
+            PrintString("Hello, World!", 5, 10);
+        }
+
+        private static void PrintString()
 		{
             Console.WriteLine($"【方法输出】\n方法名：PrintString\n返回类型：void\n参数：无\n");
 		}
@@ -129,17 +141,17 @@ namespace LearnCSharp.Basic
         //重载方法决策不包含返回类型，故不能以此作为重载依据
         //public static string PrintString() { }
 
-		public static void PrintString(string str)
+        private static void PrintString(string str)
         {
             Console.WriteLine($"【方法输出】\n方法名：PrintString\n返回类型：void\n参数：[形参类型：{str.GetType()} | 形参名：str | 实参值：{str}]\n");
         }
 
-        public static void PrintString(string str, int num)
+        private static void PrintString(string str, int num)
         {
             Console.WriteLine($"【方法输出】\n方法名：PrintString\n返回类型：void\n参数1：[形参类型：{str.GetType()} | 形参名：str | 实参值：{str}]\n参数2：[形参类型：{num.GetType()} | 形参名：num | 实参值：{num}]\n");
         }
 
-		public static bool PrintString(string str, uint cutStartIndex, uint cutEndIndex)
+        private static bool PrintString(string str, uint cutStartIndex, uint cutEndIndex)
         {
             bool result = false;
 			string cutStr = "";
@@ -158,16 +170,6 @@ namespace LearnCSharp.Basic
                 $"参数3：[形参类型：{cutEndIndex.GetType()} | 形参名：cutEndIndex | 实参值：{cutEndIndex}]\n" +
 				$"输出值：{cutStr}\n返回值：{result}\n");
             return result;
-        }
-
-        public static void StartLearnMethod()
-        {
-            Console.WriteLine("【学习方法--代码示例】");
-			Console.WriteLine("已创建四个同名（PrintString）方法，它们通过不同的签名实现了重载，接下来将依次调用这四个方法：");
-			PrintString();
-            PrintString("Hello, World!");
-            PrintString("Hello, World!", 5);
-            PrintString("Hello, World!", 5, 10);
         }
     }
 }

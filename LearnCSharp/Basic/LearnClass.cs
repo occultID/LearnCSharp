@@ -320,7 +320,7 @@ using System.Drawing;
 
 namespace LearnCSharp.Basic.LearnClassSpace
 {
-	//定义一个名为Book的类，用它来表示现实生活中的书籍
+	//定义一个名为NovelBook的类，用它来表示现实生活中的小说书籍
 	//原则上我们应该保证类名和代码所属文件名相同，且一个文件最好只包含一个类
 	//这里由于便于学习，先不考虑编程规范问题，本部分会在一个文件内定义多个类且类名和文件名未完全保持一致
 	public class NovelBook

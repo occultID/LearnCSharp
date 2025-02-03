@@ -169,11 +169,11 @@ namespace LearnCSharp.Basic //namespace 保留关键字
         public static void LearnModifierKeywords()
 		{
             Console.WriteLine("如需了解修饰符关键字，请在 [C# 学习--基础篇] 章节中选择以下章节进行了解：\n" +
-                    "014 方法\n" +
-                    "016 扩展方法\n" +
-                    "018 方法参数\n" +
-                    "020 类\n" +
-					"022 继承与多态\n");
+                    "012 方法\n" +
+                    "014 扩展方法\n" +
+                    "016 方法参数\n" +
+                    "018 类\n" +
+					"020 继承与多态\n");
 
             Console.WriteLine("如需了解修饰符关键字，请在 [C# 学习--高级篇] 章节中选择以下章节进行了解：\n" +
                     "003 事件\n");
@@ -236,7 +236,7 @@ namespace LearnCSharp.Basic //namespace 保留关键字
         public static void LearnStatementKeywords()
 		{
 			Console.WriteLine("如需了解语句关键字，请在 [C# 学习--基础篇] 章节中选择以下章节进行了解：\n" +
-					"013 语句\n");
+					"011 语句\n");
         }
 
         /*【10204：命名空间关键字】
@@ -265,7 +265,7 @@ namespace LearnCSharp.Basic //namespace 保留关键字
         public static void LearnNamespaceKeywords()
 		{
             Console.WriteLine("如需了解命名空间关键字，请在 [C# 学习--基础篇] 章节中选择以下章节进行了解：\n" +
-                    "019 命名空间\n");
+                    "017 命名空间\n");
         }
 
         /*【10205：类型定义关键字】
@@ -292,11 +292,11 @@ namespace LearnCSharp.Basic //namespace 保留关键字
         public static void LearnTypedefKeywords()
 		{
             Console.WriteLine("如需了解类型定义关键字，请在 [C# 学习--基础篇] 章节中选择以下章节进行了解：\n" +
-                    "010 枚举\n" +
-                    "020 类\n" +
-                    "023 接口\n" +
-                    "024 结构\n" +
-                    "025 记录\n");
+                    "009 枚举\n" +
+                    "018 类\n" +
+                    "021 接口\n" +
+                    "022 结构\n" +
+                    "023 记录\n");
 
             Console.WriteLine("如需了解类型定义关键字，请在 [C# 学习--高级篇] 章节中选择以下章节进行了解：\n" +
                     "001 委托\n");
@@ -371,8 +371,8 @@ namespace LearnCSharp.Basic //namespace 保留关键字
         public static void LearnTypeKeywords()
 		{
             Console.WriteLine("如需了解类型关键字，请在 [C# 学习--基础篇] 章节中选择以下章节进行了解：\n" +
-                    "005 数据类型基础\n" +
-                    "006 .NET内置简单类型\n");
+                    "004 数据类型基础\n" +
+                    "005 .NET内置简单类型\n");
         }
 
         /*【10207：运算符关键字】
@@ -427,7 +427,7 @@ namespace LearnCSharp.Basic //namespace 保留关键字
         public static void LearnOperatorKeywords()
 		{
             Console.WriteLine("如需了解运算符关键字，请在 [C# 学习--基础篇] 章节中选择以下章节进行了解：\n" +
-                    "011 运算符\n");
+                    "010 运算符\n");
 
             Console.WriteLine("如需了解运算符关键字，请在 [C# 学习--高级篇] 章节中选择以下章节进行了解：\n" +
                     "002 匿名函数\n");
@@ -472,7 +472,7 @@ namespace LearnCSharp.Basic //namespace 保留关键字
         public static void LearnAccessKeywords()
 		{
             Console.WriteLine("如需了解访问关键字，请在 [C# 学习--基础篇] 章节中选择以下章节进行了解：\n" +
-                    "022 继承与多态\n");
+                    "020 继承与多态\n");
         }
 
         /*【10210：文字关键字】

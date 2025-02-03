@@ -67,7 +67,7 @@ namespace LearnCSharp.Basic
 {
     internal class LearnStatements
     {
-		/*【11201：终结点和可访问性】
+		/*【11101：终结点和可访问性】
 			定义见顶部笔记同名章节
 			下面是示例代码
 		 */
@@ -87,7 +87,7 @@ namespace LearnCSharp.Basic
 			//以上每一个Console.WriteLine();语句最后结束的位置都是这个语句的终结点
         }
 
-        /*【11202：带标签的语句】
+        /*【11102：带标签的语句】
 			带标签语句即可以为语句定义一个标签名前缀，并在其后接一个冒号（:），随后在跟随一个语句
 			带标签语句允许出现在块中，但不允许作为嵌入语句使用
 			标签具有自己的声明空间，不会干扰其他标识符，比如标签可以和变量同名
@@ -121,7 +121,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"从 0 到 {maxNumber} 的所有正整数的和为：{result}");//end是标签
         }
 
-        /*【11203：声明语句】
+        /*【11103：声明语句】
 			声明语句是用于声明局部变量或常量的语句
 			声明语句允许在块中使用，但不允许作为嵌入语句
 		 */
@@ -154,7 +154,7 @@ namespace LearnCSharp.Basic
             }
         }
 
-        /*【11204：块】
+        /*【11104：块】
 			块即一个代码块，使用一对花括号{}将零个或多个语句组成的语句列表包含其中
 			如果块内无任何语句，则称块为空
 			块可以嵌套
@@ -191,7 +191,7 @@ namespace LearnCSharp.Basic
 
         }
 
-        /*【11205：表达式语句】
+        /*【11105：表达式语句】
 			表达式语句计算给定表达式的值
 			由表达式计算的值(如果有)将被丢弃
 			并非所有表达式都允许作为语句
@@ -214,7 +214,7 @@ namespace LearnCSharp.Basic
 			Console.WriteLine($"x++;表达式语句执行后x的值：{x}");
 		}
 
-        /*【11206：选择语句】
+        /*【11106：选择语句】
  			选择语句分为if-else语句和switch语句
 			选择语句根据表达式的值从许多可能的路径中选择要执行的语句
  
@@ -227,7 +227,7 @@ namespace LearnCSharp.Basic
             LearnCSharp.Basic.LearnSelectionStatement.StartLearnSelectionStatement();
         }
 
-        /*【11207：迭代语句】
+        /*【11107：迭代语句】
 			迭代语句用于重复执行语句或语句块
 			迭代语句也称为循环语句
 			迭代语句包括以下四种
@@ -245,7 +245,7 @@ namespace LearnCSharp.Basic
             LearnCSharp.Basic.LearnIterationStatement.StartLearnIterationStatement();
         }
 
-        /*【11208：跳转语句之goto语句】
+        /*【11108：跳转语句之goto语句】
 			goto语句总是固定形式的：使用关键字goto以及后跟标签名
 				标签名可以是用户定义的标签，也可以是switch语句中的“case 匹配标签”和“default”
 			goto语句用于将控制转交给由标签标记的语句
@@ -270,7 +270,7 @@ namespace LearnCSharp.Basic
 			end: Console.WriteLine("你输入的数字是：{0}",integer); //定义了一个start标签来标记语句
 		}
 
-		/*【11209：跳转语句之break、continue语句】
+		/*【11109：跳转语句之break、continue语句】
 			break语句将终止最接近的封闭迭代语句（while、do-while、for、foreach语句）或switch语句
 				break语句只能退出包含它的那一个switch或迭代语句
 				break语句将控制权转交给已终止语句后面的语句（如有）
@@ -324,7 +324,7 @@ namespace LearnCSharp.Basic
 			}
 		}
 
-		/*【11210：跳转语句之throw、return语句】
+		/*【11110：跳转语句之throw、return语句】
 			throw语句用于抛出异常或抛出被catch捕获的异常
 				throw语句常结合try语句使用，更多知识参考LearnException部分
 			return语句终止它所在的函数的执行，并将控制权和结果（如有）返回给当前调用方
@@ -378,7 +378,7 @@ namespace LearnCSharp.Basic
             return; 
 		}
 
-		/*【11211：try语句】
+		/*【11111：try语句】
 			try语句提供了一种机制用于捕获在执行块期间发生的异常
 			try语句提供了在捕获异常时保证仍需执行的代码块始终能得到执行的能力
 			try语句的形式：
@@ -435,7 +435,7 @@ namespace LearnCSharp.Basic
 			}
 		}
 
-		/*【11212：using语句】
+		/*【11112：using语句】
 			using语句用于获取一个或多个资源，然后执行语句，最后释放资源
 				资源是指实现了System.IDisposable接口的类或结构，其中包括一个名为Dispose的无参方法
 				using语句可以在使用资源的代码时自动调用Dispose方法来释放资源而无需开发者手动调用
@@ -478,7 +478,7 @@ namespace LearnCSharp.Basic
 			}
 		}
 
-		/*【11213：yield语句】
+		/*【11113：yield语句】
 			在迭代序列中，使用迭代器中的yield语句提供序列的下一个值
 			yield是一个上下文关键字，仅当其在迭代器上下文中时才有意义
 			yield语句有两种形式：
@@ -557,7 +557,7 @@ namespace LearnCSharp.Basic
 			}
 		}
 
-        /*【11214：checked和unchecked语句】
+        /*【11114：checked和unchecked语句】
 			checked和unchecked语句用于控制整型算术运算和转换时的溢出检查
 			checked语句 告知编译器在编译时需要对整数类型运算或转换要进行溢出检查 这是默认行为 不必须显示使用该语句
 			unchecked语句 告知编译器在编译时不需要对整数类型运算或转换要进行溢出检查 需显示使用该语句 非必要不要使用
@@ -600,7 +600,7 @@ namespace LearnCSharp.Basic
 			}
 		}
 
-        /*【11215：lock语句】
+        /*【11115：lock语句】
 			lock语句获取给定对象的互斥lock,执行语句块，然后释放lock
 			持有lock时，持有lock的线程可以再次获取并释放lock
 			阻止任何其他线程获取lock并等待释放lock
@@ -653,7 +653,7 @@ namespace LearnCSharp.Basic
             await Task.Delay(1500);
         }
 
-        /*【11216：空语句】
+        /*【11116：空语句】
 		    空语句即不执行任何操作的语句
 			在需要语句的上下文中没有要执行的操作时，将使用空语句
 			空语句的执行只是将控制转移到语句的终结点。
@@ -679,7 +679,7 @@ namespace LearnCSharp.Basic
 			;//这里是一个空语句，仅有一个分号表示语句结束，语句并无内容与操作
 		}
 
-		/*【11217：unsafe语句】
+		/*【11117：unsafe语句】
 			unsafe语句用于将非托管代码组织在unsafe块中
 			unsafe语句形式：
 				unsafe
@@ -702,7 +702,7 @@ namespace LearnCSharp.Basic
             }
 		}
 
-        /*【11218：fixed语句】
+        /*【11118：fixed语句】
             fixed语句可防止垃圾回收器重新定位可移动变量，并声明指向该变量的指针
             固定变量的地址在语句的持续时间内不会更改。 
             只能在相应的 fixed 语句中使用声明的指针。 

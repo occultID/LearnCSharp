@@ -42,23 +42,23 @@ namespace LearnCSharp
                     "007 类型转换\n" +
                     "008 数组\n" +
                     "009 枚举\n" +
-                    "010 运算符\n" +
-                    "011 表达式\n" +
-                    "012 语句\n" +
-                    "013 方法\n" +
-                    "014 本地函数\n" +
-                    "015 扩展方法\n" +
-                    "016 变量\n" +
-                    "017 方法参数\n" +
-                    "018 命名空间\n" +
-                    "019 类\n" +
-                    "020 表达式主体成员定义\n" +
-                    "021 继承与多态\n" +
-                    "022 接口\n" +
-                    "023 结构\n" +
-                    "024 记录\n" +
-                    "025 匿名类型\n" +
-                    "026 异常处理\n";
+                    "010 运算符和表达式\n" +
+                    "011 语句\n" +
+                    "012 方法\n" +
+                    "013 本地函数\n" +
+                    "014 扩展方法\n" +
+                    "015 变量\n" +
+                    "016 方法参数\n" +
+                    "017 命名空间\n" +
+                    "018 类\n" +
+                    "019 表达式主体成员定义\n" +
+                    "020 继承与多态\n" +
+                    "021 接口\n" +
+                    "022 结构\n" +
+                    "023 记录\n" +
+                    "024 匿名类型\n" +
+                    "025 异常处理\n";
+
         public static readonly Dictionary<string, Action> BasicChapterMethods = new Dictionary<string, Action>()
         {
             ["001"] = HelloWorld.SayHello,
@@ -70,23 +70,22 @@ namespace LearnCSharp
             ["007"] = LearnCastingAndTypeConversion.StartLearnCastingAndTypeConversion,
             ["008"] = LearnArray.StartLearnArray,
             ["009"] = LearnEnum.StartLearnEnum,
-            ["010"] = LearnOperator.StartLearnOperator,
-            ["011"] = LearnExpression.StartLearnExpression,
-            ["012"] = LearnStatements.StartLearnStatements,
-            ["013"] = LearnMethod.StartLearnMethod,
-            ["014"] = LearnLocalFunction.StartLearnLocalFunction,
-            ["015"] = LearnExtensionMethod.StartLearnExtensionMethod,
-            ["016"] = LearnVariables.StartLearnVariables,
-            ["017"] = LearnParameters.StartLearnParameters,
-            ["018"] = LearnNamespace.StartLearnNamespace,
-            ["019"] = LearnClass.StartLearnClass,
-            ["020"] = LearnExpressionBodied.StartLearnExpressionBodied,
-            ["021"] = LearnInheritanceAndPolymorphism.StartLearnInheritanceAndPolymorphism,
-            ["022"] = LearnInterface.StartLearnInterface,
-            ["023"] = LearnStruct.StartLearnStruct,
-            ["024"] = LearnRecord.StartLearnRecord,
-            ["025"] = LearnAnonymousType.StartLearnAnonymousType,
-            ["026"] = LearnExceptionHandling.StartLearnExceptionHandling
+            ["010"] = LearnOperatorAndExpression.StartLearnOperatorAndExpression,
+            ["011"] = LearnStatements.StartLearnStatements,
+            ["012"] = LearnMethod.StartLearnMethod,
+            ["013"] = LearnLocalFunction.StartLearnLocalFunction,
+            ["014"] = LearnExtensionMethod.StartLearnExtensionMethod,
+            ["015"] = LearnVariables.StartLearnVariables,
+            ["016"] = LearnParameters.StartLearnParameters,
+            ["017"] = LearnNamespace.StartLearnNamespace,
+            ["018"] = LearnClass.StartLearnClass,
+            ["019"] = LearnExpressionBodied.StartLearnExpressionBodied,
+            ["020"] = LearnInheritanceAndPolymorphism.StartLearnInheritanceAndPolymorphism,
+            ["021"] = LearnInterface.StartLearnInterface,
+            ["022"] = LearnStruct.StartLearnStruct,
+            ["023"] = LearnRecord.StartLearnRecord,
+            ["024"] = LearnAnonymousType.StartLearnAnonymousType,
+            ["025"] = LearnExceptionHandling.StartLearnExceptionHandling
         };
 
         public const string ProfessionalChapterName = "C# 学习--高级篇";
