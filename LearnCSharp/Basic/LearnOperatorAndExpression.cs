@@ -176,8 +176,11 @@
 		○ 动态绑定在运行时进行
  */
 
+using Microsoft.VisualBasic;
 using System;
+using System.Data;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
 
 namespace LearnCSharp.Basic
 {
@@ -1017,6 +1020,66 @@ namespace LearnCSharp.Basic
 		public static void LearnOtherPrimaryOperator()
 		{
             Console.WriteLine("\n------示例：其他主要节点运算符------\n");
+
+			//new运算符示例：创建类型实例和数组实例
+			Point point = new Point();
+			point.X = Random.Shared.Next(-999, 1000);
+            point.Y = Random.Shared.Next(-999, 1000);
+			Console.WriteLine($"输出Point实例point信息 --- {point}");
+			Console.WriteLine();
+
+			int[] ints = { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 };
+			Console.WriteLine($"输出数组实例ints元素：{string.Join<int>('，', ints)}");
+			Console.WriteLine();
+
+			//default运算符示例：为类型生成默认值，可通过default表达式或default文本实现
+			int defaultIntValue = default(int);
+			bool defaultBoolValue = default;
+
+			Console.WriteLine($"类型： int | 默认值：{defaultIntValue}");
+			Console.WriteLine($"类型：bool | 默认值：{defaultBoolValue}");
+			Console.WriteLine();
+
+			//checked和unchecked运算符示例
+			int maxIntValue = int.MaxValue;
+			int number = 0;
+            try 
+			{
+				number = checked(maxIntValue + 1);
+			}
+			catch (Exception e)
+			{
+                Console.WriteLine($"checked运算符示例---无法计算变量number的值，错误：{e.Message}");
+			}
+
+			number = unchecked(maxIntValue + 1);
+			Console.WriteLine($"unchecked运算符示例---计算变量number的值：{number}");
+			Console.WriteLine();
+
+			//nameof运算符示例：
+			string variableName = nameof(number);
+
+			Console.WriteLine($"变量number的名称为：{variableName}");
+			Console.WriteLine();
+
+			//sizeof运算符示例
+			int sizeofInt =  sizeof(int);
+
+            Console.WriteLine($"【int类型】对应.NET的 {typeof(int)} 类型 | 它表示内存占用{sizeof(int):00}字节的整数");
+            Console.WriteLine();
+
+			//栈分配运算符示例
+			unsafe
+			{
+				int* intPtr = stackalloc int[] { 1, 3, 5, 7, 9, 11, 13, 15, 17, 19 };
+
+                Console.WriteLine("数组实例spanInts中元素信息：");
+				for (int i = 0; i < 10; i++)
+				{
+					Console.WriteLine($"index[{i:00}] -- value：{intPtr[i],-2} -- address：{(long)&intPtr[i]}");
+				}
+			}
+			Console.WriteLine();
         }
 
         /*【11014：其他一元运算符】
@@ -1039,9 +1102,37 @@ namespace LearnCSharp.Basic
 																																					► 无法确保 true 和 false 运算符互补
 		 * ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 		 */
-		public static void LearnOtherUnaryOperator()
+        public static void LearnOtherUnaryOperator()
 		{
-            Console.WriteLine("\n------示例：其他一元运算符------\n");
+            Console.WriteLine("\n------示例：异步等待运算符------\n");
+
+			//异步等待运算符：使用一个局部异步方法来示例await运算符，这里使用async void是为了方便示例，通常除了WinForm、WPF的元素响应事件外不会这样使用
+			async void OutputCurrentTime()
+			{
+				DateTime maxtime = DateTime.Now.AddSeconds(30);
+				while (DateTime.Now < maxtime)
+				{
+                    Console.WriteLine(DateTime.Now);
+                    await Task.Delay(1000);
+                } 
+			}
+
+			OutputCurrentTime();
+			Thread.Sleep(30000);
+            Console.WriteLine();
+
+            Console.WriteLine("\n------示例：true 和 false运算符------\n");
+
+            //true、false运算符示例：由于内部结构Point中重载了这两个运算符，所以以该结构示例为例进行演示
+            Point point = new Point() { X = Random.Shared.Next(-999, 1000), Y = Random.Shared.Next(-999, 1000) };
+
+			//可以将示例直接解析为bool值
+			if(point)
+                Console.WriteLine($"横纵坐标均为正整数 ---{point}");
+			else
+                Console.WriteLine($"横纵坐标存在负整数 ---{point}");
+
+            Console.WriteLine();
         }
 
         /*【11015：switch和with运算符】
@@ -1116,8 +1207,16 @@ namespace LearnCSharp.Basic
 		{
             Console.WriteLine("\n------示例：运算符重载------\n");
 
-			//具体重载示例代码请看本页定义的内部结构Point，该结构表示平面坐标系中的坐标点
-			//本方法内示例为使用重载的运算符
+            //具体重载示例代码请看本页定义的内部结构Point，该结构表示平面坐标系中的坐标点
+            //本方法内示例为使用重载的运算符
+
+            Point point1 = new Point() { X = Random.Shared.Next(-999, 1000), Y = Random.Shared.Next(-999, 1000) };
+            Point point2 = new Point() { X = Random.Shared.Next(-999, 1000), Y = Random.Shared.Next(-999, 1000) };
+
+			var pointDistance = point1 - point2;
+			Console.WriteLine($"Point1 --- {point1}\nPoint2 --- {point2}\n距离：{pointDistance}");
+
+			Console.WriteLine();
         }
 
 
@@ -1144,8 +1243,8 @@ namespace LearnCSharp.Basic
 			//重载一个二元-的实现用于计算两个Point类型表示的坐标点的距离
 			public static double operator -(Point pointLeft,Point pointRight) 
 			{
-				int subX = pointLeft.X - pointRight.X;
-				int subY = pointLeft.Y - pointRight.Y;
+				double subX = pointLeft.X - pointRight.X;
+				double subY = pointLeft.Y - pointRight.Y;
 
 				return Math.Sqrt(subX * subX + subY * subY);
 			}

@@ -24,7 +24,10 @@ namespace LearnCSharp
             ["11010"] = LearnOperatorAndExpression.LearnConditionalOperator,
             ["11011"] = LearnOperatorAndExpression.LearnAnonymousFuncAndLambdaOperator,
             ["11012"] = LearnOperatorAndExpression.LearnPointerOperator,
-            ["11015"] = LearnOperatorAndExpression.LearnSwitchAndWithOperator
+            ["11013"] = LearnOperatorAndExpression.LearnOtherPrimaryOperator,
+            ["11014"] = LearnOperatorAndExpression.LearnOtherUnaryOperator,
+            ["11015"] = LearnOperatorAndExpression.LearnSwitchAndWithOperator,
+            ["11016"] = LearnOperatorAndExpression.LearnOperatorOverload
         };
 
         public static void DirectNavigate(string code)
