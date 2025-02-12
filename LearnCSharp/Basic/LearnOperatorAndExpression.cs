@@ -947,7 +947,7 @@ namespace LearnCSharp.Basic
 			Console.Write("请输入任意一段话后按Enter键提交：");
 			Console.WriteLine();
 
-			string inputString = Console.ReadLine();
+			string? inputString = Console.ReadLine();
 			
 			if(string.IsNullOrWhiteSpace(inputString))
 				goto input;
@@ -1065,7 +1065,7 @@ namespace LearnCSharp.Basic
 			//sizeof运算符示例
 			int sizeofInt =  sizeof(int);
 
-            Console.WriteLine($"【int类型】对应.NET的 {typeof(int)} 类型 | 它表示内存占用{sizeof(int):00}字节的整数");
+            Console.WriteLine($"【int类型】对应.NET的 {typeof(int)} 类型 | 它表示内存占用{sizeofInt:00}字节的整数");
             Console.WriteLine();
 
 			//栈分配运算符示例

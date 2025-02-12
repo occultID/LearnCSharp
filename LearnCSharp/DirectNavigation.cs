@@ -1,4 +1,5 @@
 ﻿using LearnCSharp.Basic;
+using LearnCSharp.Professional;
 
 namespace LearnCSharp
 {
@@ -10,6 +11,16 @@ namespace LearnCSharp
             ["10201"] = LearnKeyWords.LearnAccessibilityLevelKeywords,
             ["10210"] = LearnKeyWords.LearnLiteralKeywords,
             ["10301"] = LearnLiteralsAndOthers.StartLearnLiteralsAndOthers,
+            ["10401"] = LearnDataType.LearnObject,
+            ["10402"] = LearnDataType.LearnDynamic,
+            ["10501"] = LearnSimpleType.LearnIntegerType,
+            ["10502"] = LearnSimpleType.LearnFloatingPointType,
+            ["10503"] = LearnSimpleType.LearnCharacterType,
+            ["10504"] = LearnSimpleType.LearnBooleanType,
+            ["10505"] = LearnSimpleType.LearnStringType,
+            ["10506"] = LearnSimpleType.LearnObjectType,
+            ["10507"] = LearnSimpleType.LearnDynamicType,
+            ["10601"] = LearnTuple.StartLearnTuple,
             ["11117"] = LearnStatements.LearnUnsafeStatement,
             ["11118"] = LearnStatements.LearnFixedStatement,
             ["11001"] = LearnOperatorAndExpression.LearnArithmeticOperator,
@@ -27,7 +38,23 @@ namespace LearnCSharp
             ["11013"] = LearnOperatorAndExpression.LearnOtherPrimaryOperator,
             ["11014"] = LearnOperatorAndExpression.LearnOtherUnaryOperator,
             ["11015"] = LearnOperatorAndExpression.LearnSwitchAndWithOperator,
-            ["11016"] = LearnOperatorAndExpression.LearnOperatorOverload
+            ["11016"] = LearnOperatorAndExpression.LearnOperatorOverload,
+            ["12601"] = LearnPattern.LearnConstantPattern,
+            ["12602"] = LearnPattern.LearnRelationalPattern,
+            ["12603"] = LearnPattern.LearnLogicalPattern,
+            ["12604"] = LearnPattern.LearnDeclarationPattern,
+            ["12605"] = LearnPattern.LearnTypePattern,
+            ["12606"] = LearnPattern.LearnPropertyPattern,
+            ["12607"] = LearnPattern.LearnPositionalPattern,
+            ["12608"] = LearnPattern.LearnVarPattern,
+            ["12609"] = LearnPattern.LearnDiscardPattern,
+            ["12610"] = LearnPattern.LearnParenthesizedPattern,
+            ["12611"] = LearnPattern.LearnListPattern,
+            ["12612"] = LearnPattern.LearnSlicePattern,
+            ["20101"] = LearnDelegate.LearnSystemDelegate,
+            ["20102"] = LearnDelegate.LearnCustomerDelegate,
+            ["20103"] = LearnDelegate.LearnMultiDelegate,
+            ["20301"] = LearnEvent.StartLearnEvent
         };
 
         public static void DirectNavigate(string code)

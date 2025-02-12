@@ -57,7 +57,8 @@ namespace LearnCSharp
                     "022 结构\n" +
                     "023 记录\n" +
                     "024 匿名类型\n" +
-                    "025 异常处理\n";
+                    "025 异常处理\n" +
+                    "026 模式匹配\n";
 
         public static readonly Dictionary<string, Action> BasicChapterMethods = new Dictionary<string, Action>()
         {
@@ -85,20 +86,21 @@ namespace LearnCSharp
             ["022"] = LearnStruct.StartLearnStruct,
             ["023"] = LearnRecord.StartLearnRecord,
             ["024"] = LearnAnonymousType.StartLearnAnonymousType,
-            ["025"] = LearnExceptionHandling.StartLearnExceptionHandling
+            ["025"] = LearnExceptionHandling.StartLearnExceptionHandling,
+            ["026"] = LearnPattern.StartLearnPattern
         };
 
         public const string ProfessionalChapterName = "C# 学习--高级篇";
         public const string ProfessionalChapterMenu = "001 委托\n" +
                     "002 匿名函数\n" +
                     "003 事件\n" +
-                    "004 模式匹配\n" +
-                    "005 集合\n" +
-                    "006 泛型\n" +
-                    "007 Linq\n" +
-                    "008 特性\n" +
-                    "009 反射\n" +
-                    "010 动态类型\n" +
+                    "004 集合\n" +
+                    "005 泛型\n" +
+                    "006 Linq\n" +
+                    "007 特性\n" +
+                    "008 反射\n" +
+                    "009 动态类型\n" +
+                    "010 进程与线程\n" +
                     "011 异步编程\n" +
                     "012 并行编程\n";
         public static readonly Dictionary<string, Action> ProfessionalChapterMethods = new Dictionary<string, Action>()
@@ -106,14 +108,13 @@ namespace LearnCSharp
             ["001"] = LearnDelegate.StartLearnDelegate,
             ["002"] = LearnAnonymousFunction.StartLearnAnonymousFunction,
             ["003"] = LearnEvent.StartLearnEvent,
-            ["004"] = LearnPattern.StartLearnPattern,
-            ["005"] = LearnCollection.StartLearnCollection,
-            ["006"] = LearnGenericType.StartLearnGenericType,
-            ["007"] = LearnLinq.StartLearnLinq,
-            ["008"] = LearnAttribute.StartLearnAttribute,
-            ["009"] = LearnReflection.StartLearnReflection,
-            ["010"] = LearnDynamic.StartLearnDynamic,
-            ["011"] = LearnAsyncProgramming.StartLearnAsyncProgramming,
+            ["004"] = LearnCollection.StartLearnCollection,
+            ["005"] = LearnGenericType.StartLearnGenericType,
+            ["006"] = LearnLinq.StartLearnLinq,
+            ["007"] = LearnAttribute.StartLearnAttribute,
+            ["008"] = LearnReflection.StartLearnReflection,
+            ["009"] = LearnDynamic.StartLearnDynamic,
+            ["010"] = LearnProcessAndThread.StartLearnProcessAndThread,
             ["012"] = LearnParallelProgramming.StartLearnParallelProgramming
         };
 

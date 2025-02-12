@@ -104,7 +104,7 @@ namespace LearnCSharp.Basic
 
 			//带标签的语句示例
 			input: Console.Write("请输入一个正整数："); //input是标签，有独立的声明空间，所以可以和作用域内变量同名
-            string input = Console.ReadLine();
+            string? input = Console.ReadLine();
 
 			if (string.IsNullOrWhiteSpace(input) || !uint.TryParse(input, out uint maxNumber))
 				goto input; //可以使用goto跳转到对应标签
@@ -131,7 +131,7 @@ namespace LearnCSharp.Basic
             
 			//以下均为声明语句
             int x1;							//声明一个局部变量,并且不赋值
-			string s1, s2 = null;			//声明两个同类型的局部变量，变量可用,隔开，并且对其中一个变量不赋值
+			string? s1, s2 = null;			//声明两个同类型的局部变量，变量可用,隔开，并且对其中一个变量不赋值
 
 			var @char = 'a';	//声明一个隐式类型的局部变量，编译器可以根据赋值推导实际类型
 			int x2 = 2;             //声明一个局部变量并进行初始化
@@ -283,7 +283,6 @@ namespace LearnCSharp.Basic
             Console.WriteLine("\n------示例：break语句 和 continue语句------\n");
 
 			int[] integers = new int[10];
-			int count = 1;
 
 			for (int i = 0; i < integers.Length; i++)
 			{

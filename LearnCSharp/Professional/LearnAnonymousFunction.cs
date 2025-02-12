@@ -545,15 +545,22 @@ namespace LearnCSharp.Professional
             int countOutput = 0;
             List<Action> actions = new List<Action>();
 
-            for (int i = 0; i < names.Length; i++)
+            try
             {
-                actions.Add(() => { Console.WriteLine(names[i]); countOutput++; });
+                for (int i = 0; i < names.Length; i++)
+                {
+                    actions.Add(() => { Console.WriteLine(names[i]); countOutput++; });
+                }
+                foreach (var item in actions)
+                {
+                    item.Invoke();
+                }
+                Console.WriteLine("输出姓名次数：{0}\n", countOutput);
             }
-            foreach (var item in actions)
+            catch (Exception ex) 
             {
-                item.Invoke();
+                Console.WriteLine(ex.Message);
             }
-            Console.WriteLine("输出姓名次数：{0}\n", countOutput);
         }
 
         /*示例4会被编译器转换为如下代码

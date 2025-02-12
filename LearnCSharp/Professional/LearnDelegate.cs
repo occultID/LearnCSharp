@@ -103,7 +103,7 @@ namespace LearnCSharp.Professional.LearnDelegateSpace
 {
     //自定义一个泛型委托
     //该委托用于封装支持计算两个同数据类型操作数并返回一个同数据类型结果的方法
-    public delegate T Calculator<T>(T x, T y);
+    public delegate T CalcDelegate<T>(T x, T y);
 
 	//自定义一个泛型类
 	//该类封装了几个兼容上述自定义委托的方法
@@ -143,18 +143,12 @@ namespace LearnCSharp.Professional
 {
     internal class LearnDelegate
     {
-		public static void LearnSystemDelegates()
+		/*【20101：系统内置委托示例】
+		 */
+		public static void LearnSystemDelegate()
 		{
-            Console.WriteLine("使用以下代码声明一个自定义Calculators类的实例：\n" +
-                "Calculators<double> calculators = new Calculators<double>();\n");
-
+            //声明一个Calculators实例
             Calculators<double> calculators = new Calculators<double>();
-
-            Console.WriteLine("使用以下代码将上述实例的方法依次封装于四个内置Func委托的实例：\n" +
-                "Func<double, double, double> funcAdd = calculators.Add;\n" +
-				"Func<double, double, double> funcSub = calculators.Sub;\n" +
-				"Func<double, double, double> funcMul = calculators.Mul;\n" +
-				"Func<double, double, double> funcDiv = calculators.Div;\n");
 
 			//使用内置Func委托封装兼容方法
 			Func<double, double, double> funcAdd = calculators.Add;
@@ -162,20 +156,20 @@ namespace LearnCSharp.Professional
             Func<double, double, double> funcMul = calculators.Mul;
 			Func<double, double, double> funcDiv = calculators.Div;
 
-			//声明一个局部方法用于将委托作为参数传入进行执行
-			void CalculateResult(Func<double, double, double> func, [CallerArgumentExpression("func")] string? message = null)
+            double x, y;
+            Console.WriteLine("请依次输入两个数字");
+
+			first: Console.Write("请输入第一个数字：");
+            if (!double.TryParse(Console.ReadLine(), out x))
+                goto first;
+
+            second: Console.Write("请输入第二个数字：");
+            if (!double.TryParse(Console.ReadLine(), out y))
+                goto second;
+
+            //声明一个局部方法用于将委托作为参数传入进行执行
+            void CalculateResult(Func<double, double, double> func, [CallerArgumentExpression("func")] string? message = null)
             {
-                double x, y;
-                Console.WriteLine("请依次输入两个数字");
-
-				first: Console.Write("请输入第一个数字：");
-                if (!double.TryParse(Console.ReadLine(), out x))
-                    goto first;
-
-                second: Console.Write("请输入第二个数字：");
-                if (!double.TryParse(Console.ReadLine(), out y))
-                    goto second;
-
                 Console.WriteLine($"通过Func委托实例 {message} 调用其封装方法，{message}.Invoke({x}, {y})输出结果：");
                 Console.Write("	");
 
@@ -185,7 +179,7 @@ namespace LearnCSharp.Professional
                 Console.WriteLine();
             }
 
-            Console.WriteLine("接下来将调用委托来执行相应方法：");
+            Console.WriteLine("调用委托来执行相应方法：");
 
             CalculateResult(funcAdd);
             CalculateResult(funcSub);
@@ -193,39 +187,33 @@ namespace LearnCSharp.Professional
             CalculateResult(funcDiv);
         }
 
-		public static void LearnCustomerDelegates()
+		/*【20102：自定义委托示例】
+		 */
+		public static void LearnCustomerDelegate()
 		{
-			Console.WriteLine("使用以下代码声明一个自定义Calculators类的实例：\n" +
-                "Calculators<double> calculators = new Calculators<double>();\n");
-
-			Calculators<double> calculators = new Calculators<double>();
-
-			Console.WriteLine("使用以下代码将上述实例的方法依次封装于四个自定义Calculator委托的实例：\n" +
-                "Calculator<double> add = calculators.Add;\n" +
-				"Calculator<double> sub = calculators.Sub;\n" +
-				"Calculator<double> mul = calculators.Mul;\n" +
-				"Calculator<double> div = calculators.Div;\n");
+            //声明一个Calculators实例
+            Calculators<double> calculators = new Calculators<double>();
 
 			//使用自定义委托封装兼容方法
-			Calculator<double> add = calculators.Add;
-			Calculator<double> sub = calculators.Sub;
-			Calculator<double> mul = calculators.Mul;
-			Calculator<double> div = calculators.Div;
+			CalcDelegate<double> add = calculators.Add;
+			CalcDelegate<double> sub = calculators.Sub;
+			CalcDelegate<double> mul = calculators.Mul;
+			CalcDelegate<double> div = calculators.Div;
 
-			//声明一个局部方法用于将委托作为参数传入进行执行
-			void CalculateResult(Calculator<double> calculator, [CallerArgumentExpression("calculator")] string? message = null)
-			{
-				double x, y;
-				Console.WriteLine("请依次输入两个数字");
+            double x, y;
+            Console.WriteLine("请依次输入两个数字");
 
 			first: Console.Write("请输入第一个数字：");
-				if (!double.TryParse(Console.ReadLine(), out x))
-					goto first;
+            if (!double.TryParse(Console.ReadLine(), out x))
+                goto first;
 
-			second: Console.Write("请输入第二个数字：");
-				if (!double.TryParse(Console.ReadLine(), out y))
-					goto second;
+            second: Console.Write("请输入第二个数字：");
+            if (!double.TryParse(Console.ReadLine(), out y))
+                goto second;
 
+            //声明一个局部方法用于将委托作为参数传入进行执行
+            void CalculateResult(CalcDelegate<double> calculator, [CallerArgumentExpression("calculator")] string? message = null)
+			{
 				Console.WriteLine($"通过委托实例 {message} 调用其封装方法，{message}.Invoke({x}, {y})输出结果：");
 				Console.Write("	");
 
@@ -235,7 +223,7 @@ namespace LearnCSharp.Professional
 				Console.WriteLine();
 			}
 
-			Console.WriteLine("接下来将调用委托来执行相应方法：");
+			Console.WriteLine("调用委托来执行相应方法：");
 
 			CalculateResult(add);
 			CalculateResult(sub);
@@ -243,32 +231,26 @@ namespace LearnCSharp.Professional
 			CalculateResult(div);
 		}
 
-		public static void LearnMultiDelegates()
+		/*【20103：多播委托示例】
+		 */
+		public static void LearnMultiDelegate()
 		{
-            Console.WriteLine("使用以下代码声明一个自定义Calculators类的实例：\n" +
-                "Calculators<double> calculators = new Calculators<double>();\n");
-
+            //声明一个Calculators实例
             Calculators<double> calculators = new Calculators<double>();
 
-            Console.WriteLine("使用以下代码将上述实例的方法依次封装于一个自定义Calculator委托的实例：\n" +
-                "Calculator<double> cal = calculators.Add;\n" +
-                "cal += calculators.Sub;\n" +
-                "cal += calculators.Mul;\n" +
-                "cal += calculators.Div;\n");
-
-            //使用自定义委托封装兼容方法
-            Calculator<double> cal = calculators.Add;
+            //使用自定义委托封装多个兼容方法
+            CalcDelegate<double> cal = calculators.Add;
             cal += calculators.Sub;
             cal += calculators.Mul;
             cal += calculators.Div;
 
             //声明一个局部方法用于将委托作为参数传入进行执行
-            void CalculateResult(Calculator<double> calculator, [CallerArgumentExpression("calculator")] string? message = null)
+            void CalculateResult(CalcDelegate<double> calculator, [CallerArgumentExpression("calculator")] string? message = null)
             {
                 double x, y;
                 Console.WriteLine("请依次输入两个数字");
 
-            first: Console.Write("请输入第一个数字：");
+				first: Console.Write("请输入第一个数字：");
                 if (!double.TryParse(Console.ReadLine(), out x))
                     goto first;
 
@@ -285,17 +267,15 @@ namespace LearnCSharp.Professional
                 Console.WriteLine();
             }
 
-            Console.WriteLine("接下来将调用委托来执行封装的方法列表：");
+            Console.WriteLine("调用委托来执行封装的方法列表：");
 
             CalculateResult(cal);
 
-			Console.WriteLine("使用如下代码从委托实例cal中移除calculators.Mul方法：\n" +
-                "cal -= calculators.Mul;\n\n" +
-				"再次调用委托来执行其封装方法列表：");
-
+			//从多播委托中移除某一委托
 			cal -= calculators.Mul;
 
-			CalculateResult(cal);
+            Console.WriteLine("调用委托来执行封装的方法列表：");
+            CalculateResult(cal);
         }
 
         public static void StartLearnDelegate()
@@ -316,9 +296,9 @@ namespace LearnCSharp.Professional
 
                 switch (input)
                 {
-                    case "001": LearnSystemDelegates(); break;
-                    case "002": LearnCustomerDelegates(); break;
-					case "003": LearnMultiDelegates(); break;
+                    case "001": LearnSystemDelegate(); break;
+                    case "002": LearnCustomerDelegate(); break;
+					case "003": LearnMultiDelegate(); break;
                     default: Console.WriteLine("输入错误！"); break;
                 }
 

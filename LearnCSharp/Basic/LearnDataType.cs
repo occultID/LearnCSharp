@@ -78,7 +78,7 @@ namespace LearnCSharp.Basic
 {
     internal class LearnDataType
     {
-        /*【学习object类型】 
+        /*【10401：object类型】 
          *	object是System.Object的别名，是C#保留关键字，它表示的就是System.Object
 		 *	在 C# 的统一类型系统中，所有类型（预定义类型、用户定义类型、引用类型和值类型）都是直接或间接从 System.Object 继承的。 
 		 *	object是所有.NET类的最终基类，是类型层次的根，并且为所有派生类提供低级别服务
@@ -87,6 +87,7 @@ namespace LearnCSharp.Basic
 			使用引用了其他类型的object对象时，需要先将其转换为原本兼容类型，这个过程称为拆箱*/
         public static void LearnObject()
 		{
+            Console.WriteLine("------示例：object类型------\n");
             //以下两种声明object类型的变量的方式是等价的
             Object obj1 = new Object();
             object obj2 = new object();
@@ -105,7 +106,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"【拆箱】拆箱后的整型数值为：{i}");
         }
 
-        /*【学习动态类型】 
+        /*【10402：动态类型】 
          *	动态类型：表示变量的使用和对其成员的引用绕过编译时类型检查。 改为在运行时解析这些操作。 
 		 *	dynamic 类型简化了对 COM API（例如 Office Automation API）、动态 API（例如 IronPython 库）和 HTML 文档对象模型 (DOM) 的访问
 		 *	在大多数情况下，dynamic 类型与 object 类型的行为类似。 
@@ -117,6 +118,7 @@ namespace LearnCSharp.Basic
 				因此，dynamic 类型只在编译时存在，在运行时则不存在。*/
         public static void LearnDynamic()
         {
+            Console.WriteLine("------示例：动态类型------\n");
             //声明三个动态类型的变量，并分别赋值为整型数值、字符串和一个object对象
             dynamic dyn1 = 123;
             dynamic dyn2 = "Hello World";
@@ -136,25 +138,27 @@ namespace LearnCSharp.Basic
                 $"dyn1实例在运行时为整型，数值加1后的值为：{dyn1}");
         }
 
+        /*【10403：值类型】*/
         public static void LearnValueType()
 		{
 			//值类型
 			Console.WriteLine("请在 [C# 学习--基础篇] 章节中选择以下章节：\n" +
-                    "006 .NET内置简单类型\n" +
-                    "007 元组\n" +
-                    "010 枚举\n" +
-                    "026 结构\n");
+                    "005 .NET内置简单类型\n" +
+                    "006 元组\n" +
+                    "009 枚举\n" +
+                    "022 结构\n");
         }
 
+        /*【10404：引用类型】*/
 		public static void LearnRefType()
 		{
 			//引用类型
 			Console.WriteLine("请在 [C# 学习--基础篇] 章节选择以下章节：\n" +
-                    "006 .NET内置简单类型\n" +
-                    "009 数组\n" +
-                    "022 类\n" +
-                    "025 接口\n" +
-                    "027 记录\n" +
+                    "005 .NET内置简单类型\n" +
+                    "008 数组\n" +
+                    "018 类\n" +
+                    "021 接口\n" +
+                    "023 记录\n" +
                     "\n请在 [C# 学习--高级篇] 章节选择以下章节：\n" +
 					"001 委托\n");
 		}

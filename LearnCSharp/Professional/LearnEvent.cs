@@ -132,8 +132,11 @@ namespace LearnCSharp.Professional.LearnEventSpace
     /// </summary>
     public class ElementChangedEventArgs<T>:EventArgs where T:notnull
 	{
+		//集合元素
 		public T Element { get; set; }
+		//变化信息
 		public string ChangedInfo { get; set; }
+		//集合元素数量
 		public int CountElement { get; set; }
 
 		public ElementChangedEventArgs(T element, string changedInfo, int countElement)
@@ -155,7 +158,7 @@ namespace LearnCSharp.Professional.LearnEventSpace
     /// <param name="e">参数2:事件的消息</param>
     public delegate void ElementChangedEventHandler<T>(object sender, ElementChangedEventArgs<T> e) where T : notnull;
 
-	public class SimpleList<T>:IEnumerable<T> where T : notnull
+	public class NotifyList<T>:IEnumerable<T> where T : notnull
 	{
 		private T[] t;
 		private readonly int defaultCapacity = 10;
@@ -175,7 +178,7 @@ namespace LearnCSharp.Professional.LearnEventSpace
 			get
 			{
 				if (t is null)
-					throw new ArgumentNullException("SimpleList");
+					throw new ArgumentNullException("NotifyList");
 
 				if(index<0 || index > Count)
 					throw new IndexOutOfRangeException("index");
@@ -184,12 +187,12 @@ namespace LearnCSharp.Professional.LearnEventSpace
 			}
 		}
 
-		public SimpleList()
+		public NotifyList()
 		{
 			t = new T[defaultCapacity];
 		}
 
-		public SimpleList(int capacity)
+		public NotifyList(int capacity)
 		{
 			if (capacity <= 0)
 				throw new ArgumentException();
@@ -226,13 +229,13 @@ namespace LearnCSharp.Professional.LearnEventSpace
         {
             if (index < 0 || index > Count) throw new ArgumentOutOfRangeException("index");
             if (Contains(item)) throw new ArgumentException("请勿重复插入同一实例", nameof(item));
-            if (Count + 1 > Capacity) Increase(Capacity * 2);
+            if (Count  >= Capacity) Increase(Capacity * 2);
 
             for (int i = Count; i > index; i--)
             {
                 t[i] = t[i - 1];
             }
-            t[index] = item;
+            t[index] = item; 
             Count++;
 			this.OnElementChanged(item, "Insert Element", Count);
         }
@@ -299,7 +302,6 @@ namespace LearnCSharp.Professional.LearnEventSpace
 
 		public void Clear()
 		{
-			t = null;
 			t = new T[defaultCapacity];
 			Count = 0;
 			this.OnElementCleared();
@@ -341,23 +343,15 @@ namespace LearnCSharp.Professional
 {
     internal class LearnEvent
     {
+		/*【20301：事件使用代码示例】
+		 */
         public static void StartLearnEvent()
 		{
 			Console.WriteLine("【学习事件】");
-			SimpleList<string> strings = new SimpleList<string>();
+			NotifyList<string> strings = new NotifyList<string>();
 
-            Console.WriteLine($"已经创建集合SimpleList<string>的一个实例strings --output：{strings}");
+            Console.WriteLine($"已经创建集合NotifyList<string>的一个实例strings --output：{strings}");
             Console.WriteLine();
-
-			Console.WriteLine("使用以下委托封装一个匿名函数事件处理器");
-			string outputString = "ElementChangedEventHandler<string> processingEvent= (s, e) =>\n" +
-				"{\n    string outputString = $\"事件发布者：{s.GetType().Name}\\n\" +\n" +
-				"    $\"事件订阅者：{typeof(LearnEvents).Name}\\n\" +\n" +
-				"    $\"事件消息捕获：\\n\" +\n" +
-				"    $\"--数据：{e.Element}    --操作：{e.ChangedInfo}    --当前元素数量：{e.CountElement}\\n\";\n\n" +
-				"    Console.WriteLine(outputString);\n};\n";
-
-			Console.WriteLine(outputString);
 
             //使用以下委托封装一个匿名函数事件处理器
             ElementChangedEventHandler<string> processingEvent= (s, e) =>
@@ -369,13 +363,9 @@ namespace LearnCSharp.Professional
 
 				Console.WriteLine(outputString);
 			};
-
-			Console.WriteLine("使用以下代码来订阅strings发布的ElementChanged事件\nstrings.ElementChanged += processingEvent;\n");
 			
 			//使用以下代码来订阅strings发布的ElementChanged事件
 			strings.ElementChanged += processingEvent;
-
-			Console.WriteLine("连续使用实例strings的Add方法添加十个数据，每次添加数据都会引发ElementChanged事件，事件处理器则会响应事件并进行输出\n");
 
 			//下列代码对strings列表元素进行更改时会引发ElementChanged事件，上述提供的事件处理器则会响应事件并进行输出
 			for (int i = 0; i < 10; i++)
@@ -410,12 +400,6 @@ namespace LearnCSharp.Professional
 				Console.WriteLine(item);
 			}
 			Console.WriteLine();
-
-			Console.WriteLine("使用以下代码来订阅strings的ElementCleared事件，并附加一个匿名函数作为事件处理器\n" +
-                "strings.ElementCleared += (s,e) =>\n" +
-				"{\n    Console.WriteLine($\"事件发布者：{s.GetType().Name}\\n\" +\n" +
-				"    $\"事件订阅者：{typeof(LearnEvents).Name}\\n\" +\n" +
-				"    \"strings列表已清空数据，请勿再次采取除Add方法以外的其他方法进行列表操作\\n\");\n};\n");
 
 			//使用以下代码来订阅strings的ElementCleared事件，并附加一个匿名函数作为事件处理器
 			strings.ElementCleared += (s,e) =>

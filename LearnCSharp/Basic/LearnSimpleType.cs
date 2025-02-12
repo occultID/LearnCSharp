@@ -50,14 +50,16 @@ namespace LearnCSharp.Basic
 {
     internal class LearnSimpleType
     {
-        /*【学习整型数值类型】
+        /*【10501：整型数值类型】
          *	整型数值类型：表示整数。 
 		 *	所有的整型数值类型均为值类型。 
 		 *	它们还是简单类型，可以使用文本进行初始化。 
 		 *	所有整型数值类型都支持算术、位逻辑、比较和相等运算符。*/
         public static void LearnIntegerType()
         {
-			Console.WriteLine($"【sbyte类型】	对应.NET的 {{{typeof(sbyte),14}}} 类型 | 它表示内存占用{sizeof(sbyte) * 8:00}位的整数 | 范围包含[{sbyte.MinValue},{sbyte.MaxValue}]");
+            Console.WriteLine("------示例：整型数值类型------\n");
+
+            Console.WriteLine($"【sbyte类型】	对应.NET的 {{{typeof(sbyte),14}}} 类型 | 它表示内存占用{sizeof(sbyte) * 8:00}位的整数 | 范围包含[{sbyte.MinValue},{sbyte.MaxValue}]");
             Console.WriteLine($"【short类型】	对应.NET的 {{{typeof(short),14}}} 类型 | 它表示内存占用{sizeof(short) * 8:00}位的整数 | 范围包含[{short.MinValue},{short.MaxValue}]");
             Console.WriteLine($"【int类型】	对应.NET的 {{{typeof(int),14}}} 类型 | 它表示内存占用{sizeof(int) * 8:00}位的整数 | 范围包含[{int.MinValue},{int.MaxValue}]");
             Console.WriteLine($"【long类型】	对应.NET的 {{{typeof(long),14}}} 类型 | 它表示内存占用{sizeof(long) * 8:00}位的整数 | 范围包含[{long.MinValue},{long.MaxValue}]");
@@ -93,13 +95,15 @@ namespace LearnCSharp.Basic
             }
         }
 
-        /*【学习浮点数值类型】
+        /*【10502：浮点数值类型】
          *	浮点数值类型：表示实数。 
          *	所有浮点型数值类型均为值类型。 
          *	它们还是简单类型，可以使用文本进行初始化。 
          *	所有浮点数值类型都支持算术、比较和相等运算符。*/
-        public static void LearnFloating_pointType()
+        public static void LearnFloatingPointType()
         {
+            Console.WriteLine("------示例：浮点数值类型------\n");
+
             Console.WriteLine($"【float类型】	对应.NET的 {{{typeof(float),14}}} 类型 | 该类型内存占用{sizeof(float):00}字节 | 精度约 6~9 位有效数字 | 范围包含[{float.MinValue},{float.MaxValue}]");
             Console.WriteLine($"【double类型】	对应.NET的 {{{typeof(double),14}}} 类型 | 该类型内存占用{sizeof(double):00}字节 | 精度约15~17位有效数字 | 范围包含[{double.MinValue},{double.MaxValue}]");
             Console.WriteLine($"【decimal类型】	对应.NET的 {{{typeof(decimal),14}}} 类型 | 该类型内存占用{sizeof(decimal):00}字节 | 精度约28~29位有效数字 | 范围包含[{decimal.MinValue},{decimal.MaxValue}]");
@@ -112,7 +116,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"变量：doubleNum\n类型：{doubleNum.GetType()}\n数值：{doubleNum}\n");
         }
 
-        /*【学习字符类型】
+        /*【10503：字符类型】
 		 *	字符类型：它表示 Unicode UTF-16 字符。
          *	char 类型关键字是 .NET System.Char 结构类型的别名
          *	类型支持比较、相等、增量和减量运算符。 
@@ -120,6 +124,8 @@ namespace LearnCSharp.Basic
          */
         public static void LearnCharacterType()
 		{
+            Console.WriteLine("------示例：字符类型------\n");
+
             Console.WriteLine($"【char类型】	对应.NET的 {{{typeof(char),14}}} 类型 | 该类型内存占用{sizeof(char):00}字节 | 它表示UTF-16字符 | 范围包含[{char.MinValue},{char.MaxValue}]");
 
             Console.WriteLine();
@@ -130,7 +136,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"变量：charValue\n类型：{charValue.GetType()}\n字符：{charValue}\n");
         }
 
-        /*【学习布尔类型】 
+        /*【10504：布尔类型】 
          *	布尔类型：表示一个布尔值，可为 true 或 false。
 		 *	bool 类型关键字是 .NET System.Boolean 结构类型的别名。
 		 *	若要使用 bool 类型的值执行逻辑运算，请使用布尔逻辑运算符。 
@@ -141,6 +147,8 @@ namespace LearnCSharp.Basic
 		 */
         public static void LearnBooleanType()
 		{
+            Console.WriteLine("------示例：布尔类型------\n");
+
             Console.WriteLine($"【bool类型】	对应.NET的 {{{typeof(bool),14}}} 类型 | 该类型内存占用{sizeof(bool):00}字节 | 它表示一个布尔值 | 可为[{bool.TrueString} 或 {bool.FalseString}]");
 
             Console.WriteLine();
@@ -151,7 +159,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"变量：isInteger\n类型：{isInteger.GetType()}\n布尔值：{isInteger}\n");
         }
 
-        /*【学习字符串类型】 
+        /*【10505：字符串类型】 
          *	字符串类型：表示零个或多个 Unicode 字符的序列，即char值的序列
 		 *	string 是 System.String 在 .NET 中的别名。
 		 *	尽管 string 为引用类型，但是定义相等运算符 == 和 != 是为了比较 string 对象（而不是引用）的值。 
@@ -163,6 +171,8 @@ namespace LearnCSharp.Basic
 		 */
         public static void LearnStringType()
 		{
+            Console.WriteLine("------示例：字符串类型------\n");
+
             Console.WriteLine($"【string类型】  对应.NET的 {{{typeof(string),14}}} 类型 | 它是预定义好的用于表示零个或多个char值序列的引用类型");
 
             Console.WriteLine();
@@ -200,7 +210,7 @@ namespace LearnCSharp.Basic
             }
         }
 
-        /*【学习object类型】 
+        /*【10506：学习object类型】 
          *	object 类型是 System.Object 在 .NET 中的别名。 
 		 *	在 C# 的统一类型系统中，所有类型（预定义类型、用户定义类型、引用类型和值类型）都是直接或间接从 System.Object 继承的。 
 		 *	可以将任何类型的值赋给 object 类型的变量。 可以使用文本 null 将任何 object 变量赋值给其默认值。 
@@ -210,7 +220,7 @@ namespace LearnCSharp.Basic
 			LearnDataType.LearnObject();		
         }
 
-        /*【学习动态类型】 
+        /*【10507：学习动态类型】 
          *	动态类型：表示变量的使用和对其成员的引用绕过编译时类型检查。 改为在运行时解析这些操作。 
 		 *	dynamic 类型简化了对 COM API（例如 Office Automation API）、动态 API（例如 IronPython 库）和 HTML 文档对象模型 (DOM) 的访问
 		 *	在大多数情况下，dynamic 类型与 object 类型的行为类似。 
@@ -248,7 +258,7 @@ namespace LearnCSharp.Basic
                 switch (input)
                 {
                     case "001": LearnIntegerType(); break;
-                    case "002": LearnFloating_pointType(); break;
+                    case "002": LearnFloatingPointType(); break;
                     case "003": LearnCharacterType(); break;
                     case "004": LearnBooleanType(); break;
                     case "005": LearnObjectType(); break;

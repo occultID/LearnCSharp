@@ -58,7 +58,7 @@ namespace LearnCSharp
                     Console.WriteLine();
                     Console.Write("输入：");
 
-                    string input = Console.ReadLine();
+                    string? input = Console.ReadLine();
 
                     switch (input)
                     {

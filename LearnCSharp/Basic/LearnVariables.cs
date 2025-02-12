@@ -133,18 +133,8 @@ namespace LearnCSharp.Basic
             int number = 5;//声明一个类型为 int 名字为 number 的整型变量，并使用整数 5 对其进行初始化赋值
             string words = "你好啊！";//声明一个类型为 string 名字为 words 的字符串变量，并使用 你好啊 对其进行初始化赋值
 
-            string output = "以下代码中 在方法内部声明了两个局部变量\n第一行是声明一个类型为 int 名字为 number 的整型变量，并使用整数 5 对其进行初始化赋值"
-                            +"\n第二行声明一个类型为 string 名字为 words 的字符串变量，并使用 你好啊 对其进行初始化赋值"
-                            +"\nint number = 5;"
-                            +"\nstring words = \"你好啊！\";\n";
-            Console.WriteLine(output);
-
 			Console.WriteLine($"输出局部变量值--number：{number}，words：{words}");
         }
-    
-
-
-
 
 		public static void StartLearnVariables()
 		{

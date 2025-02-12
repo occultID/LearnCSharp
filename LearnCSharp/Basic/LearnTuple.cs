@@ -71,79 +71,100 @@
 	• 用于析构record类型实例或者含“解构函数”的class或struct实例
     • 其它需要用到这类轻型数据结构时进行使用
  */
+using LearnCSharp.Basic.LearnTupleSpace;
+using System.Runtime.CompilerServices;
 
-using System.ComponentModel.DataAnnotations;
 
 namespace LearnCSharp.Basic
 {
-    //定义一个record类型表示三维坐标点，这里暂时不用明白这是个啥，只用知道它可以直接解构成一个元组用于下面代码示例和学习元组即可
-    public record Point3D(int X,int Y,int Z);
     internal class LearnTuple
     {
+		/*【10601：元组代码示例】*/
         public static void StartLearnTuple()
         {
-			string outputString = "-------------------------------------------------------------------------\n" +
-				"使用如下代码分别声明并初始化三个元组：\n\n" +
-				"var (integer, floatNumber, decimalNumber) = (100, 12.34F, 36.225M);\n" +
-				"(int Length, int CountSpaceChar, string AString) stringInfo = (9, 2, \"I Love C#\");\n" +
-				"(int, int, int) point3DTuple = (1, 3, 4);\n\n";
-            
-            var (integer, floatNumber, decimalNumber) = (100, 12.34F, 36.225M);
-			(int Length, int CountSpaceChar, string AString) stringInfo = (9, 2, "I Love C#");
-			(int, int, int) point3DTuple = (1, 3, 4);
+            Console.WriteLine("\n------示例：元组------\n");
 
-            outputString += "第一个元组可以使用三种方法访问其元组元素：\n" +
-				$"方法一--示例访问元素一：(integer, floatNumber, decimalNumber).integer | 通过元组.变量名访问 --output:{(integer, floatNumber, decimalNumber).integer}\n" +
-				$"方法二--示例访问元素二：(integer, floatNumber, decimalNumber).Item2 | 通过元组.ItemN访问 --output:{(integer, floatNumber, decimalNumber).Item2}\n" +
-				$"方法三--示例访问元素三：decimalNumber | 直接通过元素变量名访问 --output:{decimalNumber}\n\n";
+            //使用如下代码分别声明并初始化三个元组
+            var (x,y) = (Random.Shared.Next(-999, 1000), Random.Shared.Next(-999, 1000));
+			(double X, double Y) point2d = (Random.Shared.Next(-999, 1000), Random.Shared.Next(-999, 1000));
+			(double, double) point2d1 = (Random.Shared.Next(-999, 1000), Random.Shared.Next(-999, 1000));
 
-            outputString += "第二个元组可以使用两种方法访问其元组元素：\n" +
-				$"方法一--示例访问元素一、二：(stringInfo.Length, stringInfo.CountSpaceChar) | 通过元组变量名.变量名访问 --output:({stringInfo.Length}, {stringInfo.CountSpaceChar})\n" +
-				$"方法二--示例访问元素三：stringInfo.Item3 | 通过元组变量名.ItemN访问 --output:{stringInfo.Item3}\n\n";
+            Console.WriteLine("元组var (x, y)可以使用三种方法访问其元组元素：");
+            Console.WriteLine($"方法一--通过变量名直接访问：(x, y) --- ({x}, {y})");
+            Console.WriteLine($"方法一--通过元组本身访问：(x, y) --- ({(x, y).Item1}, {(x, y).Item2})");
+            Console.WriteLine($"方法一--通过元组和变量名直接访问：(x, y) --- ({(x, y).x}, {(x, y).y})");
+            Console.WriteLine();
 
-            outputString += "第三个元组只能通过元组变量名.Item方式访问元组元素：\n" +
-				$"直接访问三个元素的值：(point3DTuple.Item1, point3DTuple.Item2, point3DTuple.Item3) --output:({point3DTuple.Item1}, {point3DTuple.Item2}, {point3DTuple.Item3}) \n" +
-                "-------------------------------------------------------------------------\n";
+            Console.WriteLine("元组(double X, double Y)point2d可以使用两种方法访问其元组元素：");
+            Console.WriteLine($"方法一--通过元组变量访问：point2d --- ({point2d.Item1}, {point2d.Item2})");
+			Console.WriteLine($"方法一--通过元组变量和变量名直接访问：point2d --- ({point2d.X}, {point2d.Y})");
+            Console.WriteLine();
 
-			Console.WriteLine(outputString);
+            Console.WriteLine("元组(double, double)point2d1只能通过元组变量名.Item方式访问元组元素：");
+            Console.WriteLine($"方法--通过元组变量访问：point2d1 --- ({point2d1.Item1}, {point2d1.Item2})");
+            Console.WriteLine();
 
-            outputString = "-------------------------------------------------------------------------\n" +
-				"使用如下代码可对上述元组一和元组三进行相等性比较，因为两个元组元素数量相同，对应元素类型兼容且支持相等性比较：\n\n" +
-				"bool isEqual = (integer, floatNumber, decimalNumber) == point3DTuple; \n\nisEqual--output: ";
+            //使用如下代码可对上述元组一和元组三进行相等性比较，因为两个元组元素数量相同，对应元素类型兼容且支持相等性比较：
 
-            bool isEqual = (integer, floatNumber, decimalNumber) == point3DTuple;
+            bool isEqual = (x, y) == point2d1;
 
-			Console.WriteLine(outputString + $"{isEqual}\n" +
-                "-------------------------------------------------------------------------\n");
+			Console.WriteLine($"对比元组(x, y)与元组point2d1相等性：{isEqual}");
+			Console.WriteLine();
 
-            outputString = "-------------------------------------------------------------------------\n" +
-				"使用如下代码声明并初始化一个record实例point3D，并使用元组对其析构和输出结果：\n\n" +
-				"Point3D point3D = new Point3D(10, 20, 30);\n" +
-				"var (a, b, c) = point3D;\n\n";
+            //使用如下代码声明并初始化一个Point实例point，并使用元组对其解构和输出结果：
+            double pointX = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
+            double pointY = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
+			Point point = new Point(pointX, pointY);
 
-            Point3D point3D = new Point3D(10, 20, 30);
-			//point3DTuple = point3D;具名元组不能用来解构record实例或者含有“解构函数”的class和struct实例
-			//var point = point3D;不能使用var关键字声明的变量来隐式析构record实例为元组，因为编译器会将实例赋给变量，并将变量推到为实例的类型
-			var (a, b, c) = point3D;
+			//point2d = point;//具名元组不能用来解构record实例或者含有“解构函数”的class和struct实例
+			//var point2d2 = point;//不能使用var关键字声明的变量来隐式析构record实例为元组，因为编译器会将实例赋给变量，并将变量推导为实例的类型
+			
+			//解构point结构实例
+			var(px, py) = point;
 
-			Console.WriteLine(outputString + $"(a, b, c)--output:({a},{b},{c})\n\n");
+            Console.WriteLine($"point结构实例信息：\n{point}\n通过元组解构：（{px}，{py}）");
+            Console.WriteLine();
 
-            outputString = "使用如下代码来使用元组二析构GetStringInfo方法的返回值，并输出结果：\n\n" +
-                "stringInfo = GetStringInfo(\"I Love .NET! I Love C#!\");\n\n";
-
+			//使用如下代码来使用元组析构GetStringInfo方法的返回值，并输出结果：
+			(int Length, int CountSpaceChar, string @String) stringInfo;
 			stringInfo = GetStringInfo("I Love .NET! I Love C#!");
-            //point3DTuple = point3D;具名元组不能用来解构record实例或者含有“解构函数”的class和struct实例
 
-            Console.WriteLine(outputString + $"stringInfo--output:(Length:{stringInfo.Length}, CountSpaceChar:{stringInfo.CountSpaceChar}, AString:{stringInfo.AString})\n" + "-------------------------------------------------------------------------\n");
+            Console.WriteLine($"stringInfo--output:(Length:{stringInfo.Length}, CountSpaceChar:{stringInfo.CountSpaceChar}, String:{stringInfo.@String})\n" + "-------------------------------------------------------------------------\n");
         }
 
 		//定义一个返回值为元组的方法
-        private static (int Length, int CountSpaceChar, string AString) GetStringInfo(string inputString)
+        private static (int Length, int CountSpaceChar, string @String) GetStringInfo(string inputString)
 		{
 			int length = inputString.Length;
 			int countSpaceChar = inputString.Count(a => a == ' ');
-			string aString = inputString;
-			return (length, countSpaceChar, aString);
+			string @string = inputString;
+			return (length, countSpaceChar, @string);
+		}
+    }
+}
+
+namespace LearnCSharp.Basic.LearnTupleSpace
+{
+	internal readonly struct Point
+	{
+		public double X { get; }
+		public double Y { get; }
+
+		public Point(double x, double y)
+		{
+			X = x;
+			Y = y;
+		}
+
+		public void Deconstruct(out double x, out double y)
+		{
+			x = X;
+			y = Y;
+		}
+
+		public override string ToString() 
+		{
+			return $"Point结构 --- 【属性】 --- X：{X} | Y：{Y}";
 		}
     }
 }
