@@ -121,7 +121,7 @@ namespace LearnCSharp.Basic
     /// </summary>
     internal class LearnMethod
     {
-
+		/*【11201：方法示例】*/
         public static void StartLearnMethod()
         {
             Console.WriteLine("\n------示例：方法------\n");

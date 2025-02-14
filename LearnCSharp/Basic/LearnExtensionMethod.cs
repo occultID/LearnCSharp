@@ -71,8 +71,11 @@ namespace LearnCSharp.Basic
 
     internal class LearnExtensionMethod
     {
+		/*【11401：扩展方法示例】*/
 		public static void StartLearnExtensionMethod()
 		{
+            Console.WriteLine("\n------示例：扩展方法------\n");
+
 			start: Console.Write("请输入一个整数：");
 
             if (int.TryParse(Console.ReadLine(), out int integer))

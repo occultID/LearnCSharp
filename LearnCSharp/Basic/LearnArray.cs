@@ -27,7 +27,7 @@ namespace LearnCSharp.Basic
 {
     internal class LearnArray
     {
-        /* 【学习一维数组】
+        /* 【10801：一维数组】
          * 一维/单维数组：将同一类型的多个数据存储在一个单一链上的数据结构
 		 * 单维数组的声明和初始化方式：
 				其一 数据类型[] 变量名 = new 数据类型[数组长度];//这种方式后续单独为每一个元素进行初始化
@@ -47,6 +47,7 @@ namespace LearnCSharp.Basic
 		   比如有一长度为7的数组a,a[1..5]、a[^6..^1]、a[2..^1]、a[^5..5]是合法的，而a[5..1]、a[^1..^6]、a[^1..2]、a[5..^5]是会报错的*/
         public static void LearnSingleDimensionalArray()
 		{
+            Console.WriteLine("\n------示例：一维数组------\n");
             //创建一个长度为10的整数数组，初始化为{ 12, 10, 15, -3, 2, 0, 300, 45, -20, 10 }
             int[] integers = new int[10] { 12, 10, 15, -3, 2, 0, 300, 45, -20, 10 };
 
@@ -84,9 +85,10 @@ namespace LearnCSharp.Basic
                 Console.Write($"{item}  ");
 			}
             Console.WriteLine();
+            Console.WriteLine();
         }
 
-        /* 【学习多维数组】
+        /* 【10802：多维数组】
          * 多维数组：数组可具有多个维度，多维数组也可称其为矩形数组
 		 * 多维数组的声明和赋值方式（以二维数组为例）：
 				其一 数据类型[,] 变量 = new 数据类型[维度一长度,维度二长度];//这种方式后续单独为每一个元素进行初始化
@@ -98,6 +100,7 @@ namespace LearnCSharp.Basic
 		 */
         public static void LearnMultiDimensionalArray()
 		{
+            Console.WriteLine("\n------示例：多维数组------\n");
             //创建一个3行4列的二维整数数组，初始化为{ { 3, 4, 5, 6 }, { -1, 20, -30, 0 }, { 0, 60, -12, 12 } }
             int[,] matrix = new int[3, 4]
 			{
@@ -146,6 +149,8 @@ namespace LearnCSharp.Basic
 				}
 			}
 
+            Console.WriteLine();
+
 			/*从三维数组可以看出，随着维度增加，直接初始化也会更复杂
 			  所以当数组维度增加时，我们可以先声明，再依次赋值
 			  比如声明一个四维数组
@@ -156,7 +161,7 @@ namespace LearnCSharp.Basic
 			  array4d[1, 2, 3, 4] = 119;*/
         }
 
-        /* 【学习交错数组】
+        /* 【10803：交错数组】
          * 交错数组：交错数组是一个数组，其元素是数组，大小可能不同。 交错阵列有时称为“数组的数组”
          * 交错数组的声明和初始化的方式
 				其一 数据类型[][] 变量名 = new 数据类型[数组长度][];//这种方式后续单独为每一个元素进行初始化
@@ -179,6 +184,7 @@ namespace LearnCSharp.Basic
 		 */
         public static void LearnJaggedArray()
 		{
+            Console.WriteLine("\n------示例：交错数组------\n");
             //创建一个3行的交错整数数组，每一行的长度不同，初始化为{ { 1, 2, 3, 4 }, { 1, 2, 3, 4, 5}, { 1, 2, 3 } }
             int[][] jaggedIntegers = new int[3][]
 			{
@@ -202,6 +208,8 @@ namespace LearnCSharp.Basic
 					Console.WriteLine($"jaggedIntegers[{i}][{j}] = {jaggedIntegers[i][j]}");
 				}
 			}
+
+            Console.WriteLine();
         }
 
 

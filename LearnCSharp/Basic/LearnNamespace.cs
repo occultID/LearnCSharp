@@ -42,6 +42,7 @@ namespace LearnCSharp.Basic
 {
     internal class LearnNamespace
     {
+		/*【11701：命名空间示例】*/
 		public static void StartLearnNamespace()
 		{
 			//使用完整限定名称访问System.Console.WriteLine方法：

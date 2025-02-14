@@ -77,7 +77,7 @@ namespace LearnCSharp
             ["013"] = LearnLocalFunction.StartLearnLocalFunction,
             ["014"] = LearnExtensionMethod.StartLearnExtensionMethod,
             ["015"] = LearnVariables.StartLearnVariables,
-            ["016"] = LearnParameters.StartLearnParameters,
+            ["016"] = LearnParameter.StartLearnParameters,
             ["017"] = LearnNamespace.StartLearnNamespace,
             ["018"] = LearnClass.StartLearnClass,
             ["019"] = LearnExpressionBodied.StartLearnExpressionBodied,

@@ -53,7 +53,7 @@ namespace LearnCSharp.Basic
 {
     internal class LearnVariables
     {
-		/*【学习静态变量】
+		/*【11501：静态变量】
 		 *	使用static修饰符声明的字段称为静态变量
 		 *	静态变量将在执行其包含类型的静态构造函数之前存在，并在关联的应用程序停止运行时结束生命周期
 		 *	静态变量的初始值是其声明类型的默认值，也可以在声明时进行显示赋值操作
@@ -64,7 +64,7 @@ namespace LearnCSharp.Basic
 		private static string staticVariable = "这是一个静态变量";//这是一个静态变量，在类中被称为静态字段
 		public static void LearnStaticVariables() => Console.WriteLine(staticVariable);
 
-        /*【学习实例变量】
+        /*【11502：实例变量】
 		 *	不使用static修饰符声明的字段称为实例变量
 		 *	实例变量只能是类或结构的实例成员，且其生命周期和类或结构的实例生命周期同步
 		 *	实例变量在类或结构内部不能被静态成员访问
@@ -72,7 +72,7 @@ namespace LearnCSharp.Basic
         private string instanceVariable = "这是一个实例变量";
 		public static void LearnInstanceVariables() => Console.WriteLine(new LearnVariables().instanceVariable);
 
-		/*【学习数组元素】
+		/*【11503：数组元素】
 		 *	数组元素，即数组的元素
 		 *	当创建数组实例时，数组的元素便会存在，并且当该数组被释放时，其元素的生命周期同时结束
 		 *	数组中每个元素都具有初始默认值，即元素数据类型的默认值
@@ -86,7 +86,7 @@ namespace LearnCSharp.Basic
 			}
 		}
 
-        /*【学习值参数】
+        /*【11504：传值参数】
 		 *	不带ref、out或in修饰符声明的方法参数
 		 *	值参数可在调用函数成员或参数所属的匿名函数时存在，并使用调用中给定的实参的值进行初始化
 		 *	值参数的生命周期通常在函数执行结束时结束，但如果该参数被一个委托实例的匿名函数捕获，则会延长至该委托实例被释放的时间
@@ -94,10 +94,10 @@ namespace LearnCSharp.Basic
 		 */
         public static void LearnValueParameters()
 		{
-			LearnParameters.LearnValueParameters();
+			LearnParameter.LearnValueParameter();
 		}
 
-        /*【学习引用参数】
+        /*【11505：引用参数】
 		 *	使用ref修饰符声明的方法参数
 		 *	引用参数不会创建新的存储位置，相反，引用参数将实参的存储位置进行传递
 		 *	引用参数的值始终与实参的值相同
@@ -105,10 +105,10 @@ namespace LearnCSharp.Basic
 		 */
         public static void LearnReferenceParameters()
 		{
-			LearnParameters.LearnReferenceParameters();
+			LearnParameter.LearnReferenceParameter();
 		}
 
-		/*【学习输出参数】
+		/*【11506：输出参数】
 		 *	使用out修饰符声明的方法参数
 		 *	输出参数是一种特殊的引用参数，同样不会创建新的存储位置，而是将实参的存储位置进行传递
 		 *	输出参数的值始终与实参的值相同
@@ -117,10 +117,10 @@ namespace LearnCSharp.Basic
 		 */
 		public static void LearnOutputParameters()
 		{
-			LearnParameters.LearnOutputParameters();
+			LearnParameter.LearnOutputParameter();
 		}
 
-        /*【学习局部变量】
+        /*【11507：局部变量】
          * 局部变量：变量是存储位置的符号名称，程序以后可以对该存储位置进行赋值和修改。
                     局部 意味着变量在方法或代码块（一对{}）内部声明，其作用域“局部”于当前代码块
                     声明变量：即定义一个变量，我们需要：

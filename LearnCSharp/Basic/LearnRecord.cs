@@ -168,7 +168,7 @@
 
 using LearnCSharp.Basic.LearnRecordSpace;
 
-/*【记录代码示例】
+/*【12301：记录代码示例】
  * 下面命名空间中设计了三种声明定义的记录
  */
 namespace LearnCSharp.Basic.LearnRecordSpace
@@ -207,8 +207,10 @@ namespace LearnCSharp.Basic
 {
     public class LearnRecord
     {
+		/*【12301：记录使用示例】*/
 		public static void StartLearnRecord()
 		{
+            Console.WriteLine("\n------示例：示例------\n");
             //声明三个记录实例
             Point2DWithParams p2dPara = new Point2DWithParams(10, 20);
 			Point2DWithBody p2dBody = new Point2DWithBody(15, 25);

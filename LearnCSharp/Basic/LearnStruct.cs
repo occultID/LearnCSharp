@@ -355,10 +355,12 @@ namespace LearnCSharp.Basic
 {
 	internal class LearnStruct
 	{
+		/*【12201：结构使用示例】*/
         public static void StartLearnStruct()
         {
-			//声明并初始化两个向量Vector实例
-			Vector vector1 = new Vector(12,10);
+            Console.WriteLine("\n------示例：结构------\n");
+            //声明并初始化两个向量Vector实例
+            Vector vector1 = new Vector(12,10);
 			Vector vector2 = (-15, 6);	//Vector实现了隐式转换所以可以将(int,int)元组赋值给一个Vector实例
 
 			//vector1.VectorX = 6;  //结构按照规范设计成了不可变的，故不能修改其值

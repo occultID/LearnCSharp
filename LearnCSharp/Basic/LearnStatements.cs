@@ -67,11 +67,13 @@ namespace LearnCSharp.Basic
 {
     internal class LearnStatements
     {
-		/*【11101：终结点和可访问性】
+        /*【11101：终结点和可访问性】
 			定义见顶部笔记同名章节
 			下面是示例代码
 		 */
-		public static void LearnEndPointsAndReachability(bool isReachable = false)//该方法具有一个拥有默认值的参数
+        public static void LearnEndPointsAndReachability() => LearnEndPointsAndReachability(false);
+
+        private static void LearnEndPointsAndReachability(bool isReachable)//该方法具有一个拥有默认值的参数
         {
             Console.WriteLine("\n------示例：终结点和可访问性------\n");
 

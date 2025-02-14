@@ -103,9 +103,12 @@ namespace LearnCSharp.Basic
 {
     internal class LearnLocalFunction
     {
+		/*【11301：本地函数示例】*/
 		public static void StartLearnLocalFunction()
 		{
-			string title1 = "【学习本地函数】";
+            Console.WriteLine("\n------示例：本地函数------\n");
+
+            string title1 = "【学习本地函数】";
 			const string title2 = "【学习本地函数】";
 
 			//调用本地函数 只要方法内部定义了本地函数，可以在方法任意位置进行调用

@@ -143,7 +143,7 @@
 
 using LearnCSharp.Basic.LearnInterfaceSpace;
 
-/*【接口代码示例】
+/*【12101：接口代码示例】
  * 下面命名空间中设计了一个接口IMove和两个实现该接口的类Box和Car
  * IMove接口提供了一系列协定，表示某个事物能进行移动的动作，且需要有速度、时间和路程
  * Box类实现IMove接口采用了显示实现，因为Box表示的箱子本身不具有移动的功能，但可以被移动，故接口成员只做辅助
@@ -217,6 +217,7 @@ namespace LearnCSharp.Basic
 {
 	public class LearnInterface
 	{
+		/*【12101：接口演示示例】*/
 		public static void StartLearnInterface()
 		{
             //以下代码用于实践访问Box类显示实现的接口成员

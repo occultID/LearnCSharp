@@ -76,41 +76,218 @@
 	• 示例：使用int类型的Parse方法将字符串形式的数字字面量转换为int类型
 		○ int integer = int.Parse("100");
  */
+using System.Net.WebSockets;
+using System.Numerics;
+using System.Text.RegularExpressions;
+
 namespace LearnCSharp.Basic
 {
     internal class LearnCastingAndTypeConversion
     {
-		public static void StartLearnCastingAndTypeConversion() 
+		/*【10701：隐式转换】*/
+		public static void LearnImplicitConversion()
 		{
-			string outputString = "使用以下代码示例内置值类型的隐式转换：\n\n" +
-				"int maxInt = int.MaxValue;\nlong int64 = maxInt;\n\n" +
-				"int类型可以安全且隐式转换为long类型，不丢失精度。int64--output:";
+            Console.WriteLine("\n------示例：隐式转换------\n");
 
-            int maxInt = int.MaxValue;
-			long int64 = maxInt;
+			//以内置类型int、double为例示例隐式转换
+			int integer = Random.Shared.Next(-999, 1000);
+            double num = integer;
 
-			Console.WriteLine(outputString + $"{int64}\n");
+            Console.WriteLine($"原类型：{integer.GetType()} | 数据：{integer}");
+            Console.WriteLine($"转换类型：{num.GetType()} | 数据：{num} | 转换形式：内置类型隐式转换");
+            Console.WriteLine();
 
-			outputString = "使用以下代码示例内置值类型的显示转换：\n\n" +
-                "double pi = 3.1415926;\nint integer = (int)pi;\n\n" +
-                "double类型显示式转换为int类型，丢失精度，小数部分舍去。integer--output:";
+            //以用户定义类型的显示转换为例示例隐式转换
+            double x = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
+            double y = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
 
-            double pi = 3.1415926;
-			int integer = (int)pi;
-			//以下代码进行的强制转换会引发异常，因为int类型的容量无法存储double类型的最大值
-			//double number = double.MaxValue;
-			//int integer = (int)number
+			(double, double) pointTuple = (x, y);
+			Point point = pointTuple;
 
-			Console.WriteLine(outputString + $"{integer}\n");
+            Console.WriteLine($"原类型：{pointTuple.GetType()} | 数据：{pointTuple}");
+            Console.WriteLine($"转换类型：{point.GetType()} | 数据：{point} | 转换形式：用户定义类型隐式转换");
+            Console.WriteLine();
+        }
 
-			outputString = "使用以下代码示例内置帮助程序类为非兼容内置类型进行转换：\n\n" +
-                "byte[] bytes = new byte[10] { 12, 13, 15, 1, 0, 5, 255, 13, 3, 10 };\nint integerFromBytes = System.BitConverter.ToInt32(bytes,0);\n\n" +
-				"使用System.BitConverter类的ToInt32方法将字节数组bytes转换为int类型。integerFromBytes--output:";
+		/*【10702：显示转换（强制转换）】*/
+        public static void LearnExplicitCasting()
+        {
+            Console.WriteLine("\n------示例：显示转换------\n");
 
-			byte[] bytes = new byte[10] { 12, 13, 15, 1, 0, 5, 255, 13, 3, 10 };
-			int integerFromBytes = System.BitConverter.ToInt32(bytes,0);
+			//以内置类型int、double为例示例强制转换
+			double num = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
+			int integer = (int)num;
 
-			Console.WriteLine(outputString + $"{integerFromBytes}\n");
-		}
+            Console.WriteLine($"原类型：{num.GetType()} | 数据：{num}");
+            Console.WriteLine($"转换类型：{integer.GetType()} | 数据：{integer} | 转换形式：内置类型显示强制转换");
+            Console.WriteLine();
+
+			//以用户定义类型的显示转换为例示例强制转换
+			double x = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
+			double y = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
+
+			Point point = new Point(x, y);
+			(int ix, int iy) pointTuple = ((int, int))point;
+
+            Console.WriteLine($"原类型：{point.GetType()} | 数据：{point}");
+            Console.WriteLine($"转换类型：{pointTuple.GetType()} | 数据：{pointTuple} | 转换形式：用户定义类型显示强制转换");
+            Console.WriteLine();
+        }
+
+		/*【10703：类型转换工具类、类型转换方法】*/
+		public static void LearnCastingTool()
+		{
+            Console.WriteLine("\n------示例：类型转换工具类、类型转换方法------\n");
+            //使用内置帮助程序类为非兼容类型进行转换：
+            byte[] bytes = new byte[10] { 12, 13, 15, 1, 0, 5, 255, 13, 3, 10 };
+            int integerFromBytes = System.BitConverter.ToInt32(bytes, 0);
+
+			Console.WriteLine($"原类型：{bytes.GetType()} | 数据：({string.Join('，', bytes)})");
+            Console.WriteLine($"转换类型：{integerFromBytes.GetType()} | 数据：{integerFromBytes} | 转换形式：内置转换工具类BitConverter");
+            Console.WriteLine();
+
+            //使用内置类型的Parse或TryParse方法进行转换：
+            Console.Write("请输入一个数字：");
+			string str = Console.ReadLine();
+			if (double.TryParse(str, out double dNumber))
+			{
+                Console.WriteLine($"原类型：{str.GetType()} | 数据：{str}");
+                Console.WriteLine($"转换类型：{dNumber.GetType()} | 数据：{dNumber} | 转换形式：double类型的TryParse方法");
+            }
+			else
+				Console.WriteLine("转换失败");
+            Console.WriteLine();
+
+            //使用用户定义类型的Parse或TryParse方法进行转换：
+            Console.Write("请输入一个元组（数值，数值）：");
+			str = Console.ReadLine();
+			if (Point.TryParse(str, out Point point)) 
+			{
+                Console.WriteLine($"原类型：{str.GetType()} | 数据：{str}");
+                Console.WriteLine($"转换类型：{point.GetType()} | 数据：{point} | 转换形式：Point结构的TryParse方法");
+            }
+			else
+                Console.WriteLine("转换失败");
+            Console.WriteLine();
+        }
+
+        public static void StartLearnCastingAndTypeConversion() 
+		{
+            string title = "001 隐式转换\n" +
+                "002 显示转换\n" +
+                "003 类型转换工具类/方法";
+
+            do
+            {
+                Console.WriteLine("【类型转换】");
+                Console.WriteLine(title);
+                Console.Write("请输入上列编号（如001）查看对应知识点代码运行结果：");
+
+                string? input = Console.ReadLine();
+
+                Console.WriteLine();
+
+                switch (input)
+                {
+                    case "001": LearnImplicitConversion(); break;
+                    case "002": LearnExplicitCasting(); break;
+                    case "003": LearnCastingTool(); break;
+                    default: Console.WriteLine("输入错误！"); break;
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("是否继续查询和运行本章节其他代码：直接按下Enter继续，否则即退出");
+
+                if (Console.ReadKey(true).Key != ConsoleKey.Enter)
+                    break;
+                Console.WriteLine("\n");
+            }
+            while (true);
+        }
+
+		//定义一个内部结构用于演示用户自定义的类型转换，这里用于演示故未考虑设计规范。
+		private readonly struct Point
+		{
+			public double X { get; }
+			public double Y { get; }
+
+			public Point(double x, double y)
+			{
+				X = x; 
+				Y = y;
+			}
+
+			//自定义一个从Point结构到（double，double）元组的隐式转换
+			public static implicit operator (double,double)(Point point)
+			{
+				return (point.X, point.Y);
+			}
+
+            //自定义一个从（double，double）元组到Point结构的隐式转换
+            public static implicit operator Point((double,double) pointTuple) 
+			{
+				return new Point(pointTuple.Item1, pointTuple.Item2);
+			}
+
+            //自定义一个从Point结构到（int, int）元组的显示转换
+            public static explicit operator (int, int)(Point point) 
+			{
+				return ((int)point.X, (int)point.Y);
+			}
+
+			//将一个元组字符串转换为Point结构
+			public static Point Parse(string s)
+			{
+                string str = Regex.Replace(s, @"\s", "");
+                str = Regex.Match(str, @"^[（(](-?\d+(\.\d+)?[,，]-?\d+(\.\d+)?)[)）]$").Value;
+                str = Regex.Replace(str, @"[（()）]", "");
+				if (string.IsNullOrWhiteSpace(str))
+					throw new InvalidCastException();
+
+				string[] numStrs = str.Split(',', '，');
+
+				double x = 0, y = 0;
+
+				try
+				{
+					x = double.Parse(numStrs[0]);
+					y = double.Parse(numStrs[1]);
+				}
+				catch
+				{
+					throw new InvalidCastException();
+				}
+
+				return new Point(x, y);
+            }
+
+            //尝试将一个元组字符串转换为Point结构
+            public static bool TryParse(string s, out Point point)
+			{
+                string str = Regex.Replace(s, @"\s", "");
+                str = Regex.Match(str, @"^[（(](-?\d+(\.\d+)?[,，]-?\d+(\.\d+)?)[)）]$").Value;
+                str = Regex.Replace(str, @"[（()）]", "");
+				if (!string.IsNullOrWhiteSpace(str))
+				{
+                    string[] numStrs = str.Split(',', '，');
+                    bool canGetX = double.TryParse(numStrs[0], out double x);
+                    bool canGetY = double.TryParse(numStrs[1], out double y);
+
+                    if (canGetX && canGetY)
+                    {
+                        point = new Point(x, y);
+                        return true;
+                    }
+                }
+
+				point = new Point(double.NaN, double.NaN);
+				return false;
+            }
+
+            public override string ToString()
+            {
+				return $"Point --- ({X}, {Y})";
+            }
+        }
     }
 }

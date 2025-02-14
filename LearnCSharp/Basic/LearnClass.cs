@@ -672,10 +672,12 @@ namespace LearnCSharp.Basic
 	 */
     public static class LearnClass
     {
+		/*【11801：类代码示例】*/
 		public static void StartLearnClass()
 		{
-			//我们使用不同的构造函数和数据初始化出5个NovelBook实例
-			NovelBook novelBook1 = new NovelBook("鬼吹灯", "天下霸唱");
+            Console.WriteLine("\n------示例：类------\n");
+            //我们使用不同的构造函数和数据初始化出5个NovelBook实例
+            NovelBook novelBook1 = new NovelBook("鬼吹灯", "天下霸唱");
 			NovelBook novelBook2 = new NovelBook("鬼吹灯", "天下霸唱", Color.Red);
 			NovelBook novelBook3 = new NovelBook(novelBook2);
 			NovelBook novelBook4 = new NovelBook("鬼吹灯", "天下霸唱", "./cover.jpg", Color.Blue, new DateTime(2006,1,1));

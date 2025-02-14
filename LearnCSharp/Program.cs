@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections;
 using System.Numerics;
 using LearnCSharp.Basic;
+using System.Text.RegularExpressions;
 
 namespace LearnCSharp
 {
@@ -46,6 +47,8 @@ namespace LearnCSharp
         public static void Main(string[] args)
         {
             Initialize();
+
+            
 
             if (args.Length == 0)
             {

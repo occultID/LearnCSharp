@@ -39,13 +39,15 @@ namespace LearnCSharp.Basic
 {
     internal class LearnAnonymousType
     {
+		/*【12401：匿名类型示例】*/
         public static void StartLearnAnonymousType()
         {
-			/*匿名类型代码示例
+            Console.WriteLine("\n------示例：匿名类型------\n");
+            /*匿名类型代码示例
 			  使用如下代码新建三个匿名类型实例person01、person02、person03
 			  person02实例是使用with表达式基于person01生成
 			  person03实例初始化器中使用了person01的属性作为属性*/
-			var person01 = new { Name = "Person01", Age = 15, Gender = '男' };
+            var person01 = new { Name = "Person01", Age = 15, Gender = '男' };
 			var person02 = person01 with { Name = "Person02", Gender = '女' };
 			var person03 = new { Name = "Person03", Age = 20, person01.Gender };
 

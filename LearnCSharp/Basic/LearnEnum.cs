@@ -85,8 +85,10 @@ namespace LearnCSharp.Basic
 
     public static class LearnEnum
     {
+		/*【10901：枚举代码示例】*/
         public static void StartLearnEnum()
         {
+            Console.WriteLine("\n------示例：枚举------\n");
             //输出Gender枚举类型的定义
             string outputString = "访问Gender枚举的成员并使用显示转换输出关联整数值：\n" +
 				$"Gender.Unknow --output:{Gender.Unknown} | 关联整数值 --output:{(int)Gender.Unknown}\n" +

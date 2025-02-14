@@ -124,7 +124,7 @@
  */
 using LearnCSharp.Basic.LearnInheritanceAndPolymorphismSpace;
 
-/*【继承代码示例】
+/*【12001：继承代码示例】
  * 下面命名空间中有四个类，它们存在继承关系
  * Animal类是一个抽象类，它隐式继承于Object类
  * Human类是继承于Animal类的一个更专门化的派生类
@@ -293,8 +293,10 @@ namespace LearnCSharp.Basic
 {
     public class LearnInheritanceAndPolymorphism
     {
+		/*【12001：继承与多态示例】*/
         public static void StartLearnInheritanceAndPolymorphism()
         {
+            Console.WriteLine("\n------示例：继承与多态------\n");
             /*通过以下代码的输出可以发现，当派生类进行实例化时
               所有基类同签名的构造函数或派生类使用base关键字指定匹配签名的构造函数会被依次优先调用
               即使没有同签名或指定的基类构造函数，也会调用基类的默认构造函数*/

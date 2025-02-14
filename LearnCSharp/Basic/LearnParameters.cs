@@ -45,18 +45,19 @@ using System.Text;
 
 namespace LearnCSharp.Basic
 {
-    internal static class LearnParameters
+    internal static class LearnParameter
     {
-        /*【学习传值参数--代码示例】
+        /*【11601：传值参数--代码示例】
          	传值参数将实参传递给形参的形式
 				实参是值类型   --将实参的值拷贝一份给形参
 				实参是引用类型 --将实参存储的引用地址拷贝一份给形参
          */
-        public static void LearnValueParameters()
+        public static void LearnValueParameter()
 		{
-			//定义三个局部方法用于示例传值参数
-			//该方法传值参数传递的实参是一个值类型
-			void PassAValueType(int x)
+            Console.WriteLine("\n------示例：传值参数------\n");
+            //定义三个局部方法用于示例传值参数
+            //该方法传值参数传递的实参是一个值类型
+            void PassAValueType(int x)
 			{
 				Console.WriteLine($"传值参数-传递值类型-形参值：{x}");
 				x += x;
@@ -98,7 +99,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"实参-引用类型-调用方法后-值：({point2D.X}, {point2D.Y})");
         }
 
-        /*【学习引用参数--代码示例】
+        /*【11602：引用参数--代码示例】
 			引用参数将实参传递给形参的形式
 				传递值类型   --将实参的存储位置直接传递给形参
 				传递引用类型 --将实参的引用存储位置直接传递给形参
@@ -106,8 +107,9 @@ namespace LearnCSharp.Basic
 
             ref可以理解为——形参是实参的别名
 		 */
-        public static void LearnReferenceParameters()
+        public static void LearnReferenceParameter()
         {
+            Console.WriteLine("\n------示例：引用参数------\n");
             //该方法引用参数传递的实参是一个值类型
             void PassAValueType(ref int x)
             {
@@ -151,15 +153,16 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"实参-引用类型-调用方法后-值：({point2D.X}, {point2D.Y})");
         }
 
-        /*【学习输出参数--代码示例】
+        /*【11603：输出参数--代码示例】
 			输出参数将实参传递给形参的形式
 				传递值类型   --将实参的存储位置直接传递给形参
 				传递引用类型 --将实参的引用存储位置直接传递给形参
 			调用含输出参数方法时，实参传递时也需要使用out关键字修饰
             输出参数必须在方法结束前明确为其赋值
 		 */
-        public static void LearnOutputParameters()
+        public static void LearnOutputParameter()
         {
+            Console.WriteLine("\n------示例：输出参数------\n");
             //该方法输出参数传递的实参是一个值类型
             void PassAValueType(out int x)
             {
@@ -187,7 +190,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"实参-引用类型-调用方法后-值：({point2D.X}, {point2D.Y})");
         }
 
-        /*【学习只读参数--代码示例】
+        /*【11604：只读参数--代码示例】
 			只读参数将实参传递给形参的形式
 				传递值类型   --将实参的存储位置直接传递给形参
 				传递引用类型 --将实参的引用存储位置直接传递给形参
@@ -195,8 +198,9 @@ namespace LearnCSharp.Basic
             只读参数在方法内不能修改其值，但可修改其状态
                 所谓修改状态即可修改类或结构实例成员的值或数组的元素
 		 */
-        public static void LearnInParameters()
+        public static void LearnInParameter()
         {
+            Console.WriteLine("\n------示例：只读参数------\n");
             //该方法只读参数传递的实参是一个值类型
             void PassAValueType(in int x)
             {
@@ -229,7 +233,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"实参-引用类型-调用方法后-值：({point2D.X}, {point2D.Y})");
         }
 
-        /*【学习数组参数--代码示例】
+        /*【11605：数组参数--代码示例】
             设定方法时如果方法的参数数量不能确定即可使用参数数组
             数组参数使用params修饰符声明，表示该方法可接收零个或多个参数
             数组参数可以和其他参数组合使用，但永远只能放在参数列表最后
@@ -238,6 +242,8 @@ namespace LearnCSharp.Basic
          */
         public static void LearnParameterArray()
         {
+            Console.WriteLine("\n------示例：数组参数------\n");
+
             void OutputParametersValue(params int[] integers)
             {
                 int countParameters = integers.Length;
@@ -271,7 +277,7 @@ namespace LearnCSharp.Basic
             OutputParametersValue(2, -5, 7, 0, 6);
         }
 
-        /*【学习可选参数--代码示例】
+        /*【11606：可选参数--代码示例】
             可选参数即具有显示初始化默认值的参数，也称为默认参数
             当调用具有可选参数的方法时，调用方可以选择是否传入可选参数，如果传入实参则使用实参值，不传入则使用默认值
             当参数列表存在多种参数时，可选参数应位于数组参数之前，其他必须参数之后
@@ -279,8 +285,10 @@ namespace LearnCSharp.Basic
                 数组参数需要具名调用，否则必须传入可选参数对应的参数
                 如果数组参数是多个参数，此时还需将多个参数先显示生成一个数组再传入
          */
-        public static void LearnDefaultParameters()
+        public static void LearnDefaultParameter()
         {
+            Console.WriteLine("\n------示例：可选参数------\n");
+
             void UseDefaultParameter(string defaultParam = "这是可选参数的显示声明默认值")
             {
                 Console.WriteLine("【方法内输出】" + defaultParam);
@@ -295,7 +303,7 @@ namespace LearnCSharp.Basic
             UseDefaultParameter("这是调用方传入的参数");
         }
 
-        /*【学习this参数--代码示例】
+        /*【11607：this参数--代码示例】
             this参数在定义扩展方法时使用
             this参数必须在参数列表第一位
                 当被扩展类型是结构时，this参数也可用in修饰
@@ -303,6 +311,7 @@ namespace LearnCSharp.Basic
          */
         public static string ToChineseNumber(this int x)
         {
+
             char[] chars = x.ToString().ToCharArray();
             int digits = Math.Abs(x).ToString().Length;
             StringBuilder  chineseNumber = new StringBuilder();
@@ -358,8 +367,10 @@ namespace LearnCSharp.Basic
             return result;
         }
 
-        public static void LearnThisParameters()
+        public static void LearnThisParameter()
         {
+            Console.WriteLine("\n------示例：this 参数------\n");
+
             Console.WriteLine("通过扩展方法，为int类型实例扩展支持了一个将整数转换成用中文形式表示");
             start: Console.WriteLine("请输入一个整数");
             if (int.TryParse(Console.ReadLine(), out int integer))
@@ -370,7 +381,7 @@ namespace LearnCSharp.Basic
                 goto start;
         }
 
-        /*【学习具名参数】
+        /*【11608：具名参数】
             具名参数是针对方法调用时定义的
             调用方法时，可在实参前加上形参名和一个冒号:作为前缀，该组合即是具名参数
             当使用具名参数调用方法时，可以不考虑定义方法时形参的顺序，但是实参必须数量和形参相同（可选参数除外）
@@ -378,6 +389,8 @@ namespace LearnCSharp.Basic
          */
         public static void LearnNamelyArgument()
         {
+            Console.WriteLine("\n------示例：具名参数------\n");
+
             void ShowNamelyArgument(int first, ref char second, string third = "这是默认可选参数", params int[] fourth)
             {
                 Console.WriteLine($"【方法内输出】--第一个形参--值参数  --output：{first}");
@@ -455,13 +468,13 @@ namespace LearnCSharp.Basic
 
                 switch (input)
                 {
-                    case "001":LearnValueParameters(); break;
-                    case "002": LearnReferenceParameters(); break;
-                    case "003": LearnOutputParameters(); break;
-                    case "004": LearnInParameters(); break;
+                    case "001":LearnValueParameter(); break;
+                    case "002": LearnReferenceParameter(); break;
+                    case "003": LearnOutputParameter(); break;
+                    case "004": LearnInParameter(); break;
                     case "005": LearnParameterArray(); break;
-                    case "006": LearnDefaultParameters(); break;
-                    case "007": LearnThisParameters(); break;
+                    case "006": LearnDefaultParameter(); break;
+                    case "007": LearnThisParameter(); break;
                     case "008": LearnNamelyArgument(); break;
                     default: Console.WriteLine("输入错误！"); break;
                 }
