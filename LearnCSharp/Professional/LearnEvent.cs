@@ -347,8 +347,8 @@ namespace LearnCSharp.Professional
 		 */
         public static void StartLearnEvent()
 		{
-			Console.WriteLine("【学习事件】");
-			NotifyList<string> strings = new NotifyList<string>();
+            Console.WriteLine("\n------示例：事件------\n");
+            NotifyList<string> strings = new NotifyList<string>();
 
             Console.WriteLine($"已经创建集合NotifyList<string>的一个实例strings --output：{strings}");
             Console.WriteLine();

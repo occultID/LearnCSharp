@@ -138,13 +138,23 @@ namespace LearnCSharp.Basic
 		public static void LearnCastingTool()
 		{
             Console.WriteLine("\n------示例：类型转换工具类、类型转换方法------\n");
-            //使用内置帮助程序类为非兼容类型进行转换：
+            //使用内置BitConverter类为非兼容类型进行转换：
             byte[] bytes = new byte[10] { 12, 13, 15, 1, 0, 5, 255, 13, 3, 10 };
             int integerFromBytes = System.BitConverter.ToInt32(bytes, 0);
 
 			Console.WriteLine($"原类型：{bytes.GetType()} | 数据：({string.Join('，', bytes)})");
             Console.WriteLine($"转换类型：{integerFromBytes.GetType()} | 数据：{integerFromBytes} | 转换形式：内置转换工具类BitConverter");
             Console.WriteLine();
+
+			//使用Convert类进行类型转换，转换时高精度数字向低精度数字转换时会采取四舍五入而非截断方式
+			decimal decimalNumber = 26.99m;
+			int explicitInt = (int)decimalNumber;
+			int convertInt = Convert.ToInt32(decimalNumber);
+
+            Console.WriteLine($"原类型：{decimalNumber.GetType()} | 数据：{decimalNumber}");
+            Console.WriteLine($"转换类型：{explicitInt.GetType()} | 数据：{explicitInt} | 转换形式：int强制类型转换");
+            Console.WriteLine($"转换类型：{convertInt.GetType()} | 数据：{convertInt} | 转换形式：Convert类ToInt32方法类型转换");
+			Console.WriteLine();
 
             //使用内置类型的Parse或TryParse方法进行转换：
             Console.Write("请输入一个数字：");

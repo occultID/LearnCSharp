@@ -123,6 +123,7 @@
  */
 
 using System.Collections;
+using System.Xml.Linq;
 using LGT = LearnCSharp.Professional.LearnGenericTypeSpace;
 
 /*【泛型学习代码示例】
@@ -131,78 +132,106 @@ using LGT = LearnCSharp.Professional.LearnGenericTypeSpace;
  */
 namespace LearnCSharp.Professional.LearnGenericTypeSpace
 {
-    public class LinkedList<T> : IEnumerable<T> where T : notnull
+    internal class LinkedList<T> : IEnumerable<T> where T : notnull
     {
-        private Node? FirstNode { get; set; }
-        private Node? LastNode { get; set; }
+        private Node<T>? firstNode;
+
+        public Node<T> FirstNode => firstNode is not null ? firstNode : throw new NullReferenceException();
+
+        public Node<T> LastNode => firstNode is not null ? firstNode.Previous : throw new NullReferenceException();
+
+        public Node<T> CurrentNode { get; private set; }
 
         public int Count { get; private set; }
-        public T First { get => FirstNode.Value; }
-        public T Last { get => LastNode.Value; }
+        public T First => FirstNode.Value;
+        public T Last => LastNode.Value;
+        public T Current => CurrentNode.Value;
 
         public T this[int index]
         {
             get
             {
-                if (index < 1 || index > Count)
-                    throw new IndexOutOfRangeException(nameof(index));
-
-                var pointer = FirstNode;
-                for (int i = 1; i < index; i++)
-                {
-                    pointer = pointer.Next;
-                }
-                return pointer.Value;
+                return GetNode(index).Value;
+            }
+            set
+            {
+                UpdateAt(index, value);
             }
         }
         public void AddFirst(T item)
         {
-            var node = new Node(item);
-
-            if (FirstNode is null)
-            {
-                FirstNode = node;
-                LastNode = node;
-                Count++;
-                return;
-            }
-
-            node.Next = FirstNode;
-            node.Next.Previous = node;
-            FirstNode = node;
-            Count++;
+            Add(item);
+            firstNode = firstNode.Previous;
         }
 
         public void AddLast(T item)
         {
-            if (FirstNode is null)
+            Add(item);
+        }
+
+        public void Add(T item)
+        {
+            var node = new Node<T>(item);
+
+            if (firstNode is null)
             {
-                AddFirst(item);
-                return;
+                firstNode = node;
+                firstNode.Previous = firstNode;
+                firstNode.Next = firstNode;
             }
 
-            var node = new Node(item);
-            node.Previous = LastNode;
-            node.Previous.Next = node;
-            LastNode = node;
+            node.Next = firstNode;
+            node.Previous = firstNode.Previous;
+            firstNode.Previous.Next = node;
+            firstNode.Previous = node;
+            
+            CurrentNode = node; 
             Count++;
+        }
+
+        public int IndexOf(T item)
+        {
+            var pointer = firstNode;
+
+            for (int i = 0; i < Count; i++)
+            {
+                if(pointer.Value.Equals(item))
+                    return i;
+                pointer = pointer.Next;
+            }
+
+            return -1;
+        }
+
+        public int IndexOf(Node<T> node)
+        {
+            var pointer = firstNode;
+
+            for (int i = 0; i < Count; i++)
+            {
+                if (pointer == node) 
+                    return i;
+                pointer = pointer.Next;
+            }
+
+            return -1;
         }
 
         public void InsertAt(int index, T item)
         {
-            if (index < 1 || index > Count)
+            if (index < 0 || index >= Count)
                 throw new IndexOutOfRangeException(nameof(index));
 
-            if (index == 1)
+            if (index == 0)
             {
                 AddFirst(item);
                 return;
             }
 
-            var node = new Node(item);
-            var pointer = FirstNode;
+            var node = new Node<T>(item);
+            var pointer = firstNode;
 
-            for (int i = 1; i < index; i++)
+            for (int i = 0; i < index; i++)
             {
                 pointer = pointer.Next;
             }
@@ -211,17 +240,44 @@ namespace LearnCSharp.Professional.LearnGenericTypeSpace
             node.Previous = pointer.Previous;
             node.Previous.Next = node;
             node.Next.Previous = node;
+            CurrentNode = node;
             Count++;
+        }
+
+        public Node<T> GetNode(int index)
+        {
+            if (index < 0 || index >= Count)
+                throw new IndexOutOfRangeException();
+
+            var pointer = firstNode;
+            for (int i = 0; i < index; i++)
+            {
+                pointer = pointer.Next;
+            }
+            return pointer;
+        }
+
+        public Node<T> GetNode(T item)
+        {
+            var pointer = firstNode;
+            for (int i = 0; i < Count; i++)
+            {
+                if (pointer.Value.Equals(item))
+                    return pointer;
+                pointer = pointer.Next;
+            }
+            return null;
+
         }
 
         public void RemoveAt(int index)
         {
-            if (index < 1 || index > Count)
+            if (index < 0 || index >= Count)
                 throw new IndexOutOfRangeException(nameof(index));
 
-            var pointer = FirstNode;
+            var pointer = firstNode;
 
-            for (int i = 1; i < index; i++)
+            for (int i = 0; i < index; i++)
             {
                 pointer = pointer.Next;
             }
@@ -232,52 +288,120 @@ namespace LearnCSharp.Professional.LearnGenericTypeSpace
                 return;
             }
 
-            if (pointer.Previous is null && Count > 1)
+            if (pointer == CurrentNode)
+                CurrentNode = null;
+
+            if (pointer == firstNode)
             {
-                FirstNode = pointer.Next;
-                FirstNode.Previous = null;
+                firstNode = pointer.Next;
+                pointer.Previous.Next = firstNode;
+                firstNode.Previous = pointer.Previous;
+                pointer.Previous = null;
+                pointer.Next = null;
+                pointer = null;
                 Count--;
                 return;
             }
 
-            if (pointer.Next is null && Count > 1)
+            if (pointer.Next == firstNode)
             {
-                LastNode = pointer.Previous;
-                LastNode.Next = null;
+                pointer.Previous.Next = firstNode;
+                firstNode.Previous = pointer.Previous;
+                pointer.Previous = null;
+                pointer.Next = null;
+                pointer = null;
                 Count--;
                 return;
             }
 
             pointer.Previous.Next = pointer.Next;
             pointer.Next.Previous = pointer.Previous;
+            pointer.Previous = null;
+            pointer.Next = null;
+            pointer = null;
             Count--;
+        }
+
+        public void Reverse()
+        {
+            if (Count <= 1) return;
+
+            bool resetCurrentNode = false;
+            var pointerForward = firstNode;
+            var pointerBackward = firstNode.Previous;
+
+            int max = Count / 2;
+            for (var i = 0; i < max; i++) 
+            {
+                if (!resetCurrentNode)
+                {
+                    if (pointerForward == CurrentNode)
+                    {
+                        CurrentNode = pointerBackward;
+                        resetCurrentNode = true;
+                    }
+
+                    if (pointerBackward == CurrentNode)
+                    {
+                        CurrentNode = pointerForward;
+                        resetCurrentNode= true;
+                    }
+                }
+
+                var temp = pointerForward.Value;
+                pointerForward.Value = pointerBackward.Value;
+                pointerBackward.Value = temp;
+
+                pointerForward = pointerForward.Next;
+                pointerBackward = pointerBackward.Previous;
+            }
         }
 
         public void UpdateAt(int index, T item)
         {
-            var pointer = FirstNode;
-            for (int i = 1; i < index; i++)
+            if(index < 0 || index >= Count) 
+                throw new IndexOutOfRangeException(nameof(index));
+
+            var pointer = firstNode;
+            for (int i = 0; i < index; i++)
             {
                 pointer = pointer.Next;
             }
 
             pointer.Value = item;
+            CurrentNode = pointer;
         }
 
         public void Clear()
         {
-            FirstNode = null;
-            LastNode = null;
+            var pointer = firstNode;
+            do
+            {
+                pointer.Previous = null;
+                pointer = pointer.Next;
+            }
+            while (pointer != firstNode);
+
+            while(pointer.Next != null)
+            {
+                var nextNode = pointer.Next;
+                pointer.Next = null;
+                pointer = nextNode;
+            }
+
+            firstNode = null;
+            CurrentNode = null;
             Count = 0;
         }
         public IEnumerator<T> GetEnumerator()
         {
-            var pointer = FirstNode;
-            while (pointer is not null)
+            var pointer = firstNode;
+            do
             {
                 yield return pointer.Value;
                 pointer = pointer.Next;
             }
+            while (pointer != firstNode);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -285,18 +409,58 @@ namespace LearnCSharp.Professional.LearnGenericTypeSpace
             return GetEnumerator();
         }
 
-        private class Node
+        public IEnumerable<T> EnumeratorStartAt(int index)
         {
-            public Node Previous { get; set; }
-            public T Value { get; set; }
-            public Node Next { get; set; }
+            var mark = GetNode(index);
+            var pointer = mark; ;
 
-            public Node(T t)
+            do
             {
-                Value = t;
-                Previous = null;
-                Next = null;
+                yield return pointer.Value;
+                pointer = pointer.Next;
             }
+            while (pointer != mark);
+        }
+
+        public IEnumerable<T> ReverseEnumerator()
+        {
+            var pointer = firstNode;
+            do
+            {
+                pointer = pointer.Previous;
+                yield return pointer.Value;
+            }
+            while (pointer != firstNode);
+
+            yield break;
+        }
+
+        public IEnumerable<T> ReverseEnumeratorStartAt(int index)
+        {
+            var mark = GetNode(index);
+            var pointer = mark;
+            do
+            {
+                yield return pointer.Value;
+                pointer = pointer.Previous;
+            }
+            while (pointer != mark);
+
+            yield break;
+        }
+    }
+
+    internal class Node<T> where T : notnull
+    {
+        public Node<T> Previous { get; set; }
+        public T Value { get; set; }
+        public Node<T> Next { get; set; }
+
+        public Node(T t)
+        {
+            Value = t;
+            Previous = null;
+            Next = null;
         }
     }
 }
@@ -305,65 +469,135 @@ namespace LearnCSharp.Professional
 {
     internal class LearnGenericType
     {
+        /*【20501：泛型示例】*/
         public static void StartLearnGenericType()
         {
             Console.WriteLine("【学习泛型】");
 
-            LGT.LinkedList<string> listStrings = new LGT.LinkedList<string>();
-            Console.WriteLine("使用以下代码来测试自己创建的双链表泛型集合类，类型参数使用的实际类型为string类型\nLinkedList<string> listStrings = new LinkedList<string>();");
-            Console.WriteLine();
-            Console.WriteLine("已经创建具体存储string类型数据的双链表实例listStrings");
-            Console.WriteLine();
+            //通过自定义的泛型双链表集合来进行代码演示
+            LGT.LinkedList<int> integerList = new LGT.LinkedList<int>();
 
-            Console.WriteLine("使用AddFirst方法依次前向添加三个节点，其数据为“I Love C#”、“Hello World”、“我爱编程”");
+            Console.WriteLine("已创建泛型双链表集合实例integerList");
+            Console.WriteLine($"【集合】实例：integerList | 元素数量：{integerList.Count}");
             Console.WriteLine();
 
-            listStrings.AddFirst("I Love C#");
-            Console.WriteLine($"--头节点：[ {listStrings.First} ] --尾节点：[ {listStrings.Last} ] --节点数：[ {listStrings.Count} ]");
-            listStrings.AddFirst("Hello World");
-            Console.WriteLine($"--头节点：[ {listStrings.First} ] --尾节点：[ {listStrings.Last} ] --节点数：[ {listStrings.Count} ]");
-            listStrings.AddFirst("我爱编程");
-            Console.WriteLine($"--头节点：[ {listStrings.First} ] --尾节点：[ {listStrings.Last} ] --节点数：[ {listStrings.Count} ]");
 
-            Console.WriteLine();
-            Console.WriteLine("使用AddLast方法依次后向添加三个节点，其数据为“你好.NET”、“学习.NET”、“学习写代码”");
-            Console.WriteLine();
-
-            listStrings.AddLast("你好.NET");
-            Console.WriteLine($"--头节点：[ {listStrings.First} ] --尾节点：[ {listStrings.Last} ] --节点数：[ {listStrings.Count} ]");
-            listStrings.AddLast("学习.NET");
-            Console.WriteLine($"--头节点：[ {listStrings.First} ] --尾节点：[ {listStrings.Last} ] --节点数：[ {listStrings.Count} ]");
-            listStrings.AddLast("学习写代码");
-            Console.WriteLine($"--头节点：[ {listStrings.First} ] --尾节点：[ {listStrings.Last} ] --节点数：[ {listStrings.Count} ]");
-
-            Console.WriteLine("依次遍历当前双链表中的数据：\n");
-
-            foreach (var item in listStrings)
+            Console.WriteLine("通过AddFirst方法添加数据");
+            //使用添加头节点方式(AddFirst方法)连续添加10个数据
+            for (int i = 0; i < 10; i++)
             {
-                Console.WriteLine(item);
+                integerList.AddFirst(Random.Shared.Next(100, 999));
+                Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("通过AddFirst方法添加数据成功，输出集合信息：");
+            Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            foreach (int i in integerList)
+            {
+                Console.WriteLine($"【元素】数字：{i}");
             }
             Console.WriteLine();
 
-            Console.WriteLine("使用InsertAt方法在第四个位值出插入新数据--“我爱用C#写程序”");
-            listStrings.InsertAt(4, "我爱用C#写程序");
-
-            Console.WriteLine("使用UpdateAt方法将当前第五个节点数据更改为--“我们一起学习.NET”");
-            listStrings.UpdateAt(5, "我们一起学习.NET");
-
-            Console.WriteLine("使用RemoveAt方法将当前第六个节点数据移除");
-            listStrings.RemoveAt(6);
-
-            Console.WriteLine();
-            Console.WriteLine("再次遍历当前双链表中的数据：\n");
-
-            foreach (var item in listStrings)
+            Console.WriteLine("通过AddLast方法添加数据");
+            //使用添加尾节点方式(AddLast方法)连续添加10个数据
+            for (int i = 0; i < 10; i++)
             {
-                Console.WriteLine(item);
+                integerList.AddLast(Random.Shared.Next(100, 999));
+                Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("通过AddLast方法添加数据成功，输出集合信息：");
+            Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            foreach (int i in integerList)
+            {
+                Console.WriteLine($"【元素】数字：{i}");
             }
             Console.WriteLine();
 
-            Console.WriteLine($"当前双链表基本信息：--头节点：[ {listStrings.First} ] --尾节点：[ {listStrings.Last} ] --节点数：[ {listStrings.Count} ]");
-            Console.WriteLine($"使用集合访问运算符访问当前第四个节点：listStrings[4] = {listStrings[4]}");
+            Console.WriteLine("通过Insert方法插入数据");
+            //使用InsertAt方法随机插入5个数据
+            for (int i = 0; i < 5; i++)
+            {
+                integerList.InsertAt(Random.Shared.Next(0, integerList.Count), Random.Shared.Next(100, 999));
+                Console.WriteLine($"【集合】实例：integerList | 上一节点：{integerList.CurrentNode.Previous.Value} | 当前节点：{integerList.Current} | 下一节点：{integerList.CurrentNode.Next.Value} | 元素数量：{integerList.Count}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("通过InsertAt方法插入数据成功，输出集合信息：");
+            Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            foreach (int i in integerList)
+            {
+                Console.WriteLine($"【元素】数字：{i}");
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("通过RemoveAt方法移除数据");
+            //使用RemoveAt随机移除5个数据
+            for (int i = 0; i < 5; i++)
+            {
+                int index = Random.Shared.Next(0, integerList.Count);
+                var node = integerList.GetNode(index);
+                int preInt = node.Previous.Value;
+                int nextInt = node.Next.Value;
+                integerList.RemoveAt(index);
+                Console.WriteLine($"【集合】实例：integerList | 上一节点：{preInt} | 移除节点：{node.Value} | 下一节点：{nextInt} | 元素数量：{integerList.Count}");
+                node = null;
+            }
+            Console.WriteLine();
+            Console.WriteLine("通过RemoveAt方法移除数据成功，输出集合信息：");
+            Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            foreach (int i in integerList)
+            {
+                Console.WriteLine($"【元素】数字：{i}");
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("通过Reverse方法将集合顺序倒转");
+            //使用Reverse方法倒转集合
+            integerList.Reverse();
+
+            Console.WriteLine();
+            Console.WriteLine("通过Reverse方法倒转集合成功，输出集合信息：");
+            Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            foreach (int i in integerList)
+            {
+                Console.WriteLine($"【元素】数字：{i}");
+            }
+            Console.WriteLine();
+
+            Console.WriteLine("通过UpdateAt随机修改数据");
+            //使用UpdateAt随机修改5个数据
+            for (int i = 0; i < 5; i++)
+            {
+                int index = Random.Shared.Next(0, integerList.Count);
+                int oldValue = integerList[index];
+                integerList.UpdateAt(index,Random.Shared.Next(100,999));
+                Console.WriteLine($"【集合】实例：integerList | 上一节点：{integerList.CurrentNode.Previous.Value} | 当前节点原值：{oldValue} | 新值：{integerList.Current} | 下一节点：{integerList.CurrentNode.Next.Value} | 元素数量：{integerList.Count}");
+            }
+            Console.WriteLine();
+            Console.WriteLine("通过RemoveAt方法移除数据成功，输出集合信息：");
+            Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            foreach (int i in integerList)
+            {
+                Console.WriteLine($"【元素】数字：{i}");
+            }
+            Console.WriteLine();
+
+            //使用索引器访问数据
+            Console.WriteLine();
+            Console.WriteLine("通过索引器遍历数据输出集合信息：");
+            Console.WriteLine($"【集合】实例：integerList | 头节点：{integerList.First} | 尾节点：{integerList.Last} | 元素数量：{integerList.Count}");
+            for (int i = 0; i < integerList.Count; i++)
+            {
+                Console.WriteLine($"【元素】索引：[{i,2}] | 数字：{integerList[i]}");
+            }
+            Console.WriteLine();
+
+            //使用Clear方法清空数据
+            integerList.Clear();
+
+            Console.WriteLine("通过Clear方法情空集合数据：");
+            Console.WriteLine($"【集合】实例：integerList | 无节点 | 元素数量：{integerList.Count}");
+            Console.WriteLine();
         }
     }
 }

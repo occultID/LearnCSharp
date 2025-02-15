@@ -149,506 +149,585 @@
 
 using LearnCSharp.Professional.LearnCollectionsSpace;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace LearnCSharp.Professional.LearnCollectionsSpace
 {
-    /*定义一个学生类
-     *内部重写了Object类中的Equals、GetHashCode和ToString方法
-     *内部实现了IEquatable<T>接口
-     *内部重载了==和!=运算符
-     */
-    public class Student:IEquatable<Student>
+    /*【自定义集合示例】
+     * 定义一个自定义集合类Books
+	 *该类用于存储Book类对象实例
+	 *Book类的定义在本类后面
+	 */
+    public class Books : IEnumerable<Book>
     {
-        public int StuID { get; private set; }
-
-        public string Name { get; set; }
-
-        public int Age { get; set; }
-
-        public static int CurrentYear { get; } = DateTime.Now.Year;
-        public Student(int stuID, string name, int age)
-        {
-            StuID = stuID;
-            Name = name;
-            Age = age;
-        }
-
-        public Student(string name, int age) : this(CurrentYear * 1_0000 + Random.Shared.Next(1, 1_0000), name, age) { }
-
-        public Student(Student student)
-        {
-            this.StuID = student.StuID;
-            this.Name = student.Name;
-            this.Age = student.Age;
-        }
-
-        public void IntroduceSelf()
-        {
-            Console.WriteLine($"大家好，我是{Name},今年{Age}岁,我的学号是{StuID}");
-        }
-
-        public bool Equals(Student? other)
-        {
-            return other is not null ? this.StuID == other.StuID : false;
-        }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is Student s ? Equals(s) : false;
-        }
-
-        public override int GetHashCode()
-        {
-            return StuID.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return $"Student {{StuID = {StuID}, Name = {Name}, Age = {Age}}}";
-        }
-
-        public static bool operator ==(Student left, Student right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Student left, Student right)
-        {
-            return !left.Equals(right);
-        }
-    }
-
-    /*定义一个学生集合，用于存储和管理学生实例
-     *该类实现了IEnumerable<T>、ICollection<T>和IList<T>接口 
-     */
-    public class Students : IEnumerable<Student>
-    {
-        //定义一个常量来设置默认容量
         private const int defaultCapacity = 10;
-        //定义一个内部学生数组用于存储学生实例
-        private Student?[] students;
-        //定义一个属性Count用于显示当前已存容量
-        public int Count { get; private set; } = 0;
-        //定义一个属性用来确保数组的动态最大容量
-        public int Capacity
-        {
-            get => students.Length;
-            set
-            {
-                if (value >= students.Length)
-                {
-                    Increase(value);
+        private Book[] books;
+
+		public bool IsReadOnly { get; }
+
+        public int Count { get; private set; }
+		public int Capacity
+		{
+			get => books.Length;
+		}
+
+		public Books() : this(defaultCapacity) { }
+
+		public Books(int capacity)
+		{
+			if (capacity <= 0) throw new ArgumentException(nameof(capacity));
+			books = new Book[capacity];
+			Count = 0;
+		}
+
+		public Books(bool isReadOnly = false, params Book[] books)
+		{
+			if (books == null || books.Length == 0) throw new ArgumentNullException();
+
+			int countElement = 0;
+			bool allElementsAreNull = true;
+			for (int i = 0; i < books.Length; i++)
+			{
+				if (books[i] is not null)
+				{
+					allElementsAreNull = false;
+                    countElement++;
                 }
-                else
-                    throw new ArgumentOutOfRangeException(nameof(value));
-            }
-        }
-        public bool IsReadOnly { get; set; } = false;
+			}
 
-        //定义一个索引器，用于Students集合的实例可以如数组一样访问
-        public Student this[int index]
+			if (allElementsAreNull) throw new ArgumentNullException();
+
+			this.books = new Book[countElement];
+
+            int mark = 0;
+            for (int i = 0; i < countElement; i++)
+			{
+				for (int j = mark; j < books.Length; j++)
+				{
+					if (books[j] is not null)
+					{
+						this.books[i] = books[j];
+						mark += 1;
+						break;
+					}
+				}
+			}
+
+			Count = countElement;
+			IsReadOnly = isReadOnly;
+		}
+
+        public Book this[int index] 
+		{
+			get
+			{
+				if (index < 0 || index >= Count) 
+					throw new IndexOutOfRangeException();
+				return books[index];
+			}
+			set
+			{
+                if (IsReadOnly) throw new InvalidOperationException("只读集合禁止操作元素");
+                if (index < 0 || index >= Count) throw new IndexOutOfRangeException();
+                if (value is null) throw new ArgumentNullException();
+
+				books[index] = value;
+			}
+		}
+
+		private void Increase(uint newCapacity)
+		{
+			if (Count >= int.MaxValue) throw new InvalidOperationException();
+
+			if (newCapacity > (uint)int.MaxValue) 
+				newCapacity = (uint)int.MaxValue;
+
+			var temp = books;
+			books = new Book[newCapacity];
+			Array.Copy(temp, books, temp.Length);
+			Array.Clear(temp);
+		}
+
+        public void Add(Book book)
         {
-            get
-            {
-                if (index < 0 || index >= students.Length)
-                    throw new IndexOutOfRangeException(nameof(index));
+            if(IsReadOnly) throw new InvalidOperationException("只读集合禁止操作元素");
+			if(book is null) throw new ArgumentNullException("不得添加null实例");
+			if (Contains(book)) throw new ArgumentException("请勿重复添加相同元素");
 
-                return students[index];
-            }
-            set
-            {
+			if (Count >= Capacity)
+				Increase((uint)Capacity * 2);
 
-                if (index < 0 || index >= students.Length)
-                    throw new IndexOutOfRangeException(nameof(index));
-
-                if (value is null)
-                    throw new ArgumentNullException(nameof(value));
-
-                if (this.Contains(value))
-                    throw new ArgumentException(message: "已存在该学生，请确认输入无误！",nameof(value));
-
-                students[index] = value;
-            }
-        }
-
-        public Students()
-        {
-            students = new Student[defaultCapacity];
-            Count = 0;
-        }
-
-        public Students(int capacity)
-        {
-            students = new Student[capacity];
-            Count = 0;
-        }
-
-        public Students(params Student[] students)
-        {
-            if (students is null || students.Length == 0)
-                throw new ArgumentNullException();
-
-            if (students.Length <= defaultCapacity)
-                this.students = new Student[defaultCapacity];
-            else
-                this.students = new Student[students.Length];
-            Count = students.Length;
-            Array.Copy(students, this.students, Count);            
-        }
-
-        private void Increase(int newCapacity)
-        {
-            var temp = new Student[newCapacity];
-            if (students is not null)
-                this.CopyTo(temp, 0);
-            students = temp;
-        }
-
-        public void Add(Student item)
-        {
-            if (Count >= Capacity)
-                Increase(Capacity * 2);
-
-            if (this.Contains(item))
-                throw new ArgumentException("已存在该学生", nameof(item));
-
-            students[Count] = item;
-            
-            Count++;
+			books[Count] = book;
+			Count++;
         }
 
         public void Clear()
         {
-            for (int i = 0; i < students.Length; i++)
-            {
-                students[i] = null;
-            }
-            students = new Student[defaultCapacity];
-            Count = 0;
+            if (IsReadOnly) throw new InvalidOperationException("只读集合禁止操作元素");
+            Array.Clear(books);
+			books = new Book[defaultCapacity];
+			Count = 0;
         }
 
-        public bool Contains(Student item)
+        public bool Contains(Book book)
         {
-            if (item is null) 
-                return false;
+			if (book is null)
+				return false;
+
+			for (int i = 0; i < Count; i++) 
+			{
+				if(books[i] == book) return true;
+			}
+
+			return false;
+        }
+
+        public void CopyTo(Book[] books, int booksIndex)
+        {
+			if (books == null) throw new ArgumentNullException();
+			if (booksIndex < 0 || booksIndex >= books.Length) throw new IndexOutOfRangeException();
+			if (books.Length - booksIndex < Count) throw new ArgumentOutOfRangeException();
 
             for (int i = 0; i < Count; i++)
             {
-                if (students[i] == item)
-                    return true;
-            }
-
-            return false;
-        }
-
-        public void CopyTo(Student[] array, int arrayIndex)
-        {
-            if (array is null) throw new ArgumentNullException("array");
-            if (array.Length - arrayIndex < Count) throw new ArgumentException("目标数组容量不足");
-
-            for (int i = arrayIndex; i < arrayIndex+Count; i++)
-            {
-                array[i] = students[i - arrayIndex];
+				books[booksIndex + i] = this.books[i];
             }
         }
 
-        public IEnumerator<Student> GetEnumerator()
+        public IEnumerator<Book> GetEnumerator()
         {
-            return new StudentEnumerator(this);
+			//for (int i = 0; i < Count; i++) { yield return books[i]; }
+			return new BookEnumerator(this);
         }
 
-        public int IndexOf(Student item)
+        public int IndexOf(Book book)
         {
+			if (book is null)
+				return -1;
+
             for (int i = 0; i < Count; i++)
             {
-                if (item == students[i])
-                    return i;
+                if (books[i] == book) return i;
             }
 
-            return -1;
+			return -1;
         }
 
-        public void Insert(int index, Student item)
+        public void Insert(int index, Book book)
         {
-            if (index < 0 || index > Count) throw new ArgumentOutOfRangeException("index");
-            if (Contains(item)) throw new ArgumentException("请勿重复插入同一学生实例", nameof(item));
-            if (Count + 1 > Capacity) Increase(Capacity * 2);
+            if (IsReadOnly) throw new InvalidOperationException("只读集合禁止操作元素");
+            if (index < 0 || index >= Count) throw new IndexOutOfRangeException();
+            if (book is null) throw new ArgumentNullException("不得插入null实例");
+            if (Contains(book)) throw new ArgumentException("请勿重复添加相同元素");
 
-            for (int i = Count; i > index; i--)
-            {
-                students[i] = students[i - 1];
-            }
-            students[index] = item;
-            Count++;
+			if (Count >= Capacity)
+				Increase((uint)Capacity * 2);
+
+			for (int i = Count; i > index; i--)
+			{
+				books[i] = books[i - 1];
+			}
+
+			books[index] = book;
+			Count++;
         }
 
-        public bool Remove(Student item)
+        public bool Remove(Book book)
         {
-            if(Contains(item))
-            {
-                this.RemoveAt(this.IndexOf(item));
-                return true;
-            }
-
-            return false;
+			int indexOfBook = IndexOf(book);
+			if(indexOfBook >= 0)
+			{
+				RemoveAt(indexOfBook);
+				return true;
+			}
+			return false;
         }
 
         public void RemoveAt(int index)
         {
-            if (index < 0 || index > Count) throw new ArgumentOutOfRangeException("index");
+            if (IsReadOnly) throw new InvalidOperationException("只读集合禁止操作元素");
+            if (index < 0 || index >= Count) throw new IndexOutOfRangeException();
 
-            for (int i = index; i < Count; i++)
-            {
-                students[i] = students[i + 1];
-            }
-            Count--;
+			for (int i = index; i < Count-1; i++)
+			{
+				books[i] = books[i + 1];
+			}
+			books[Count - 1] = null;
+			Count--;
         }
-
-        /*这个属性的get访问器返回一个迭代器
-         *这个迭代器用于本类支持foreach循环
-        IEnumerator Enumerator
-        {
-            get
-            {
-                if(students is not null)
-                    for (int i = 0; i < this.Count; i++)
-                    {
-                        yield return this[i];
-                    }
-            }
-        }*/
 
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
         }
 
-        public override string ToString()
+		/*【自定义迭代器】*/
+        private sealed class BookEnumerator : IEnumerator<Book>
         {
-            return $"Students --Count：{Count} --Capacity：{Capacity}";
-        }
+			private Books books;
+			private int index = -1;
 
-        /*定义一个包装学生类数组的枚举器类
-        *该类实现了IEnumerator<T>接口
-        *该类用于在迭代器中返回一个枚举器，而无需用户自定义迭代器
-        */
-        class StudentEnumerator : IEnumerator<Student>
-        {
-            private Students students;
-            private int position = -1;
-
-            public StudentEnumerator(Students students)
-            {
-                this.students = students;
-            }
-            public Student Current => students[position];
+            public Book Current => books[index];
 
             object IEnumerator.Current => Current;
 
+			public BookEnumerator(Books books)
+			{
+				if (books is null) throw new ArgumentNullException(nameof(books));
+				this.books = books;
+			}
             public void Dispose()
             {
-                
+                Reset();
             }
 
             public bool MoveNext()
             {
-                position++;
-                return position < students.Count;
+				index++;
+				return index < books.Count;
             }
 
             public void Reset()
             {
-                position = -1;
+				index = -1;
             }
         }
     }
+
+    /*定义一个Book类
+     *内部重写了Object类中的Equals、GetHashCode和ToString方法
+     *内部实现了IEquatable<T>接口
+     *内部重载了==和!=运算符
+     */
+    public class Book : IEquatable<Book>
+    {
+		public Guid Guid { get; init; }
+		public string BookName 
+		{ 
+			get;
+			set 
+			{
+				if (!string.IsNullOrWhiteSpace(value))
+					field = value;
+				else
+					throw new ArgumentException(nameof(BookName));
+			} 
+		}
+		public string Author
+		{
+            get;
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                    field = value;
+                else
+                    throw new ArgumentException(nameof(Author));
+            }
+        }
+
+		public Book(string bookName,string author)
+		{
+			Guid = Guid.NewGuid();
+			BookName = bookName;
+			Author = author;
+		}
+
+        public bool Equals(Book? other)
+        {
+            bool isSameGuid = this.Guid == other?.Guid;
+            bool isSameName = this.BookName == other?.BookName;
+			bool isSameAuthor = this.Author == other?.Author;
+
+			if (isSameGuid) return true;
+			if (isSameName && isSameAuthor) return true;
+
+			return false;
+        }
+
+		public static bool operator ==(Book left, Book right)
+		{
+			return left.Equals(right);
+;		}
+
+		public static bool operator !=(Book left,Book right)
+		{
+			return !left.Equals(right);
+		}
+
+        public override bool Equals(object? obj)
+        {
+			return obj is Book book ? Equals(book) : false;
+        }
+
+        public override string ToString()
+        {
+			return $"书籍信息 --- 书籍ID：{Guid} | 书名：《{BookName}》 | 作者：{Author}";
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+    }
+
 }
 
 namespace LearnCSharp.Professional
 {
     internal class LearnCollection
     {
-        public static void LearnSystemCollections()
-        {
-            Console.WriteLine("以系统内置的集合Dictionary<Tkey,TValue>和自建Student类实例为例学习该内置集合");
-            Dictionary<int, Student> students = new Dictionary<int, Student>(10);
+		/*【20401：系统内置集合 --- 以List<T>为例】
+		 */
+		public static void LearnSystemCollection()
+		{
+            Console.WriteLine("\n------示例：系统内置集合（以List<T>为例）------\n");
 
-            Console.WriteLine($"已经创建集合Dictionary<int, Student>的一个实例students --output：Dictionary<int, Student> {{--Count：{students.Count}}}");
-            Console.WriteLine();
-
-            for (int i = 0; i < 10; i++)
+            //实例化一个List<Book>集合,分别使用初始化器和Add方法添加一些元素
+            List<Book> bookList = new List<Book>()
             {
-                Student student = new Student($"学生<{i + 1:0000}>", Random.Shared.Next(11, 19));
-                students.Add(student.StuID, student);
-            }
+                new Book("鬼 吹 灯","天下霸唱"),
+                new Book("迷踪之国","天下霸唱"),
+                new Book("死亡循环","天下霸唱"),
+                new Book("盗墓笔记","南派三叔"),
+                new Book("老 九 门","南派三叔"),
+                new Book("斗罗大陆","唐家三少"),
+                new Book("神印王座","唐家三少")
+            };
 
-            Console.WriteLine($"使用Add方法随机添加十个Student实例进入集合students --output：Dictionary<int, Student> {{--Count：{students.Count}}}");
-            Console.WriteLine();
-            Console.WriteLine("遍历输出已添加学生信息：");
+            bookList!.Add(new Book("射雕英雄", "金庸"));
+            bookList!.Add(new Book("神雕侠侣", "金庸"));
+            bookList!.Add(new Book("天龙八部", "金庸"));
 
-            foreach (var student in students)
+            Console.WriteLine("已创建一个List<Book>集合实例bookList，输出集合数据：");
+            Console.WriteLine($"【集合】实例：bookList | 元素数量：{bookList.Count} | 集合容量：{bookList.Capacity}");
+            foreach (Book book in bookList)
             {
-                Console.WriteLine($"Key：{student.Key}  Value：{student.Value}");
-            }
-            Console.WriteLine();
-
-            for (int i = 10; i < 15; i++)
-            {
-                Student student = new Student($"学生<{i + 1:0000}>", Random.Shared.Next(11, 19));
-                students.Add(student.StuID, student);
-            }
-
-            Console.WriteLine($"再次使用Add方法随机添加五个Student实例进入集合students --output：Dictionary<int, Student> {{--Count：{students.Count}}}");
-            Console.WriteLine();
-            Console.WriteLine("遍历输出已添加学生信息：");
-
-            foreach (var student in students)
-            {
-                Console.WriteLine($"Key：{student.Key}  Value：{student.Value}");
+                Console.WriteLine($" |---【元素】{book}");
             }
             Console.WriteLine();
-            
-            Student stu = students[students.First().Key];
+            //下方注释了的代码添加了重复项，如果添加到集合会触发集合内定义了的排重机制引发异常
+            //bookList!.Add(new Book("天龙八部", "金庸"));
 
-            Console.WriteLine($"使用索引访问的方式读取students集合索引为{students.First().Key}的Student实例的信息：students[{students.First().Key}] \n--output：{stu}\n");
-            Console.Write($"将该实例使用Add方法再次加入集合，由于Dictionary<Tkey,TValue>本身支持根据键去重，故结果输出：");
-            try
+            //使用Insert方法继续插入十个数据
+            bookList.Insert(1, new Book("小李飞刀", "古龙"));
+            bookList.Insert(3, new Book("圆月弯刀", "古龙"));
+            bookList.Insert(5, new Book("楚 留 香", "古龙"));
+            bookList.Insert(7, new Book("斗破苍穹", "天蚕土豆"));
+            bookList.Insert(9, new Book("西 游 记", "吴承恩"));
+            bookList.Insert(11, new Book("三国演义", "罗贯中"));
+            bookList.Insert(13, new Book("水 浒 传", "施耐庵"));
+            bookList.Insert(15, new Book("红 楼 梦", "曹雪芹"));
+            bookList.Insert(17, new Book("聊斋志异", "蒲松龄"));
+            bookList.Insert(18, new Book("白发魔女", "梁羽生"));
+
+            Console.WriteLine("数据插入完成，输出集合数据：");
+            Console.WriteLine($"【集合】实例：bookList | 元素数量：{bookList.Count} | 集合容量：{bookList.Capacity}");
+            foreach (Book book in bookList)
             {
-                students.Add(stu.StuID, stu);
-            }
-            catch (ArgumentException e)
-            {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($" |---【元素】{book}");
             }
             Console.WriteLine();
 
-            Console.WriteLine($"使用Remove方法将该Student实例从集合移除，移除结果：{students.Remove(stu.StuID)}");
-            Console.WriteLine($"此时students实例信息：Dictionary<int, Student> {{--Count：{students.Count}}}");
-            Console.WriteLine($"再次遍历集合内Student实例信息");
+            //使用Remove和RemoveAt方法分别移除一个数据
+            Book book03 = bookList[3];
+            Book book19 = bookList[19];
 
-            foreach (var student in students)
+            bookList.RemoveAt(3);
+            bool isRemoved = bookList.Remove(book19);
+
+            Console.WriteLine($"已移除【元素】{book03}");
+            if (isRemoved) Console.WriteLine($"已移除【元素】{book19}");
+
+            Console.WriteLine("数据移除完成，输出集合数据：");
+            Console.WriteLine($"【集合】实例：bookList | 元素数量：{bookList.Count} | 集合容量：{bookList.Capacity}");
+            foreach (Book book in bookList)
             {
-                Console.WriteLine($"Key：{student.Key}  Value：{student.Value}");
+                Console.WriteLine($" |---【元素】{book}");
             }
             Console.WriteLine();
 
-            Console.WriteLine($"使用Add方法再次将该Student实例插入集合");
+			//使用Sort方法对List进行排序
+			bookList.Sort((x, y) => x.Author.GetHashCode() - y.Author.GetHashCode());
 
-            students.Add(stu.StuID, stu);
-
-            Console.WriteLine($"此时students实例信息：Dictionary<int, Student> {{--Count：{students.Count}}}");
-            Console.WriteLine($"再次遍历集合内Student实例信息");
-
-            foreach (var student in students)
+            Console.WriteLine("数据排序完成，输出集合数据：");
+            Console.WriteLine($"【集合】实例：bookList | 元素数量：{bookList.Count} | 集合容量：{bookList.Capacity}");
+            foreach (Book book in bookList)
             {
-                Console.WriteLine($"Key：{student.Key}  Value：{student.Value}");
+                Console.WriteLine($" |---【元素】{book}");
             }
             Console.WriteLine();
 
-            students.Clear();
-            Console.WriteLine($"使用Clear方法清除集合，此时students实例信息：Dictionary<int, Student> {{--Count：{students.Count}}}");
+            //使用CopyTo方法将bookList数据复制到一个Book数组
+            Book[] bookArray = new Book[20];
+            bookList.CopyTo(bookArray, 0);
+
+            Console.WriteLine("数据复制完成，输出数组数据：");
+            Console.WriteLine($"【数组】实例：bookArray | 数组长度：{bookArray.Length}");
+            foreach (Book book in bookArray)
+            {
+                if (book is not null)
+                    Console.WriteLine($" |---【元素】{book}");
+                else
+                    Console.WriteLine($" |---【元素】NULL");
+            }
+            Console.WriteLine();
+
+            //使用Clear方法清除bookList所有数据
+            bookList.Clear();
+
+            Console.WriteLine("数据清除完成，输出集合数据：");
+            Console.WriteLine($"【集合】实例：bookList | 元素数量：{bookList.Count} | 集合容量：{bookList.Capacity}");
+            Console.WriteLine();
         }
+       
+		/*【20402：用户定义的集合示例】
+		 */
+		public static void LearnCustomerCollection()
+		{
+            Console.WriteLine("\n------示例：自定义集合------\n");
 
-        /*【使用自定义集合代码示例】
-         * 使用自定义集合并测试相关功能
-         */
-        public static void LearnCustomerCollections()
-        {
-            Students students = new Students(10);
+			//实例化一个自定义的List<Book>集合,分别使用初始化器和Add方法添加一些元素
+			Books books = new Books()
+			{
+				new Book("鬼 吹 灯","天下霸唱"),
+                new Book("迷踪之国","天下霸唱"),
+                new Book("死亡循环","天下霸唱"),
+                new Book("盗墓笔记","南派三叔"),
+                new Book("老 九 门","南派三叔"),
+                new Book("斗罗大陆","唐家三少"),
+                new Book("神印王座","唐家三少")
+            };
 
-            Console.WriteLine($"已经创建集合Students的一个实例students --output：{students}");
+			books!.Add(new Book("射雕英雄", "金庸"));
+			books!.Add(new Book("神雕侠侣", "金庸"));
+			books!.Add(new Book("天龙八部", "金庸"));
+
+            Console.WriteLine("已创建一个Books集合实例books，输出集合数据：");
+            Console.WriteLine($"【集合】实例：books | 元素数量：{books.Count} | 集合容量：{books.Capacity}");
+			foreach (Book book in books) 
+			{
+                Console.WriteLine($" |---【元素】{book}");
+			}
             Console.WriteLine();
+			//下方注释了的代码添加了重复项，如果添加到集合会触发集合内定义了的排重机制引发异常
+			//books!.Add(new Book("天龙八部", "金庸"));
 
-            for (int i = 0; i < 10; i++)
+			//使用Insert方法继续插入十个数据
+			books.Insert(1, new Book("小李飞刀", "古龙"));
+            books.Insert(3, new Book("圆月弯刀", "古龙"));
+            books.Insert(5, new Book("楚 留 香", "古龙"));
+            books.Insert(7, new Book("斗破苍穹", "天蚕土豆"));
+            books.Insert(9, new Book("西 游 记", "吴承恩"));
+            books.Insert(11, new Book("三国演义", "罗贯中"));
+            books.Insert(13, new Book("水 浒 传", "施耐庵"));
+            books.Insert(15, new Book("红 楼 梦", "曹雪芹"));
+            books.Insert(17, new Book("聊斋志异", "蒲松龄"));
+            books.Insert(18, new Book("白发魔女", "梁羽生"));
+
+            Console.WriteLine("数据插入完成，输出集合数据：");
+            Console.WriteLine($"【集合】实例：books | 元素数量：{books.Count} | 集合容量：{books.Capacity}");
+            foreach (Book book in books)
             {
-                Student student = new Student($"学生<{i + 1:0000}>", Random.Shared.Next(11, 19));
-                students.Add(student);
-            }
-
-            Console.WriteLine($"使用Add方法随机添加十个Student实例进入集合students --output：{students}");
-            Console.WriteLine();
-            Console.WriteLine("遍历输出已添加学生信息：");
-
-            foreach (var student in students)
-            {
-                Console.WriteLine(student);
-            }
-            Console.WriteLine();
-
-            for (int i = 10; i < 15; i++)
-            {
-                Student student = new Student($"学生<{i + 1:0000}>", Random.Shared.Next(11, 19));
-                students.Add(student);
-            }
-
-            Console.WriteLine($"再次使用Add方法随机添加五个Student实例进入集合students --output：{students}");
-            Console.WriteLine();
-            Console.WriteLine("遍历输出已添加学生信息：");
-
-            foreach (var student in students)
-            {
-                Console.WriteLine(student);
-            }
-            Console.WriteLine();
-
-            Student stu = students[5];
-
-            Console.WriteLine($"使用索引访问的方式读取students集合索引为5即第六个Student实例的信息：students[5] \n--output：{stu}\n");
-            Console.Write($"将该实例使用Add方法再次加入集合，由于加入了去重验证，故结果输出：");
-            try 
-            {
-                students.Add(stu);
-            }
-            catch (ArgumentException e) 
-            {
-                Console.WriteLine(e.Message); 
+                Console.WriteLine($" |---【元素】{book}");
             }
             Console.WriteLine();
 
-            Console.Write($"将该实例使用Insert方法再次加入集合，由于加入了去重验证，故结果输出：");
+			//使用Remove和RemoveAt方法分别移除一个数据
+			Book book03 = books[3];
+			Book book19 = books[19];
+
+			books.RemoveAt(3);
+			bool isRemoved = books.Remove(book19);
+
+            Console.WriteLine($"已移除【元素】{book03}");
+			if(isRemoved ) Console.WriteLine($"已移除【元素】{book19}");
+            
+			Console.WriteLine("数据移除完成，输出集合数据：");
+            Console.WriteLine($"【集合】实例：books | 元素数量：{books.Count} | 集合容量：{books.Capacity}");
+            foreach (Book book in books)
+            {
+                Console.WriteLine($" |---【元素】{book}");
+            }
+            Console.WriteLine();
+
+			//使用CopyTo方法将books数据复制到一个Book数组
+			Book[] bookArray = new Book[20];
+			books.CopyTo(bookArray, 0);
+
+            Console.WriteLine("数据复制完成，输出数组数据：");
+            Console.WriteLine($"【数组】实例：bookArray | 数组长度：{bookArray.Length}");
+            foreach (Book book in bookArray)
+            {
+				if(book is not null)
+					Console.WriteLine($" |---【元素】{book}");
+				else
+					Console.WriteLine($" |---【元素】NULL");
+            }
+            Console.WriteLine();
+
+			//使用Clear方法清除books所有数据
+			books.Clear();
+
+            Console.WriteLine("数据清除完成，输出集合数据：");
+            Console.WriteLine($"【集合】实例：books | 元素数量：{books.Count} | 集合容量：{books.Capacity}");
+            Console.WriteLine();
+
+			//通过IsReadOnly属性构建只读的Books实例readonlyBooks
+			Books readonlyBooks = new Books(true, bookArray);
+
+            Console.WriteLine("已创建一个只读Books集合实例readonlyBooks，输出集合数据：");
+            Console.WriteLine($"【集合】实例：readonlyBooks | 元素数量：{readonlyBooks.Count} | 集合容量：{readonlyBooks.Capacity} | 只读：{readonlyBooks.IsReadOnly}");
+            foreach (Book book in readonlyBooks)
+            {
+                Console.WriteLine($" |---【元素】{book}");
+            }
+            Console.WriteLine();
+
+            //对只读集合添加数据、插入数据、移除数据、清除数据均会引发异常
+            Console.WriteLine("对只读集合实例readonlyBooks添加数据、插入数据、移除数据、清除数据：");
+			try 
+			{
+                readonlyBooks.Add(new Book("千朵桃花一世开", "随宇而安"));
+            }
+			catch(Exception e)
+			{
+				Console.WriteLine($"添加数据 --- 错误：{e.Message}");
+			}
+
             try
             {
-                students.Insert(10, stu);
+                readonlyBooks.Insert(5,new Book("千朵桃花一世开", "随宇而安"));
             }
-            catch (ArgumentException e)
+            catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine($"插入数据 --- 错误：{e.Message}");
             }
-            Console.WriteLine();
 
-            Console.WriteLine($"使用Remove方法将该Student实例从集合移除，移除结果：{students.Remove(stu)}");
-            Console.WriteLine($"此时students实例信息：{students}");
-            Console.WriteLine($"再次遍历集合内Student实例信息");
-
-            foreach (var student in students)
+            try
             {
-                Console.WriteLine(student);
+                readonlyBooks.RemoveAt(7);
             }
-            Console.WriteLine();
-
-            Console.WriteLine($"使用Insert方法再次将该Student实例插入集合原位置");
-
-            students.Insert(5, stu);
-
-            Console.WriteLine($"此时students实例信息：{students}");
-            Console.WriteLine($"再次遍历集合内Student实例信息");
-
-            foreach (var student in students)
+            catch (Exception e)
             {
-                Console.WriteLine(student);
+                Console.WriteLine($"移除数据 --- 错误：{e.Message}");
             }
-            Console.WriteLine();
 
-            students.Clear();
-            Console.WriteLine($"使用Clear方法清除集合，此时students实例信息：{students}");
+            try
+            {
+                readonlyBooks.Clear();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"清除数据 --- 错误：{e.Message}");
+            }
+
+            Console.WriteLine();
         }
 
         public static void StartLearnCollection()
         {
             string title = "001 内置集合（Dictionary<TKey, TValue>示例）\n" +
                 "002 自定义集合";
-
+			
             do
             {
                 Console.WriteLine("【学习集合】");
@@ -661,8 +740,8 @@ namespace LearnCSharp.Professional
 
                 switch (input)
                 {
-                    case "001": LearnSystemCollections(); break;
-                    case "002": LearnCustomerCollections(); break;
+                    case "001": ; break;
+                    case "002": LearnCustomerCollection(); break;
                     default: Console.WriteLine("输入错误！"); break;
                 }
 

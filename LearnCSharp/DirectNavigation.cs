@@ -103,7 +103,22 @@ namespace LearnCSharp
             ["20101"] = LearnDelegate.LearnSystemDelegate,
             ["20102"] = LearnDelegate.LearnCustomerDelegate,
             ["20103"] = LearnDelegate.LearnMultiDelegate,
-            ["20301"] = LearnEvent.StartLearnEvent
+            ["20201"] = LearnAnonymousFunction.LearnAnonymousMethods,
+            ["20202"] = LearnAnonymousFunction.LearnStatement_Lambda,
+            ["20203"] = LearnAnonymousFunction.LearnExpression_Lambda,
+            ["20204"] = LearnAnonymousFunction.LearnLambdaNotCatchOuterVariable,
+            ["20205"] = LearnAnonymousFunction.LearnLambdaCatchOuterVariable,
+            ["20206"] = LearnAnonymousFunction.LearnLambdaCatchOuterForeachLoopVariable,
+            ["20207"] = LearnAnonymousFunction.LearnLambdaCatchOuterForLoopVariable,
+            ["20301"] = LearnEvent.StartLearnEvent,
+            ["20401"] = LearnCollection.LearnSystemCollection,
+            ["20402"] = LearnCollection.LearnCustomerCollection,
+            ["20501"] = LearnGenericType.StartLearnGenericType,
+            ["20601"] = LearnLinq.LearnLINQQuerySyntax,
+            ["20602"] = LearnLinq.LearnLINQMethodSyntax,
+            ["21001"] = LearnProcessAndThread.LearnProcess,
+            ["21002"] = LearnProcessAndThread.LearnThread,
+            ["00000"] = Test.TestFunc
         };
 
         public static void DirectNavigate(string code)

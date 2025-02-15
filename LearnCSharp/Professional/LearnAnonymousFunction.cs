@@ -205,9 +205,10 @@ namespace LearnCSharp.Professional
 {
     internal class LearnAnonymousFunction
     {
-		//匿名方法代码示例
+		/*【20201：匿名方法代码示例】*/
         public static void LearnAnonymousMethods()
         {
+            Console.WriteLine("\n------示例：匿名方法------\n");
             //匿名方法的简单使用 声明一个具有两个整型参数并返回bool值的匿名方法，并将其赋值给一个Func<int, int, bool>委托
             Func<int, int, bool> compare = delegate (int x, int y) 
             {
@@ -230,9 +231,10 @@ namespace LearnCSharp.Professional
             Console.WriteLine(info.Invoke());
         }
 
-        //语句Lambda代码示例
+        /*【20202：语句Lambda代码示例】*/
         public static void LearnStatement_Lambda()
         {
+            Console.WriteLine("\n------示例：语句Lambda------\n");
             //示例：无参无返回类型的Action委托接收一个语句Lambda表达式
             Action action = () =>
             {
@@ -255,9 +257,10 @@ namespace LearnCSharp.Professional
                 " 整数x:{0} 和 整数y:{1} 交换后的结果：x:{2} y:{3}", 5, 6, result.Item1, result.Item2); 
         }
 
-		//表达式Lambda代码示例
+		/*【20203：表达式Lambda代码示例】*/
         public static void LearnExpression_Lambda()
         {
+            Console.WriteLine("\n------示例：表达式Lambda------\n");
             //示例：使用Action委托接收一个仅含一句输出语句的Lambda表达式
             Action action = () => Console.WriteLine("这是一个“表达式Lambda”表达式，无参，且无返回值");
             
@@ -276,12 +279,12 @@ namespace LearnCSharp.Professional
          *Lambda表达式只是C#给我们的一个“语法糖”，用于提升代码的简洁性和可读性、可维护性。
          */
 
-        /*示例一：Lambda表达式（或匿名方法）未使用其主体外部声明的变量
+        /*【20204：Lambda表达式（或匿名方法）未使用其主体外部声明的变量】
          *该情况下 编译器遇到匿名函数会将其转换成单独的、由编译器内部声明的静态方法。
          该静态方法再实例化成一个委托并作为参数传递。
         */
         private static void PrintSomething(Func<string> print) => Console.WriteLine(print.Invoke());
-        public static void LearnLambdaWithoutOuterVariable()
+        public static void LearnLambdaNotCatchOuterVariable()
         {
             Func<string> func = () =>
             {
@@ -294,7 +297,7 @@ namespace LearnCSharp.Professional
 
             /*对于该方法中的Lambda表达式会被编译器进行如下转换
              * 
-               public static void LearnLambdaWithoutOuterVariable()
+               public static void LearnLambdaNotCatchOuterVariable()
               {
                     Func<string> func = LearnLambda.__AnonymousMethod_00000000;
                     PrintSomething(func);
@@ -309,7 +312,7 @@ namespace LearnCSharp.Professional
              */
         }
 
-        /*示例二：Lambda表达式（或匿名方法）使用了其主体外部声明的变量
+        /*【20205：Lambda表达式（或匿名方法）使用了其主体外部声明的变量】
          *在Lambda表达式外部声明的局部变量（包括包容方法的参数）称为该Lambda的外部变量（this引用虽然技术上说不是变量，但也被视为外部变量）
          *如果Lambda表达式主体使用一个外部变量，那么就说该变量被该Lambda表达式捕捉
          */
@@ -389,7 +392,8 @@ namespace LearnCSharp.Professional
             */
         }
 
-        /*关于Lambda表达式捕捉外部变量时，尤其要注意捕捉到循环中的迭代变量
+        /*【20206：Lambda表达式（或匿名方法）使用了其主体外部声明的Foreach循环迭代变量】
+         *关于Lambda表达式捕捉外部变量时，尤其要注意捕捉到循环中的迭代变量
          *以下方法执行的结果我们认为的会是：
           张三
           李四
@@ -407,40 +411,8 @@ namespace LearnCSharp.Professional
          *但在C# 5.0中，对foreach循环这一情况下Lambda捕捉外部变量的行为进行了改变，
           认为每一次循环迭代，foreach循环变量都应该是“新变量”。所以，每次创建委托，
           捕捉的都是不同的变量，不再共享同一个变量。
-         *注意，上一条所述的更改不适用于其他循环，例如将上述代码更改为如下代码，
-          for (int i = 0; i < names.Length; i++)
-          {
-              actions.Add(() => Console.WriteLine(names[i]));
-          }
-          foreach (var item in actions)
-          {
-              item.Invoke();
-          }
-          每次循环创建委托后，变量都会保留其最新值4，如果继续执行委托调用，则会
-          报错[Index was outside the bounds of the array.],因为不存在names[4]。
-         *注意，Lambda表达式是一个匿名函数，这个匿名函数会直接用于创建一个委托实例，
-          在实际执行过程中顺序是如下的：
-          将匿名函数转换为类型兼容的委托->委托使用Invoke方法调用该匿名函数->执行匿名方法
-          所以需要注意，当Lambda表达式捕捉的外部变量是循环变量且作为循环判断条件使用时
-          不要在使用Lambda表达式来循环创建委托实例时又在表达式主体内进行处理来结束循环，
-          因为这样做的结果时运行时由于永远不会优先执行匿名函数导致循环变量不会改变而导致无限循环。
-          如果代码如下，运行时将会进入无限循环：
-          int i = 0;
-          while(i < names.Length)
-          {
-              Action action = () =>
-              {
-                  Console.WriteLine(names[i]);
-                  i++;
-               };
-              actions.Add(action);        
-           }
-            
-          foreach (var item in actions)
-          {
-              item.Invoke();
-           }*/
-        public static void LearnLambdaCatchOuterLoopVariable()
+         */
+        public static void LearnLambdaCatchOuterForeachLoopVariable()
         {
             string[] names = { "张三", "李四", "王五", "赵六" };
             int countOutput = 0;
@@ -462,7 +434,7 @@ namespace LearnCSharp.Professional
             Console.WriteLine("输出姓名次数：{0}\n", countOutput);
         }
 
-        /*示例LearnLambdaCatchOuterLoopVariable中的代码会被编译器转换为如下代码
+        /*示例LearnLambdaCatchOuterForeachLoopVariable中的代码会被编译器转换为如下代码
         private sealed class __LocalsDisplayClass_00000000
         {
             public int countOutput;
@@ -480,7 +452,7 @@ namespace LearnCSharp.Professional
             }
         }
 
-        public static void LearnLambdaCatchOuterLoopVariable()
+        public static void LearnLambdaCatchOuterForeachLoopVariable()
         {
             __LocalsDisplayClass_00000000 locals1 = new __LocalsDisplayClass_00000000();
             string[] names = new string[] { "张三", "李四", "王五", "赵六" };
@@ -519,7 +491,7 @@ namespace LearnCSharp.Professional
             }
         }
 
-        public static void LearnLambdaCatchOuterLoopVariable()
+        public static void LearnLambdaCatchOuterForeachLoopVariable()
         {
             __LocalsDisplayClass_00000001 locals = new __LocalsDisplayClass_00000001();
             locals.locals1 = new __LocalsDisplayClass_00000000();
@@ -539,6 +511,20 @@ namespace LearnCSharp.Professional
             Console.WriteLine(locals.locals1.countOutput);
         }*/
 
+
+        /*【20207：Lambda表达式（或匿名方法）使用了其主体外部声明的For循环迭代变量】
+         * 上一条所述的更改不适用于其他循环，例如将foreach代码更改为如下代码，
+          for (int i = 0; i < names.Length; i++)
+          {
+              actions.Add(() => Console.WriteLine(names[i]));
+          }
+          foreach (var item in actions)
+          {
+              item.Invoke();
+          }
+          每次循环创建委托后，变量都会保留其最新值4，如果继续执行委托调用，则会
+          报错[Index was outside the bounds of the array.],因为不存在names[4]。
+         */
         public static void LearnLambdaCatchOuterForLoopVariable()
         {
             string[] names = { "张三", "李四", "王五", "赵六" };
@@ -604,6 +590,29 @@ namespace LearnCSharp.Professional
             Console.WriteLine(locals.locals1.countOutput) ;
         }*/
 
+        /*注意，Lambda表达式是一个匿名函数，这个匿名函数会直接用于创建一个委托实例，
+          在实际执行过程中顺序是如下的：
+          将匿名函数转换为类型兼容的委托->委托使用Invoke方法调用该匿名函数->执行匿名方法
+          所以需要注意，当Lambda表达式捕捉的外部变量是循环变量且作为循环判断条件使用时
+          不要在使用Lambda表达式来循环创建委托实例时又在表达式主体内进行处理来结束循环，
+          因为这样做的结果时运行时由于永远不会优先执行匿名函数导致循环变量不会改变而导致无限循环。
+          如果代码如下，运行时将会进入无限循环：
+          int i = 0;
+          while(i < names.Length)
+          {
+              Action action = () =>
+              {
+                  Console.WriteLine(names[i]);
+                  i++;
+               };
+              actions.Add(action);        
+           }
+            
+          foreach (var item in actions)
+          {
+              item.Invoke();
+           }
+         */
         public static void StartLearnAnonymousFunction()
         {
             string title = "001 匿名方法\n" +
@@ -628,9 +637,9 @@ namespace LearnCSharp.Professional
                     case "001": LearnAnonymousMethods(); break;
                     case "002": LearnStatement_Lambda(); break;
                     case "003": LearnExpression_Lambda(); break;
-                    case "004": LearnLambdaWithoutOuterVariable(); break;
+                    case "004": LearnLambdaNotCatchOuterVariable(); break;
                     case "005": LearnLambdaCatchOuterVariable(); break;
-                    case "006": LearnLambdaCatchOuterLoopVariable(); break;
+                    case "006": LearnLambdaCatchOuterForeachLoopVariable(); break;
                     case "007": LearnLambdaCatchOuterForLoopVariable(); break;
                     default: Console.WriteLine("输入错误！"); break;
                 }

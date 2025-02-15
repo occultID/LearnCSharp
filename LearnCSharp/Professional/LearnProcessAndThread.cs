@@ -9,6 +9,8 @@ namespace LearnCSharp.Professional
 {
     internal class LearnProcessAndThread
     {
+        private static object obj = new object();
+        /*【21001：进程】*/
         public static void LearnProcess()
         {
             Process current = Process.GetCurrentProcess();
@@ -36,6 +38,7 @@ namespace LearnCSharp.Professional
                 current.Kill();
         }
 
+        /*【21002：线程】*/
         public static void LearnThread()
         {
             string outputString = "";

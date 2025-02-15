@@ -147,6 +147,7 @@ namespace LearnCSharp.Professional
 		 */
 		public static void LearnSystemDelegate()
 		{
+            Console.WriteLine("\n------示例：内置简单委托------\n");
             //声明一个Calculators实例
             Calculators<double> calculators = new Calculators<double>();
 
@@ -191,6 +192,7 @@ namespace LearnCSharp.Professional
 		 */
 		public static void LearnCustomerDelegate()
 		{
+            Console.WriteLine("\n------示例：自定义委托------\n");
             //声明一个Calculators实例
             Calculators<double> calculators = new Calculators<double>();
 
@@ -235,6 +237,7 @@ namespace LearnCSharp.Professional
 		 */
 		public static void LearnMultiDelegate()
 		{
+            Console.WriteLine("\n------示例：多播委托------\n");
             //声明一个Calculators实例
             Calculators<double> calculators = new Calculators<double>();
 

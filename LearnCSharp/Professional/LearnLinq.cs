@@ -176,324 +176,208 @@ LINQ查询基础
 				□ 要强制立即执行任何查询并缓存其结果，可调用ToList、ToArray、ToDictionary或ToLookup方法
 				□ 要强制立即执行任何查询可在查询表达式后紧跟一个foreach循环来实现
  */
-using System.Net.Cache;
-using System.Xml;
+using LearnCSharp.Basic;
+using LearnCSharp.Professional.LearnCollectionsSpace;
+using System.Numerics;
 
 namespace LearnCSharp.Professional
 {
     internal class LearnLinq
     {
-		private static List<Student> students = new List<Student>();
-		private static List<Score> scores = new List<Score>();
+		private static List<Author> authors = new List<Author>(20)
+        {
+            new Author(1,"周树人","鲁迅",'男'),
+            new Author(2,"查良镛","金庸",'男'),
+            new Author(3,"熊耀华","古龙",'男'),
+            new Author(4,"温瑞安","温瑞安",'男'),
+            new Author(5,"陈文统","梁羽生",'男'),
+            new Author(6,"徐  磊","南派三叔",'男'),
+            new Author(7,"张  威","唐家三少",'男'),
+            new Author(8,"张牧野","天下霸唱",'男'),
+            new Author(9,"李  虎","天蚕土豆",'男'),
+            new Author(10,"陈  喆","琼瑶",'女'),
+            new Author(11,"张爱玲","梁京",'女'),
+            new Author(12,"杨季康","杨绛",'女'),
+            new Author(13,"钱钟书","钱钟书",'男'),
+            new Author(14,"唐  七","唐七",'女'),
+            new Author(15,"周浩晖","周浩晖",'男'),
+            new Author(16,"张  恒","zhttty",'男'),
+            new Author(17,"谢婉莹","冰心",'女'),
+            new Author(18,"李尧棠","巴金",'男'),
+            new Author(19,"吴  鑫","卖报小郎君",'男'),
+            new Author(20,"陈政华","烽火戏诸侯",'男')
+        };
+
+		private static List<Book> books = new List<Book>(20)
+		{
+			new Book("鬼 吹 灯",authors[7].AuthorID),
+			new Book("迷踪之国",authors[7].AuthorID),
+			new Book("死亡循环",authors[7].AuthorID),
+			new Book("盗墓笔记",authors[5].AuthorID),
+			new Book("老 九 门",authors[5].AuthorID),
+			new Book("斗罗大陆",authors[6].AuthorID),
+			new Book("神印王座",authors[6].AuthorID),
+			new Book("射雕英雄", authors[1].AuthorID),
+			new Book("神雕侠侣", authors[1].AuthorID),
+			new Book("天龙八部", authors[1].AuthorID),
+			new Book("小李飞刀", authors[2].AuthorID),
+			new Book("圆月弯刀", authors[2].AuthorID),
+			new Book("楚 留 香", authors[2].AuthorID),
+			new Book("斗破苍穹", authors[8].AuthorID),
+			new Book("茉莉香片", authors[10].AuthorID),
+			new Book("倾城之恋", authors[10].AuthorID),
+			new Book("华 胥 引", authors[13].AuthorID),
+			new Book("烟雨蒙蒙", authors[9].AuthorID),
+			new Book("剑    来", authors[19].AuthorID),
+			new Book("白发魔女", authors[4].AuthorID)
+		};
+
+		private static List<Score> scores;
+
+        /*【20601：LINQ查询语句】*/
         public static void LearnLINQQuerySyntax()
         {
-			Console.WriteLine("【使用LINQ查询语法对列表集合进行查询】");
-			Console.WriteLine("使用如下语句查询students中Student实例年龄大于13的元素并且按年龄升序排序返回一个只包含姓名和年龄的集合\n" +
-                "var stuAgeThan13 = from student in students\n" +
-				"                   where student.Age > 13\n" +
-				"                   orderby student.Age ascending\n" +
-				"                   select new { Name = student.Name, Age = student.Age };\n");
+            Console.WriteLine("\n------示例：Linq查询语法------\n");
+            ShowList();
 
-			var stuAgeThan13 = from student in students
-						 where student.Age > 13
-						 orderby student.Age ascending
-						 select new { Name = student.Name, Age = student.Age };
-
-			Console.WriteLine("使用foreach遍历stuAgeThan13执行查询并输出筛选信息");
-
-			foreach (var item in stuAgeThan13)
+            //使用Linq查询语法输出按作者信息分组的书籍信息
+            Console.WriteLine("按作者信息分组查询书籍信息");
+			var booksGroupByAuthor = from book in books
+									 from author in authors
+									 where book.AuthorID == author.AuthorID
+									 group book by author;
+			foreach (var books in booksGroupByAuthor)
 			{
-				Console.WriteLine($"Student Info：--姓名：{item.Name} --年龄：{item.Age}");
-			}
-
-			Console.WriteLine();
-			Console.WriteLine("使用如下语句查询students中Student实例年龄小于18的元素并且按年龄降序排序以及按性别分组并返回结果\n" +
-                "var stuGroupByGender = from student in students\n" +
-				"                       where student.Age < 18\n" +
-				"                       orderby student.Age descending\n" +
-				"                       group student by student.Gender;\n");
-
-			var stuGroupByGender = from student in students
-								   where student.Age < 18
-								   orderby student.Age descending
-								   group student by student.Gender;
-
-            Console.WriteLine("使用foreach遍历stuGroupByGender执行查询并输出筛选信息");
-
-            foreach (var stus in stuGroupByGender)
-            {
-				Console.WriteLine($"--性别：{stus.Key}");
-				foreach (var stu in stus)
+                Console.WriteLine(books.Key.Pseudonym);
+				foreach (var book in books)
 				{
-					Console.WriteLine($"   {stu}");
-				}
-            }
-
-			Console.WriteLine();
-			Console.WriteLine("使用如下语句查询并联接students和scores实例中StuID相同的元素并使用一个匿名类型返回结果，这里使用交叉联接\n" +
-                "var stuWithScores = from student in students\n" +
-				"                    from score in scores\n" +
-				"                    where student.StuID == score.StuID\n" +
-				"                    let studentScore = new { StuID = student.StuID, Name=student.Name, Score = score.StuScore}\n" +
-				"                    select studentScore;\n");
-
-			var stuWithScores = from student in students
-								from score in scores
-								where student.StuID == score.StuID
-								let studentScore = new { StuID = student.StuID, Name=student.Name, Score = score.StuScore}
-								select studentScore;
-
-            Console.WriteLine("使用foreach遍历stuWithScores执行查询并输出筛选信息");
-            
-			foreach (var item in stuWithScores)
-			{
-				Console.WriteLine($"Student Info：--学号：{item.StuID} --姓名：{item.Name} --分数{item.Score}");
-			}
-
-			Console.WriteLine();
-			Console.WriteLine("使用如下语句查询并联接students和scores实例中StuID相等的元素并使用一个匿名类型返回结果，这里是使用join子句进行内部联接\n" +
-                "var stuJoinScores = from student in students\n" +
-				"                    join score in scores on student.StuID equals score.StuID\n" +
-				"                    select new { StuID = student.StuID, Name = student.Name, Score = score.StuScore };\n");
-
-			var stuJoinScores = from student in students
-								join score in scores on student.StuID equals score.StuID
-								select new { StuID = student.StuID, Name = student.Name, Score = score.StuScore };
-
-            Console.WriteLine("使用foreach遍历stuJionScores执行查询并输出筛选信息");
-
-            foreach (var item in stuJoinScores)
-			{
-                Console.WriteLine($"Student Info：--学号：{item.StuID} --姓名：{item.Name} --分数{item.Score}");
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("部分方法语法没有对应的查询语法，此时只能使用或搭配使用方法语法");
-            Console.WriteLine("使用下列语句对stuJoinScores查询结果进行进一步查询\n" +
-                "var countStudent = stuJoinScores.Count();\n" +
-                "var stuAverageScore = stuJoinScores.Average(s => s.Score);\n" +
-                "var stuGroupByScores = from stu in stuJoinScores\n" +
-				"                       orderby stu.Score descending\r\n" +
-				"                       group stu by stu.Score >= stuAverageScore ? \"高于平均分\" : \"低于平均分\";\n");
-
-            var countStudent = stuJoinScores.Count();
-            var stuAverageScore = stuJoinScores.Average(s => s.Score);
-			var stuGroupByScores = from stu in stuJoinScores
-								   orderby stu.Score descending
-								   group stu by stu.Score >= stuAverageScore ? "高于平均分" : "低于平均分";
-
-            Console.WriteLine($"拥有分数的学生总数：{countStudent}");
-            Console.WriteLine($"拥有分数的学生平均分：{stuAverageScore}");
-            Console.WriteLine($"对拥有分数的学生使用分数是否高于平均分进行分组并按成绩降序输出：");
-
-            foreach (var sc in stuGroupByScores)
-            {
-                Console.WriteLine($"成绩{sc.Key}:");
-                foreach (var item in sc)
-                {
-                    Console.WriteLine($"   Student Info：--学号：{item.StuID} --姓名：{item.Name} --分数{item.Score}");
+                    Console.WriteLine($"    {book}");
                 }
+                Console.WriteLine();
             }
 
-            Console.WriteLine();
-			Console.WriteLine("使用如下语句查询并联接students和scores实例中StuID相等的元素并使用一个匿名类型返回结果，这里是使用join子句进行分组联接\n" +
-                "var stuGroupJoinScores = from student in students\n" +
-				"                         join score in scores on student.StuID equals score.StuID into studentScores\n" +
-				"                         select new { Name = student.Name, StuID = student.StuID, Scores = studentScores };\n");
+            Console.WriteLine("使用并列from子句联接books、authors和scores集合并导出新集合并按评分分组和按从高到低输出书籍评分信息：");
+			var bookScores = from book in books
+							 from author in authors
+							 from score in scores
+							 where book.Guid == score.Guid && book.AuthorID == author.AuthorID
+							 select new { BookName = book.BookName, Author = author.Pseudonym, Score = score.BookScore }
+							 into bookScoresInfo
+							 orderby bookScoresInfo.Score descending
+							 group bookScoresInfo by bookScoresInfo.Score >= 8.0 ? "高于8分" : "低于8分";
 
-			var stuGroupJoinScores = from student in students
-									 join score in scores on student.StuID equals score.StuID into studentScores
-									 select new { Name = student.Name, StuID = student.StuID, Scores = studentScores };
-
-            Console.WriteLine("使用foreach遍历stuGroupJoinScores执行查询并输出筛选信息");
-
-            foreach (var item in stuGroupJoinScores)
+			foreach (var booksInfo in bookScores)
 			{
-				Console.WriteLine($"Student Info：--学号：{item.StuID} --姓名：{item.Name}");
-				foreach (var i in item.Scores)
+				Console.WriteLine(booksInfo.Key);
+				foreach (var book in booksInfo)
 				{
-					Console.WriteLine($"   --分数：{i.StuScore}");		
-				}
+                    Console.WriteLine($"    书籍评分信息 --- 书籍：{book.BookName} | 评分：{book.Score:0.00} | 作者：{book.Author}");
+                }
+				Console.WriteLine();
 			}
 
-            Console.WriteLine();
-            Console.WriteLine("使用如下语句查询并联接students和scores实例中StuID相等的元素并使用一个匿名类型返回结果，这里是使用join子句进行左外部联接\n" +
-                "var stuLeftJoinScores = from student in students\n" +
-				"                        join score in scores on student.StuID equals score.StuID into studentScores\n" +
-				"                        from studentScore in studentScores.DefaultIfEmpty()\n" +
-				"                        select new { Name = student.Name, StuID = student.StuID, Score = studentScore?.StuScore ?? -1 };\n");
+			Console.WriteLine("使用join子句联接books、authors集合并按作家性别、笔名对书籍信息进行分组再进行输出：");
+			var booksGroupByAuthorAndAuthorGender = from book in books
+													join author in authors
+													on book.AuthorID equals author.AuthorID
+													let booksInfo = new { BookName = book.BookName, Author = author.Pseudonym, Gender = author.Gender == '男' ? "男作家" : "女作家" }
+													group booksInfo by booksInfo.Gender
+													into booksInfoByGender
+													select new
+													{
+														Gender = booksInfoByGender.Key,
+														Books = from book in booksInfoByGender
+																  group book by book.Author
+													};
 
-			var stuLeftJoinScores = from student in students
-									join score in scores on student.StuID equals score.StuID into studentScores
-									from studentScore in studentScores.DefaultIfEmpty()
-									select new { Name = student.Name, StuID = student.StuID, Gender=student.Gender, Score = studentScore?.StuScore ?? -1 };
+			foreach (var booksInfo in booksGroupByAuthorAndAuthorGender) 
+			{
+				Console.WriteLine(booksInfo.Gender);
+				foreach (var books in booksInfo.Books)
+				{
+					Console.WriteLine($"    {books.Key}");
+					foreach (var book in books)
+					{
+						Console.WriteLine($"        {book.BookName}");
+					}
+					Console.WriteLine();
+				}
+				Console.WriteLine();
+			}
 
-            Console.WriteLine("使用foreach遍历stuLeftJoinScores执行查询并输出筛选信息");
+			Console.WriteLine("使用join子句对authors、books和scores进行联接");
+			var booksFullInfo = from author in authors
+								join book in books on author.AuthorID equals book.AuthorID
+								into books
+								from bookInfo in books.DefaultIfEmpty(new Book("未 收 录", -1))
+								let book = new { BookName = bookInfo.BookName, Author = author.Pseudonym, Guid = bookInfo.Guid }
+								join score in scores on book.Guid equals score.Guid
+								into bookinfo 
+								from bi in bookinfo.DefaultIfEmpty(new Score(new Guid(),0.0))
+								let bifon = new { BookName = book.BookName, Author = book.Author, Score = bi.BookScore }
+                                group bifon by bifon.Author;
 
-            foreach (var item in stuLeftJoinScores)
-            {
-				Console.WriteLine($"Student Info：--学号：{item.StuID} --姓名：{item.Name} --性别：{item.Gender} --分数：{item.Score}");
-            }
+			foreach (var item in booksFullInfo)
+			{
+				Console.WriteLine(item.Key);
+				foreach (var book in item)
+				{
+                    Console.WriteLine($"    书籍信息 --- 书籍：{book.BookName} | 评分：{book.Score:0.00} | 作者：{book.Author}");
+                }
+			}
         }
 
+		/*【20602：LINQ方法】*/
 		public static void LearnLINQMethodSyntax()
 		{
-			Console.WriteLine("【使用标准查询运算符扩展方法对列表集合进行查询】");
-			Console.WriteLine("使用如下语句查询students中Student实例年龄大于13的元素并且按年龄升序排序返回一个只包含姓名和年龄的集合\n" +
-                "var stuAgeThan13 = students.Where(student => student.Age > 13)\n" +
-				"                   .OrderBy(student => student.Age);\n");
+            Console.WriteLine("\n------示例：Linq方法------\n");
+            ShowList();
+		}
 
-			var stuAgeThan13 = students.Where(student => student.Age > 13).OrderBy(student => student.Age);
+		private static void ShowList()
+		{
+            Console.WriteLine("使用List<T>类创建了一个Author类的列表实例authors");
+            Console.WriteLine();
+            Console.WriteLine("向列表authors中随机添加了20个author类实例，并遍历列表内所有数据：");
 
-			Console.WriteLine("使用foreach遍历stuAgeThan13执行查询并输出筛选信息");
-
-			foreach (var item in stuAgeThan13)
-			{
-				Console.WriteLine($"Student Info：--姓名：{item.Name} --年龄：{item.Age}");
-			}
-
-			Console.WriteLine();
-			Console.WriteLine("使用如下语句查询students中Student实例年龄小于18的元素并且按年龄降序排序以及按性别分组并返回结果\n" +
-                "var stuGroupByGender = students.Where(student => student.Age < 18)\n" +
-				"                       .OrderByDescending(student => student.Age)\n" +
-				"                       .GroupBy(student => student.Gender);\n");
-
-			var stuGroupByGender = students.Where(student => student.Age < 18)
-				.OrderByDescending(student => student.Age)
-				.GroupBy(student => student.Gender);
-
-            Console.WriteLine("使用foreach遍历stuGroupByGender执行查询并输出筛选信息");
-
-            foreach (var stus in stuGroupByGender)
+            foreach (Author author in authors)
             {
-				Console.WriteLine($"--性别：{stus.Key}");
-				foreach (var stu in stus)
-				{
-					Console.WriteLine($"   {stu}");
-				}
+                Console.WriteLine(author);
             }
-
-			Console.WriteLine();
-			Console.WriteLine("使用如下语句查询并联接students和scores实例中StuID相等的元素并使用一个匿名类型返回结果，这里是使用join子句进行内部联接\n" +
-                "var stuJoinScores = students.Join(scores,\n" +
-				"                    student => student.StuID,\n" +
-				"                    score => score.StuID,\n" +
-				"                    (student, score) => new { StuID = student.StuID, Name = student.Name, Score = score.StuScore });\n");
-
-			var stuJoinScores = students.Join(scores,
-				   student => student.StuID,
-					 score => score.StuID,
-					 (student, score) => new { StuID = student.StuID, Name = student.Name, Score = score.StuScore });
-
-            Console.WriteLine("使用foreach遍历stuJionScores执行查询并输出筛选信息");
-
-            foreach (var item in stuJoinScores)
-			{
-                Console.WriteLine($"Student Info：--学号：{item.StuID} --姓名：{item.Name} --分数{item.Score}");
-            }
-
-			Console.WriteLine();
-			Console.WriteLine("部分方法语法没有对应的查询语法，此时只能使用或搭配使用方法语法");
-			Console.WriteLine("使用下列语句对stuJoinScores查询结果进行进一步查询\n" +
-                "var countStudent = stuJoinScores.Count();\n" +
-				"var stuAverageScore = stuJoinScores.Average(s => s.Score);\n" +
-				"var stuGroupByScores = stuJoinScores.OrderByDescending(s => s.Score).GroupBy(s => s.Score >= 60 ? \"及格\" : \"不及格\");\n");
-
-			var countStudent = stuJoinScores.Count();
-			var stuAverageScore = stuJoinScores.Average(s => s.Score);
-			var stuGroupByScores = stuJoinScores.OrderByDescending(s => s.Score).GroupBy(s => s.Score >= 60 ? "及格" : "不及格");
-
-			Console.WriteLine($"拥有分数的学生总数：{countStudent}");
-			Console.WriteLine($"拥有分数的学生平均分：{stuAverageScore}");
-			Console.WriteLine($"对拥有分数的学生使用分数是否及格进行分组并按成绩降序输出：");
-
-			foreach (var sc in stuGroupByScores)
-			{
-				Console.WriteLine($"成绩{sc.Key}:");
-				foreach (var item in sc)
-				{
-                    Console.WriteLine($"   Student Info：--学号：{item.StuID} --姓名：{item.Name} --分数{item.Score}");
-                }
-			}
-
-			Console.WriteLine();
-			Console.WriteLine("使用如下语句查询并联接students和scores实例中StuID相等的元素并使用一个匿名类型返回结果，这里是使用join子句进行分组联接\n" +
-                "var stuGroupJoinScores = students.GroupJoin(scores,\n" +
-				"                         student => student.StuID,\n" +
-				"                         score => score.StuID,\n" +
-				"                         (student, scores) => new { StuID = student.StuID, Name = student.Name, Scores = scores });\n");
-
-			var stuGroupJoinScores = students.GroupJoin(scores,
-				student => student.StuID,
-				score => score.StuID,
-				(student, scores) => new { StuID = student.StuID, Name = student.Name, Scores = scores });
-
-            Console.WriteLine("使用foreach遍历stuGroupJoinScores执行查询并输出筛选信息");
-
-            foreach (var item in stuGroupJoinScores)
-			{
-				Console.WriteLine($"Student Info：--学号：{item.StuID} --姓名：{item.Name}");
-				foreach (var i in item.Scores)
-				{
-					Console.WriteLine($"   --分数：{i.StuScore}");		
-				}
-			}
 
             Console.WriteLine();
-            Console.WriteLine("使用如下语句查询并联接students和scores实例中StuID相等的元素并使用一个匿名类型返回结果，这里是使用join子句进行左外部联接\n" +
-                "var stuLeftJoinScores = students.GroupJoin(scores,\n" +
-				"                        student => student.StuID,\n" +
-				"                        score => score.StuID,\n" +
-				"                        (student, scores) => new { StuID = student.StuID, Name = student.Name, Gender = student.Gender, Score = scores.Any() ? scores.First().StuScore : -1 });\n");
 
-			var stuLeftJoinScores = students.GroupJoin(scores,
-				student => student.StuID,
-				score => score.StuID,
-				(student, scores) => new { StuID = student.StuID, Name = student.Name, Gender = student.Gender, Score = scores.Any() ? scores.First().StuScore : -1 });
+            Console.WriteLine("使用List<T>类创建了一个Book类的列表实例books");
+            Console.WriteLine();
+            Console.WriteLine("向列表books中添加了20个Book类实例，并遍历列表内所有数据：");
 
-            Console.WriteLine("使用foreach遍历stuLeftJoinScores执行查询并输出筛选信息");
-
-            foreach (var item in stuLeftJoinScores)
+            foreach (Book book in books)
             {
-				Console.WriteLine($"Student Info：--学号：{item.StuID} --姓名：{item.Name} --性别：{item.Gender} --分数：{item.Score}");
+                Console.WriteLine(book);
             }
-		}
+            Console.WriteLine();
+
+            Console.WriteLine("使用List<T>类创建了一个Score类的列表实例scores");
+            Console.WriteLine();
+            Console.WriteLine("向列表scores中添加了20个Score类实例，并遍历列表内所有数据：");
+
+			scores = new List<Score>(20);
+
+			for (int i = 0; i < 20; i++)
+			{
+				scores.Add(new Score(books[i].Guid, Random.Shared.Next(5, 10) + Random.Shared.NextDouble()));
+			}
+
+            foreach (Score score in scores)
+            {
+                Console.WriteLine(score);
+            }
+            Console.WriteLine();
+        }
 
 		public static void StartLearnLinq()
 		{
             Console.WriteLine("【学习LINQ代码运行示例】");
-            Console.WriteLine("使用List<T>类创建了一个Student类的列表实例students");
-			Console.WriteLine();
-            Console.WriteLine("向列表students中随机添加了30个Student类实例，并遍历列表内所有数据：");
-            
-			for (int i = 1; i <= 30; i++)
-            {
-                char gender = Random.Shared.Next(0, 2) == 0 ? '男' : '女';
-                Student student = new Student(DateTime.Now.Year * 1_0000 + i, $"学生{i:00}", Random.Shared.Next(10, 20), gender);
-                students.Add(student);
-            }
-
-            foreach (var item in students)
-            {
-                Console.WriteLine(item);
-            }
-			Console.WriteLine();
-            
-			Console.WriteLine("使用List<T>类创建了一个Score类的列表实例scores");
-            Console.WriteLine();
-            Console.WriteLine("向列表students中随机添加了30个Score类实例，并遍历列表内所有数据：");
-
-            for (int i = 10; i <= 40; i++)
-            {
-                Score score = new Score(DateTime.Now.Year * 1_0000 + i, Random.Shared.Next(50, 101));
-                scores.Add(score);
-            }
-
-            foreach (var item in scores)
-            {
-                Console.WriteLine(item);
-            }
-            Console.WriteLine();
 
             string title = "001 LINQ查询语法\n" +
                 "002 LINQ方法语法";
@@ -525,42 +409,160 @@ namespace LearnCSharp.Professional
             while (true);
         }
 
-        private class Student
+        private class Book : IEquatable<Book>
         {
-            public int StuID { get; private set; }
-            public string Name { get; set; }
-            public int Age { get; set; }
-
-            public char Gender { get; set; }
-
-            public Student(int stuID, string name, int age, char gender)
+            public Guid Guid { get; init; }
+            public string BookName
             {
-                StuID = stuID;
-                Name = name;
-                Age = age;
-                Gender = gender;
+                get;
+                set
+                {
+                    if (!string.IsNullOrWhiteSpace(value))
+                        field = value;
+                    else
+                        throw new ArgumentException(nameof(BookName));
+                }
+            }
+            public int AuthorID
+            {
+                get;
+				set;
+            }
+
+            public Book(string bookName, int authorID)
+            {
+                Guid = Guid.NewGuid();
+                BookName = bookName;
+                AuthorID = authorID;
+            }
+
+            public bool Equals(Book? other)
+            {
+				if (other is null) return false;
+
+				if (other.GetHashCode() == GetHashCode())
+					return true;
+
+                bool isSameGuid = this.Guid == other?.Guid;
+                bool isSameName = this.BookName == other?.BookName;
+                bool isSameAuthor = this.AuthorID == other?.AuthorID;
+
+                if (isSameGuid) return true;
+                if (isSameName && isSameAuthor) return true;
+
+                return false;
+            }
+
+            public static bool operator ==(Book left, Book right)
+            {
+                if (left is null) return false;
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(Book left, Book right)
+            {
+                if (left is null) return false;
+                return !left.Equals(right);
+            }
+
+            public override bool Equals(object? obj)
+            {
+                return obj is Book book ? Equals(book) : false;
             }
 
             public override string ToString()
             {
-                return $"Student Info：--姓名：{Name} --年龄：{Age} --学号：{StuID} --性别：{Gender}";
+                return $"书籍信息 --- 书籍ID：{Guid} | 书名：《{BookName}》";
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
             }
         }
 
-        private class Score
+        private class Author:IEquatable<Author>
         {
-            public int StuScore { get; private set; }
-            public int StuID { get; private set; }
+            public int AuthorID { get; private set; }
+            public string AuthorName { get; private set; }
 
-            public Score(int stuID, int score)
+			public string Pseudonym { get; private set; }
+
+			public char Gender { get; private set; }
+
+            public Author(int authorID, string authorName, string pseudonym, char gender)
             {
-                StuID = stuID;
-                StuScore = score;
+				AuthorID = authorID;
+				AuthorName = authorName;
+				Pseudonym = pseudonym;
+				Gender = gender;
             }
 
             public override string ToString()
             {
-                return $"Score Info：--学号：{StuID} --分数：{StuScore}";
+				return $"作者信息 --- ID：{AuthorID,3} | 姓名：{AuthorName} | 笔名：{Pseudonym}";
+            }
+
+            public bool Equals(Author? other)
+            {
+                if (other is null) return false;
+
+				if (other.GetHashCode() == GetHashCode())
+					return true;
+
+				if (other.AuthorName == AuthorName && other.Pseudonym == Pseudonym)
+					return true;
+
+				return false;
+            }
+
+            public override bool Equals(object? obj)
+            {
+				if (obj is Author author)
+					return Equals(author);
+
+				return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
+
+            public static bool operator ==(Author left, Author right)
+			{
+				if (left is null) return false;
+
+				return left.Equals(right);
+			}
+
+			public static bool operator !=(Author left, Author right)
+			{
+				if (left is null) return false;
+
+				return !left.Equals(right);
+			}
+        }
+
+		private record Score
+		{
+			public Guid Guid { get; init; }
+			public double BookScore { get; init; }
+
+			public Score(Guid guid, double score)
+			{
+				Guid = guid;
+				BookScore = score;
+			}
+
+            public void Deconstruct(out Guid guid, out double score)
+            {
+				(guid, score) = (Guid, BookScore);
+            }
+
+            public override string ToString()
+            {
+				return $"书籍评分 --- 书籍ID：{Guid} | 书籍评分：{BookScore:0.00}";
             }
         }
     }

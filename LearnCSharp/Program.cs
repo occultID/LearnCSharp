@@ -43,12 +43,24 @@ namespace LearnCSharp
             Console.WriteLine();
         }
 
+        class Node<T>
+        {
+            public Node<T> Pre { get; set; }
+
+            public T Value { get; set; }
+
+            public Node<T> Next { get; set; }
+
+            public Node(T value)
+            {
+                Value = value;
+            }
+        }
+
 
         public static void Main(string[] args)
         {
             Initialize();
-
-            
 
             if (args.Length == 0)
             {
