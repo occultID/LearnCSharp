@@ -375,6 +375,7 @@ namespace LearnCSharp.Professional.LearnCollectionsSpace
 				if (books is null) throw new ArgumentNullException(nameof(books));
 				this.books = books;
 			}
+
             public void Dispose()
             {
                 Reset();

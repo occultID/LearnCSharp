@@ -354,7 +354,7 @@ namespace LearnCSharp.Professional
             Console.WriteLine();
 
             //使用以下委托封装一个匿名函数事件处理器
-            ElementChangedEventHandler<string> processingEvent= (s, e) =>
+            ElementChangedEventHandler<string> processingEvent = (s, e) =>
 			{
 				string outputString = $"事件发布者：{s.GetType().Name}\n" +
 				$"事件订阅者：{typeof(LearnEvent).Name}\n" +

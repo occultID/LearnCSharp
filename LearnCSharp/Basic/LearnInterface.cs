@@ -222,7 +222,7 @@ namespace LearnCSharp.Basic
 		{
             //以下代码用于实践访问Box类显示实现的接口成员
             Box box = new Box("Box No.0001");
-			//student.Move();   //无法访问接口成员，因为Student类中接口是被显示实现的
+			//box.Move();   //无法访问接口成员，因为Box类中接口是被显示实现的
 			IMove boxMove = box;
 			boxMove.Velocity = 5;
             boxMove.Time = 6;

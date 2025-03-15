@@ -97,7 +97,7 @@ namespace LearnCSharp.Basic
             Console.WriteLine($"转换类型：{num.GetType()} | 数据：{num} | 转换形式：内置类型隐式转换");
             Console.WriteLine();
 
-            //以用户定义类型的显示转换为例示例隐式转换
+            //以用户定义类型的隐式转换为例示例隐式转换
             double x = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
             double y = Random.Shared.Next(-999, 1000) + Random.Shared.NextDouble();
 
