@@ -24,6 +24,9 @@
     <ProjectReference Include="..\HelperLibForLearnCSharp\HelperLibForLearnCSharp.csproj">
       <Aliases>Helper</Aliases>
     </ProjectReference>
+    <ProjectReference Include="..\TestProcessAndThread\TestProcessAndThread.csproj">
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

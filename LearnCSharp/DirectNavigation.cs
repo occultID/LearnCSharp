@@ -118,6 +118,15 @@ namespace LearnCSharp
             ["20602"] = LearnLinq.LearnLINQMethodSyntax,
             ["21001"] = LearnProcessAndThread.LearnProcess,
             ["21002"] = LearnProcessAndThread.LearnThread,
+            ["21003"] = LearnProcessAndThread.LearnThreadWithParams,
+            ["21004"] = LearnProcessAndThread.LearnLockAndMonitor,
+            ["21005"] = LearnProcessAndThread.LearnMutex,
+            ["21006"] = LearnProcessAndThread.LearnSemaphore,
+            ["21007"] = LearnProcessAndThread.LearnReaderWriterLock,
+            ["21008"] = LearnProcessAndThread.LearnAutoResetEvent,
+            ["21009"] = LearnProcessAndThread.LearnManualResetEvent,
+            ["21010"] = LearnProcessAndThread.LearnCountdownEvent,
+            ["21011"] = LearnProcessAndThread.LearnBarrier,
             ["00000"] = Test.TestFunc
         };
 
