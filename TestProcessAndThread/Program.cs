@@ -8,7 +8,7 @@ namespace TestProcessAndThread
     {
         static void Main(string[] args)
         {
-            Console.Title = "进程竞争测试";
+            Console.Title = $"{args[0]}：竞争测试";
             Process current = Process.GetCurrentProcess();
             int counter = 0;
 
