@@ -127,6 +127,7 @@ namespace LearnCSharp
             ["21009"] = LearnProcessAndThread.LearnManualResetEvent,
             ["21010"] = LearnProcessAndThread.LearnCountdownEvent,
             ["21011"] = LearnProcessAndThread.LearnBarrier,
+            ["21012"] = LearnProcessAndThread.LearnThreadPool,
             ["00000"] = Test.TestFunc
         };
 

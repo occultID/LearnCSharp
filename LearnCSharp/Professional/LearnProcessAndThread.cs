@@ -1,6 +1,7 @@
 ﻿extern alias Helper;//引入外部程序集，并且为其创建一个别名
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Xml.Linq;
 using static Helper.HelperLibForLearnCSharp.SharedData;
 
 namespace LearnCSharp.Professional
@@ -8,7 +9,7 @@ namespace LearnCSharp.Professional
     internal class LearnProcessAndThread
     {
         //定义一些私有字段用于线程相关代码演示使用
-        private static object obj = new object();
+        private static object objLock = new object();
 
         /*【21001：进程】*/
         public static void LearnProcess()
@@ -65,7 +66,7 @@ namespace LearnCSharp.Professional
         //用于显示线程的信息
         private static void ShowThreadInfo(params Thread[] threads)
         {
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ResetColor();
             foreach (var thread in threads)
             {
 
@@ -95,12 +96,15 @@ namespace LearnCSharp.Professional
                 for (int i = 1; i <= 10; i++)
                 {
                     Thread.Sleep(500);//暂停线程，模拟耗时操作
-                    Console.ForegroundColor = (ConsoleColor)Random.Shared.Next(1, 16);
-                    Console.WriteLine($"{name}输出数字{i:00}");
-
+                    lock(objLock)
+                    {
+                        Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                        Console.WriteLine($"【{name}】输出数字{i:00}");
+                        Console.ResetColor();
+                    }
                     //Thread.Sleep(1000);
                 }
-                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.ResetColor();
             }
 
             //获取当前线程
@@ -221,19 +225,22 @@ namespace LearnCSharp.Professional
             Console.WriteLine("\n------示例：通过Thread类学习多线程传参------\n");
 
             //用于线程的打印数字的方法，需要使用参数传递
-            void PrintNumber(object objParam)
+            void PrintNumber(object obj)
             {
-                (string threadName, int maxPrintNumber) = ((string, int))objParam;
+                (string threadName, int maxPrintNumber) = ((string, int))obj;
+                string name = $"{threadName}{Thread.CurrentThread.ManagedThreadId,5}";//线程名称+线程ID
 
                 for (int i = 1; i <= maxPrintNumber; i++)
                 {
                     Thread.Sleep(500);//暂停线程，模拟耗时操作
-                    Console.ForegroundColor = (ConsoleColor)Random.Shared.Next(1, 16);
-                    Console.WriteLine($"{threadName}输出数字{i:00}");
-
-                    //Thread.Sleep(1000);
+                    lock (objLock)
+                    {
+                        Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                        Console.WriteLine($"【{name}】输出数字{i:00}");
+                        Console.ResetColor();
+                    }
                 }
-                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.ResetColor();
             }
 
             //获取当前线程
@@ -246,31 +253,29 @@ namespace LearnCSharp.Professional
 
             Console.WriteLine("-----------------------------------------------");
 
-            Console.WriteLine("》》》创建3个其他前台线程《《《");
+            Console.WriteLine("》》》创建2个其他前台线程《《《");
 
             //创建线程
             Thread thread1 = new Thread(PrintNumber!);//使用方法名创建线程，在启动时传参
-            Thread thread2 = new Thread(() => PrintNumber(("线程二", 10)));//使用Lambda表达式创建线程，并直接传参
+            Thread thread2 = new Thread(() => PrintNumber(("线程", 10)));//使用Lambda表达式创建线程，并直接传参
 
             //设置线程名
-            thread1.Name = "线程一";
-            thread2.Name = "线程二";
+            thread1.Name = $"线程{thread1.ManagedThreadId}";
+            thread2.Name = $"线程{thread2.ManagedThreadId}";
 
             //显示所有线程信息
-            ShowThreadInfo(current, thread1, thread2);
+            ShowThreadInfo(thread1, thread2);
 
             Console.WriteLine("》》》线程创建完成，开始同时执行子线程，主线程持续执行《《《");
 
             Thread.Sleep(2000);//暂停主线程
 
             //开始执行线程
-            thread1.Start(("线程一", 15));//传递参数
+            thread1.Start(("线程", 15));//传递参数
             thread2.Start();
 
             //显示所有线程信息
-            ShowThreadInfo(current, thread1, thread2);
-
-            PrintNumber(("主线程", 12));//主线程持续执行
+            ShowThreadInfo(thread1, thread2);
 
             //等待所有线程执行完成
             thread1.Join();
@@ -287,9 +292,9 @@ namespace LearnCSharp.Professional
 
             int count = 0;
             //定义一个局部方法用于互斥锁的示例
-            void PrintNumber(object objParam)
+            void PrintNumber(object obj)
             {
-                (string opt, string lockMethod) calCount = ((string, string))objParam;
+                (string opt, string lockMethod) calCount = ((string, string))obj;
 
                 Thread.Sleep(500);
 
@@ -312,7 +317,7 @@ namespace LearnCSharp.Professional
                     case "Lock":
                         for (int i = 1; i <= 100000; i++)
                         {
-                            lock (obj)
+                            lock (objLock)
                             {
                                 action.Invoke();
                             }
@@ -324,14 +329,14 @@ namespace LearnCSharp.Professional
                             bool lockTaken = false;//是否获取锁的标志
                             try
                             {
-                                lockTaken = Monitor.TryEnter(obj, TimeSpan.FromSeconds(1));//获取锁
+                                lockTaken = Monitor.TryEnter(objLock, TimeSpan.FromSeconds(1));//获取锁
                                 action.Invoke();
                             }
                             finally
                             {
                                 if (lockTaken)
                                 {
-                                    Monitor.Exit(obj);//释放锁
+                                    Monitor.Exit(objLock);//释放锁
                                 }
                             }
                         }
@@ -609,11 +614,14 @@ namespace LearnCSharp.Professional
                 for (int i = 1; i <= 5; i++)
                 {
                     Thread.Sleep(2000);//暂停线程，模拟耗时操作
-                    Console.ForegroundColor = (ConsoleColor)Random.Shared.Next(1, 16);
-                    Console.WriteLine($"{name}输出数字{i:00}");
-                    //Thread.Sleep(1000);
+                    lock (objLock)
+                    {
+                        Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                        Console.WriteLine($"【{name}】输出数字{i:00}");
+                        Console.ResetColor();
+                    }
                 }
-                Console.ForegroundColor = ConsoleColor.Gray;
+                //Console.ResetColor();
                 Console.WriteLine($"{name}完成输出");
                 semaphore.Release();//释放信号量
             }
@@ -641,7 +649,6 @@ namespace LearnCSharp.Professional
             }
             
             Console.WriteLine();
-            Console.ReadKey();
         }
 
         /*【21007：ReaderWriterLock读写锁】*/
@@ -658,7 +665,7 @@ namespace LearnCSharp.Professional
             //创建读写锁
             ReaderWriterLockSlim rwLock = new ReaderWriterLockSlim();
 
-            //用于线程的打印数字的方法
+            //用于线程的方法
             void ReadOrWrite(object objBool)
             {
                 bool isRead = (bool)objBool;
@@ -672,7 +679,7 @@ namespace LearnCSharp.Professional
                         try
                         {
                             rwLock.EnterReadLock();//获取读锁
-                            if (strings.Count > 0) 
+                            if (strings.Count > 0)
                                 Console.WriteLine($"{name}读取数据-- {strings[^1]}");
                         }
                         finally
@@ -707,8 +714,8 @@ namespace LearnCSharp.Professional
                 }
             }
 
-            Thread[] threads = new Thread[threadCount];//创建7个线程
-            Console.WriteLine("》》》创建7其他前台线程《《《");
+            Thread[] threads = new Thread[threadCount];//创建多个线程
+            Console.WriteLine($"》》》创建{threadCount}其他前台线程《《《");
 
             for (int i = 0; i < threads.Length; i++)
             {
@@ -753,10 +760,14 @@ namespace LearnCSharp.Professional
                 for (int i = 1; i <= 5; i++)
                 {
                     Thread.Sleep(2000);//暂停线程，模拟耗时操作
-                    Console.ForegroundColor = (ConsoleColor)Random.Shared.Next(1, 16);
-                    Console.WriteLine($"{name}输出数字{i:00}");
+                    lock (objLock)
+                    {
+                        Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                        Console.WriteLine($"【{name}】输出数字{i:00}");
+                        Console.ResetColor();
+                    }
                 }
-                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.ResetColor();
             }
 
             Thread thread = new Thread(PrintNumber);
@@ -807,7 +818,12 @@ namespace LearnCSharp.Professional
                 {
                     mre.WaitOne();//等待信号量
                     Thread.Sleep(threadForLoopSleepTime);//暂停线程，模拟耗时操作
-                    Console.WriteLine($"{name}输出数字{i:00}");
+                    lock (objLock)
+                    {
+                        Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                        Console.WriteLine($"【{name}】输出数字{i:00}");
+                        Console.ResetColor();
+                    }
                 }
             }
 
@@ -877,7 +893,7 @@ namespace LearnCSharp.Professional
 
                 while (true)
                 {
-                    lock(obj)
+                    lock(objLock)
                     {
                         if (count >= capacity)
                             break;
@@ -958,12 +974,14 @@ namespace LearnCSharp.Professional
                 int sleepTime = Random.Shared.Next(200, 1500);
                 for (int i = 1; i <= phaseCount; i++)
                 {
-                    lock (obj)
+                    lock (objLock)
                     {
+                        Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
                         Console.WriteLine($"{name,-6}正在第{i}轮向strings列表写入数据");
                         strings.Add($"编号：{strings.Count:00000} | 线程：{name,8} | 轮次：{i,5:00} | 随机数字：{Random.Shared.Next(100,1000)}");
                         Thread.Sleep(sleepTime);//模拟耗时操作
                         Console.WriteLine($"{name,-6}完成第{i}轮向strings列表写入数据");
+                        Console.ResetColor();
                     }
 
                     //不要将barrire.SignalAndWait()方法放入到处理共享数据的锁中，否则很可能造成死锁
@@ -1008,6 +1026,102 @@ namespace LearnCSharp.Professional
             {
                 Console.WriteLine(str);
             }
+
+            Console.WriteLine();
+        }
+
+        /*【21012：ThreadPool线程池】*/
+        public static void LearnThreadPool() 
+        {
+            Console.WriteLine("\n------示例：线程池------\n");
+            int maxNumber = 5;//最大输出数字
+            int taskCount = 10;//线程池任务数量
+            int participantCount = 4;//参与者数量
+
+            int mainForLoopSleepTime = 500;//主线程循环执行业务的间隔时间
+            int mainForLoopCount = 5;//主线程循环执行业务的次数
+            int threadForLoopSleepTime = 1000;//线程循环输出数字的间隔时间
+
+            int minThreadCount = 4;//线程池最小线程数
+            int maxThreadCount = 4;//线程池最大线程数
+
+            using ManualResetEvent mre = new ManualResetEvent(false);//创建一个手动重置事件对象
+            using CountdownEvent cde = new CountdownEvent(taskCount);//创建一个计数器
+
+            void PrintNumber(object obj)
+            {
+                var name = $"池内线程{Thread.CurrentThread.ManagedThreadId}";
+                int taskId = (int)obj;
+                mre.WaitOne();//等待信号量
+                Console.WriteLine($"{name}收到了信号，任务{taskId}开始执行输出");
+
+
+                for (int i = 1; i <= maxNumber; i++)
+                {
+                    Thread.Sleep(threadForLoopSleepTime);
+                    lock (objLock)
+                    {
+                        Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                        Console.Write($"【{name}】 ");
+                        Console.ResetColor();
+                        Console.Write($"执行");
+                        Console.ForegroundColor = (ConsoleColor)(taskId % 16);
+                        Console.Write($" [任务{taskId}] ");
+                        Console.ResetColor();
+                        Console.WriteLine($"输出数字{i:00}");
+                    }
+                }
+
+                cde.Signal();//发出信号，计数器减1
+                Console.ResetColor();
+            }
+
+
+            Thread current = Thread.CurrentThread;
+            current.Name = "主线程";
+            ShowThreadInfo(Thread.CurrentThread);
+
+
+            Console.WriteLine("》》》创建线程池并执行任务《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            ThreadPool.GetMinThreads(out int workerThreads, out int completionPortThreads);         //获取线程池最小线程数
+            ThreadPool.GetMaxThreads(out int maxWorkerThreads, out int maxCompletionPortThreads);   //获取线程池最大线程数
+
+            Console.WriteLine($"默认线程池最小线程数：{workerThreads}");
+            Console.WriteLine($"默认线程池最大线程数：{maxWorkerThreads}");
+
+            ThreadPool.SetMinThreads(minThreadCount, completionPortThreads);        //设置线程池最小线程数
+            ThreadPool.SetMaxThreads(maxThreadCount, maxCompletionPortThreads);     //设置线程池最大线程数
+
+            ThreadPool.GetMinThreads(out workerThreads, out completionPortThreads);         //获取线程池最小线程数
+            ThreadPool.GetMaxThreads(out maxWorkerThreads, out maxCompletionPortThreads);   //获取线程池最大线程数
+
+            Console.WriteLine($"当前线程池最小线程数：{workerThreads}");
+            Console.WriteLine($"当前线程池最大线程数：{maxWorkerThreads}");
+
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine();
+
+            for (int i = 0; i < taskCount; i++)
+            {
+                ThreadPool.QueueUserWorkItem(PrintNumber, i + 1);
+            }
+
+            
+            for (int i = 0; i < mainForLoopCount; i++)
+            {
+                Thread.Sleep(mainForLoopSleepTime);
+                Console.WriteLine($"主线程正在执行一些事务[{i}]");
+            }
+
+            Console.WriteLine("主线程执行完成 开始执行线程池任务 主线程等待");
+
+            mre.Set();//发出信号通知子线程可以开始执行输出任务
+
+            cde.Wait();//等待计数器归零
+
+            Console.WriteLine("所有子线程执行完成，主线程继续执行");
 
             Console.WriteLine();
         }

@@ -6,72 +6,55 @@ using static Helper.HelperLibForLearnCSharp.SharedData;
 
 class Test
 {
-    private static object obj = new object();//锁对象
-    /*【00000：测试方法】*/
-    public static void TestFunc()
+    // 预定义颜色列表（确保每个线程有唯一颜色）
+    private static readonly ConsoleColor[] Colors = new ConsoleColor[]
     {
-        int maxNumber = 30;//最大输出数字
-        int threadForLoopSleepTime = 1000;//线程循环输出数字的间隔时间
-        int mainForLoopSleepTime = 500;//主线程循环执行业务的间隔时间
-        int mainForLoopCount = 5;//主线程循环执行业务的次数
-        int manualReserSleepTime = mainForLoopSleepTime * 10;//手动重置事件对象的间隔时间
+        ConsoleColor.Red,
+        ConsoleColor.Green,
+        ConsoleColor.Blue,
+        ConsoleColor.Yellow,
+        ConsoleColor.Cyan,
+        ConsoleColor.Magenta,
+        ConsoleColor.White,
+        ConsoleColor.Gray
+    };
 
-        using AutoResetEvent are = new AutoResetEvent(false);
+    // 线程本地存储：为每个线程分配独立颜色
+    private static ThreadLocal<ConsoleColor> _threadColor = new ThreadLocal<ConsoleColor>(() =>
+    {
+        // 为线程分配颜色（基于线程ID哈希值）
+        int index = Environment.CurrentManagedThreadId % Colors.Length;
+        return Colors[index];
+    });
 
-        void PrintNumber()
+    // 同步锁，防止多线程输出时文字交错
+    private static readonly object _lock = new object();
+
+    internal static void TestFunc()
+    {
+        // 创建5个线程，每个线程循环输出5次
+        for (int i = 0; i < 5; i++)
         {
-            var name = Thread.CurrentThread.Name;
-            Console.WriteLine($"{name}等待执行输出");
-            are.WaitOne();//等待信号量
-            Console.WriteLine($"{name}收到了信号，开始执行输出");
-            for (int i = 1; i <= maxNumber; i++)
+            new Thread(() =>
             {
-                are.WaitOne();//等待信号量
-                Thread.Sleep(threadForLoopSleepTime);//暂停线程，模拟耗时操作
-                Console.WriteLine($"{name}输出数字{i:00}");
-            }
+                for (int j = 0; j < 5; j++)
+                {
+                    // 获取当前线程的专属颜色
+                    ConsoleColor color = _threadColor.Value;
+
+                    // 同步输出，避免文字混杂
+                    lock (_lock)
+                    {
+                        Console.ForegroundColor = color;
+                        Console.WriteLine($"线程 {Thread.CurrentThread.ManagedThreadId} 第 {j + 1} 次输出");
+                        Console.ResetColor(); // 重置为默认颜色（可选）
+                    }
+
+                    Thread.Sleep(100); // 模拟耗时操作
+                }
+            }).Start();
         }
 
-        Thread thread1 = new Thread(PrintNumber);
-        Thread thread2 = new Thread(PrintNumber);
-        Thread thread3 = new Thread(PrintNumber);
-
-        thread1.Name = $"线程{thread1.ManagedThreadId}";
-        thread2.Name = $"线程{thread2.ManagedThreadId}";
-        thread3.Name = $"线程{thread3.ManagedThreadId}";
-
-
-        thread1.Start();
-        thread2.Start();
-        thread3.Start();
-
-        Thread.Sleep(500);
-
-        while (true)
-        {
-            for (int i = 1; i <= mainForLoopCount; i++)
-            {
-                Thread.Sleep(mainForLoopSleepTime);
-                Console.WriteLine($"主线程正在执行一些事务[{i}]");
-            }
-
-            Console.WriteLine();
-            Console.WriteLine("主线程完成了工作，现在发出信号通知子线程可以开始执行输出任务");
-
-            are.Set();//发出信号通知子线程可以开始执行输出任务
-
-            if (!thread1.IsAlive && !thread2.IsAlive && !thread3.IsAlive)
-                break;//如果所有子线程都已经执行完成，则退出循环
-
-            Thread.Sleep(manualReserSleepTime);//暂停主线程
-            //are.Reset();//重置事件对象，阻止子线程继续执行
-
-            Thread.Sleep(threadForLoopSleepTime);
-            Console.WriteLine();
-            Console.WriteLine("主线程介入了工作，现在发出信号通知子线程等待执行输出任务");
-        }
-
-        Console.WriteLine("所有线程均已完成工作！");
-        Console.WriteLine();
+        Console.ReadLine(); // 等待所有线程完成
     }
 }
