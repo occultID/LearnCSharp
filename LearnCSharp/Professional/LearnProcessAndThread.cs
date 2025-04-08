@@ -66,9 +66,10 @@ namespace LearnCSharp.Professional
         private static void ShowThreadInfo(params Thread[] threads)
         {
             Console.ForegroundColor = ConsoleColor.Gray;
-            Console.WriteLine("----------------------------------------------");
             foreach (var thread in threads)
             {
+
+                Console.WriteLine("----------------------------------------------");
                 var info = $">>>线程信息<<<\n线程名：      {thread.Name}\n" +
                     $"TID：         {thread.ManagedThreadId}\n" +
                     $"线程状态：    {thread.ThreadState}\n" +
@@ -78,8 +79,8 @@ namespace LearnCSharp.Professional
                     $"优先级：      {(thread.ThreadState == System.Threading.ThreadState.Stopped ? "Has Stopped" : thread.Priority)}";
 
                 Console.WriteLine(info);
+                Console.WriteLine("----------------------------------------------\n");
             }
-            Console.WriteLine("----------------------------------------------\n");
         }
 
         /*【21002：线程】*/
