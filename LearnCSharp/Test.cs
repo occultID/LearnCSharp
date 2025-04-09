@@ -6,55 +6,44 @@ using static Helper.HelperLibForLearnCSharp.SharedData;
 
 class Test
 {
-    // 预定义颜色列表（确保每个线程有唯一颜色）
-    private static readonly ConsoleColor[] Colors = new ConsoleColor[]
-    {
-        ConsoleColor.Red,
-        ConsoleColor.Green,
-        ConsoleColor.Blue,
-        ConsoleColor.Yellow,
-        ConsoleColor.Cyan,
-        ConsoleColor.Magenta,
-        ConsoleColor.White,
-        ConsoleColor.Gray
-    };
-
-    // 线程本地存储：为每个线程分配独立颜色
-    private static ThreadLocal<ConsoleColor> _threadColor = new ThreadLocal<ConsoleColor>(() =>
-    {
-        // 为线程分配颜色（基于线程ID哈希值）
-        int index = Environment.CurrentManagedThreadId % Colors.Length;
-        return Colors[index];
-    });
-
     // 同步锁，防止多线程输出时文字交错
-    private static readonly object _lock = new object();
+    private static readonly object objLock = new object();
 
+    //static int count1 = 0;
     internal static void TestFunc()
     {
-        // 创建5个线程，每个线程循环输出5次
-        for (int i = 0; i < 5; i++)
+
+        void Run(object obj)
         {
-            new Thread(() =>
+            int lineNumber = (int)obj;
+            var name = Thread.CurrentThread.Name;
+
+            for (int i = 0; i <= 50; i++)
             {
-                for (int j = 0; j < 5; j++)
+                lock (objLock)
                 {
-                    // 获取当前线程的专属颜色
-                    ConsoleColor color = _threadColor.Value;
-
-                    // 同步输出，避免文字混杂
-                    lock (_lock)
-                    {
-                        Console.ForegroundColor = color;
-                        Console.WriteLine($"线程 {Thread.CurrentThread.ManagedThreadId} 第 {j + 1} 次输出");
-                        Console.ResetColor(); // 重置为默认颜色（可选）
-                    }
-
-                    Thread.Sleep(100); // 模拟耗时操作
+                    Console.SetCursorPosition(0, lineNumber);
+                    Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
+                    Console.Write($"{name}: ");
+                    Console.ResetColor();
+                    Console.Write("[");
+                    Console.Write(new string('=', i));
+                    Console.SetCursorPosition(Console.GetCursorPosition().Left, lineNumber);
+                    Console.Write($"]{i*2}%");
                 }
-            }).Start();
+                Thread.Sleep(100);
+            }
+            
         }
 
-        Console.ReadLine(); // 等待所有线程完成
+        Console.Clear();
+
+        for (int i = 0; i < 3; i++)
+        {
+            Thread.CurrentThread.Name = $"Thread {i}";
+            Run(i);
+        }
+
+        Console.WriteLine();
     }
 }

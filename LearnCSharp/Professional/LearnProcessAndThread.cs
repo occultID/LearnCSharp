@@ -1,6 +1,7 @@
 ﻿extern alias Helper;//引入外部程序集，并且为其创建一个别名
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Xml.Linq;
 using static Helper.HelperLibForLearnCSharp.SharedData;
 
@@ -93,11 +94,11 @@ namespace LearnCSharp.Professional
             void PrintNumber()
             {
                 var name = Thread.CurrentThread.Name;
-                for (int i = 1; i <= 10; i++)
+                for (int i = 1; i <= 20; i++)
                 {
-                    Thread.Sleep(500);//暂停线程，模拟耗时操作
                     lock(objLock)
                     {
+                        Thread.Sleep(100);//暂停线程，模拟耗时操作
                         Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
                         Console.WriteLine($"【{name}】输出数字{i:00}");
                         Console.ResetColor();
@@ -1126,6 +1127,79 @@ namespace LearnCSharp.Professional
             Console.WriteLine();
         }
 
+        /*【21013：CancellationTokenSource取消令牌】*/
+        public static void LearnCancellationToken()
+        {
+            int participantCount = 10;//参与者数量
+
+            using CancellationTokenSource cts = new CancellationTokenSource();
+
+            void Run(object obj)
+            {
+                int lineNumber = (int)obj;
+                var name = Thread.CurrentThread.Name;
+                int sleepTime = Random.Shared.Next(100, 500);
+
+                for (int i = 0; i <= 50; i++)
+                {
+                    lock (objLock)
+                    {
+                        if (cts.IsCancellationRequested)
+                            break;
+                        Console.SetCursorPosition(0, lineNumber);
+                        Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
+                        Console.Write($"{name}: ");
+                        Console.ResetColor();
+                        Console.Write(new string('=', i));
+                        Console.SetCursorPosition(Console.GetCursorPosition().Left, lineNumber);
+                        Console.Write(">>>");
+                        Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
+                        Console.Write($"{i * 2}%");
+
+                        if (i == 50)
+                        {
+                            Console.Write($" 【{name}】获得胜利");
+                            cts.Cancel();
+                        }
+
+                        Console.ResetColor();
+                    }
+                    Thread.Sleep(sleepTime);
+                }
+            }
+
+            Thread[] threads = new Thread[participantCount];
+
+            for (int i = 0; i < threads.Length; i++)
+            {
+                threads[i] = new Thread(Run!);
+                threads[i].Name = $"选手 {threads[i].ManagedThreadId:00}";
+            }
+
+            Console.WriteLine($"共计{threads.Length}名选手参加比赛，按任意键开始！");
+            Console.ReadKey(true);//等待用户输入
+
+            Console.Clear();
+            Console.CursorVisible = false;//隐藏光标
+            Console.WriteLine(">>>比赛开始");
+            Thread.Sleep(1000);
+
+            for (int i = 0; i < threads.Length; i++)
+            {
+                threads[i].Start(i+1);
+            }
+
+            for (int i = 0; i <threads.Length; i++)
+            {
+                threads[i].Join();
+            }
+
+            Console.SetCursorPosition(0, threads.Length + 1);
+            Console.WriteLine("比赛完成！");
+            Console.CursorVisible = true;//隐藏光标
+
+            Console.WriteLine();
+        }
         public static void StartLearnProcessAndThread()
         {
             string title = "001 进程：Process类代码示例\n" +
