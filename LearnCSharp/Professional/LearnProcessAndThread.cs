@@ -1130,15 +1130,18 @@ namespace LearnCSharp.Professional
         /*【21013：CancellationTokenSource取消令牌】*/
         public static void LearnCancellationToken()
         {
+            Console.WriteLine("\n------示例：取消令牌------\n");
+
             int participantCount = 10;//参与者数量
 
-            using CancellationTokenSource cts = new CancellationTokenSource();
+            using CancellationTokenSource cts = new CancellationTokenSource();//创建一个取消令牌源
 
+            //模拟选手比赛进度
             void Run(object obj)
             {
-                int lineNumber = (int)obj;
-                var name = Thread.CurrentThread.Name;
-                int sleepTime = Random.Shared.Next(100, 500);
+                int lineNumber = (int)obj;//行号  
+                var name = Thread.CurrentThread.Name;//线程名称
+                int sleepTime = Random.Shared.Next(100, 500);//随机睡眠时间
 
                 for (int i = 0; i <= 50; i++)
                 {
@@ -1150,16 +1153,17 @@ namespace LearnCSharp.Professional
                         Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
                         Console.Write($"{name}: ");
                         Console.ResetColor();
+                        Console.Write("[");
                         Console.Write(new string('=', i));
                         Console.SetCursorPosition(Console.GetCursorPosition().Left, lineNumber);
-                        Console.Write(">>>");
+                        Console.Write("]");
                         Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
                         Console.Write($"{i * 2}%");
 
                         if (i == 50)
                         {
                             Console.Write($" 【{name}】获得胜利");
-                            cts.Cancel();
+                            cts.Cancel();//取消令牌
                         }
 
                         Console.ResetColor();
@@ -1168,12 +1172,30 @@ namespace LearnCSharp.Professional
                 }
             }
 
-            Thread[] threads = new Thread[participantCount];
+            Console.WriteLine($"》》》创建{participantCount}个子线程表示{participantCount}个选手的比赛过程《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            Console.Write("请输入参赛选手人数，如不输入默认为10：");
+
+            string? input = Console.ReadLine();
+            if (int.TryParse(input, out int count))
+            {
+                participantCount = count;
+            }
+            else
+            {
+                Console.WriteLine("输入错误，使用默认值10");
+            }
+
+            Console.WriteLine($"当前参赛选手信息：{participantCount}");
+
+            Thread[] threads = new Thread[participantCount];//创建多个线程
 
             for (int i = 0; i < threads.Length; i++)
             {
                 threads[i] = new Thread(Run!);
                 threads[i].Name = $"选手 {threads[i].ManagedThreadId:00}";
+                ShowThreadInfo(threads[i]);
             }
 
             Console.WriteLine($"共计{threads.Length}名选手参加比赛，按任意键开始！");
@@ -1181,12 +1203,14 @@ namespace LearnCSharp.Professional
 
             Console.Clear();
             Console.CursorVisible = false;//隐藏光标
-            Console.WriteLine(">>>比赛开始");
+
+            Console.WriteLine("》》》比赛开始《《《");
+            Console.WriteLine("-----------------------------------------------");
             Thread.Sleep(1000);
 
             for (int i = 0; i < threads.Length; i++)
             {
-                threads[i].Start(i+1);
+                threads[i].Start(i+2);
             }
 
             for (int i = 0; i <threads.Length; i++)
@@ -1195,6 +1219,8 @@ namespace LearnCSharp.Professional
             }
 
             Console.SetCursorPosition(0, threads.Length + 1);
+
+            Console.WriteLine("-----------------------------------------------");
             Console.WriteLine("比赛完成！");
             Console.CursorVisible = true;//隐藏光标
 
