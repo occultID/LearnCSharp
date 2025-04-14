@@ -16,14 +16,12 @@ namespace LearnWPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        private double progressValue = 0.0;
+        private bool isProgressing = false;
         public MainWindow()
         {
-            InitializeComponent();
+            
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
     }  
 }

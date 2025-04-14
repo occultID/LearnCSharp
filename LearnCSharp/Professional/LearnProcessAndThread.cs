@@ -1127,7 +1127,7 @@ namespace LearnCSharp.Professional
             Console.WriteLine();
         }
 
-        /*【21013：CancellationTokenSource取消令牌】*/
+        /*【21013：CancellationToken取消令牌】*/
         public static void LearnCancellationToken()
         {
             Console.WriteLine("\n------示例：取消令牌------\n");
@@ -1135,6 +1135,7 @@ namespace LearnCSharp.Professional
             int participantCount = 10;//参与者数量
 
             using CancellationTokenSource cts = new CancellationTokenSource();//创建一个取消令牌源
+            CancellationToken cancellationToken = cts.Token;//获取取消令牌
 
             //模拟选手比赛进度
             void Run(object obj)
@@ -1147,7 +1148,7 @@ namespace LearnCSharp.Professional
                 {
                     lock (objLock)
                     {
-                        if (cts.IsCancellationRequested)
+                        if (cancellationToken.IsCancellationRequested)
                             break;
                         Console.SetCursorPosition(0, lineNumber);
                         Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
@@ -1229,11 +1230,19 @@ namespace LearnCSharp.Professional
         public static void StartLearnProcessAndThread()
         {
             string title = "001 进程：Process类代码示例\n" +
-                "002 线程：Thread类代码示例\n"+
+                "002 线程：Thread类代码示例\n" +
                 "003 线程：线程传参\n" +
                 "004 线程：互斥锁\n" +
                 "005 进程：互斥体\n" +
-                "006 线程：信号量";
+                "006 线程：信号量\n" +
+                "007 线程：读写锁\n" +
+                "008 等待句柄：AutoResetEvent\n" +
+                "009 等待句柄：ManualResetEvent\n" +
+                "010 CountdownEvent\n" +
+                "011 Barrier\n" +
+                "012 线程池\n" +
+                "013 CancellationToken";
+
 
             do
             {
@@ -1249,6 +1258,17 @@ namespace LearnCSharp.Professional
                 {
                     case "001": LearnProcess(); break;
                     case "002": LearnThread(); break;
+                    case "003": LearnThreadWithParams(); break;
+                    case "004": LearnLockAndMonitor(); break;
+                    case "005": LearnMutex(); break;
+                    case "006": LearnSemaphore(); break;
+                    case "007": LearnReaderWriterLock(); break;
+                    case "008": LearnAutoResetEvent(); break;
+                    case "009": LearnManualResetEvent(); break;
+                    case "010": LearnCountdownEvent(); break;
+                    case "011": LearnBarrier(); break;
+                    case "012": LearnThreadPool(); break;
+                    case "013": LearnCancellationToken(); break;
                     default: Console.WriteLine("输入错误！"); break;
                 }
 

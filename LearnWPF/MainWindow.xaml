@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:LearnWPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-    </Grid>
+    <StackPanel Orientation="Vertical">
+        <ProgressBar x:Name="progressBar" Height="30" Margin="10" Minimum="0" Maximum="100"/>
+        <Button x:Name="btnProgress" Height="30" Width="200" Content="Start"/>
+    </StackPanel>
 </Window>
