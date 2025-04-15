@@ -129,6 +129,10 @@ namespace LearnCSharp
             ["21011"] = LearnProcessAndThread.LearnBarrier,                                         //屏障
             ["21012"] = LearnProcessAndThread.LearnThreadPool,                                      //线程池
             ["21013"] = LearnProcessAndThread.LearnCancellationToken,                               //取消令牌
+            ["21101"] = LearnAsyncProgramming.LearnTask,                                            //Task
+            ["21102"] = LearnAsyncProgramming.LearnAsyncMethod,                                     //异步方法
+            ["21103"] = LearnAsyncProgramming.LearnSynchronizationContext,                          //同步上下文
+            ["21104"] = LearnAsyncProgramming.LearnConfigureAwait,                                  //ConfigureAwait
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 
