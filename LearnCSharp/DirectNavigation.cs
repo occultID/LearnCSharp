@@ -1,4 +1,9 @@
-﻿using LearnCSharp.Basic;
+﻿/*【代码说明】
+ *01.该代码用于导航运行不同的章节和方法。
+ *02.该代码使用了字典来存储每个章节对应的方法，并通过输入方法注释代码来调用相应的方法。
+ */
+
+using LearnCSharp.Basic;
 using LearnCSharp.Professional;
 
 namespace LearnCSharp
@@ -129,10 +134,12 @@ namespace LearnCSharp
             ["21011"] = LearnProcessAndThread.LearnBarrier,                                         //屏障
             ["21012"] = LearnProcessAndThread.LearnThreadPool,                                      //线程池
             ["21013"] = LearnProcessAndThread.LearnCancellationToken,                               //取消令牌
-            ["21101"] = LearnAsyncProgramming.LearnTask,                                            //Task
-            ["21102"] = LearnAsyncProgramming.LearnAsyncMethod,                                     //异步方法
-            ["21103"] = LearnAsyncProgramming.LearnSynchronizationContext,                          //同步上下文
-            ["21104"] = LearnAsyncProgramming.LearnConfigureAwait,                                  //ConfigureAwait
+            ["21101"] = LearnAsyncProgramming.LearnAsyncDelegate,                                   //异步委托
+            ["21102"] = LearnAsyncProgramming.LearnTask,                                            //Task
+            ["21103"] = LearnAsyncProgramming.LearnAsyncMethod,                                     //异步方法
+            ["21104"] = LearnAsyncProgramming.LearnSynchronizationContext,                          //同步上下文
+            ["21105"] = LearnAsyncProgramming.LearnConfigureAwait,                                  //ConfigureAwait
+            ["21106"] = LearnAsyncProgramming.LearnAsyncVoid,                                       //异步void方法
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 
@@ -140,6 +147,12 @@ namespace LearnCSharp
         {
             if (!string.IsNullOrWhiteSpace(code) && funcDic.TryGetValue(code, out Action? action)) 
                 action!.Invoke();
+            else
+            {
+                Console.WriteLine(@"【错误】输入的代码不存在或不合法，请重新输入！");
+                Console.WriteLine(@"【提示】如需查看目录请输入“menu”；如需退出请输入“exit”;如需查看对应方法运行请输入对应代码");
+                Console.WriteLine();
+            }
         }
     }
 }

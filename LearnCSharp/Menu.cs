@@ -1,8 +1,17 @@
-﻿using LearnCSharp.Basic;
+﻿/*【代码说明】
+ *01. 该代码是一个C#学习项目的菜单系统，包含多个章节和对应的方法。
+ *02. 该代码使用了枚举类型MenuType来定义不同的菜单类型。
+ *03. 该代码使用了字典来存储每个章节对应的方法，并通过输入章节代码来调用相应的方法。
+ *04. 该代码还包含了退出程序的功能。
+ *05. 运行时，用户可以根据提示输入章节代码来查看对应的结果。
+ *
+ *注意：目录系统已弃用，运行项目后尽量不要直接使用菜单系统，直接输入代码注释中的数字进行运行。
+ */
+
+using LearnCSharp.Basic;
 using LearnCSharp.Professional;
 using LearnCSharp.BCL;
 using LearnCSharp.Example;
-using System.Diagnostics;
 
 namespace LearnCSharp
 {

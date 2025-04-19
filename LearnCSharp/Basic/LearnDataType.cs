@@ -1,4 +1,4 @@
-﻿/*【简单了解数据类型】
+﻿/*【104：简单了解数据类型】
  * 什么是类型
 	• 又名数据类型（DataType）
 		○ A data type is a homogeneous of values, effectively presented, equipped with a set of operations which manipulate these values.
@@ -162,6 +162,7 @@ namespace LearnCSharp.Basic
                     "\n请在 [C# 学习--高级篇] 章节选择以下章节：\n" +
 					"001 委托\n");
 		}
+
         private static void PrintObjectInfo(object obj, [CallerArgumentExpression("obj")] string? argumentName = null)
         {
 			Console.WriteLine($"【Object类型】\n" +
@@ -169,6 +170,7 @@ namespace LearnCSharp.Basic
 				$"实际类型：[{obj.GetType()}]\n" +
 				$"哈希值：[{obj.GetHashCode()}]\n");
         }
+
         private static void PrintDynamicInfo(dynamic dyn, [CallerArgumentExpression("dyn")] string? argumentName = null)
         {
             Console.WriteLine($"【Dynamic类型】\n" +

@@ -1,4 +1,4 @@
-﻿/*【学习C#内置的基本类型】
+﻿/*【105：学习C#内置的基本类型】
  * 基本类型
 	• C#内置了一组基本值类型和一组基本引用类型
 	• 这些预定义的基本类型都有保留关键字与其对应
@@ -8,25 +8,25 @@
 	• C#内置了一组预定义的值类型，其类型分类、关键字与对应.NET类型如下
 		○ 整数类型
 			§有符号整数类型
-				sbyte	System.Sbyte	8位整数	        -128~127
-				short	System.Int16	16位整数    	-3,2768~3,2767
-				int 	System.Int32	32位整数    	-21,4748,3648~21,4748,3647
-				long	System.Int64	64位整数	    -922,3372,0368,5477,5808~922,3372,0368,5477,5807
-				nint	System.IntPtr	32位或64位整数	取决于运行时的平台CPU架构
+				sbyte	System.Sbyte	8位整数	                        -128~127
+				short	System.Int16	16位整数    	                    -3,2768~3,2767
+				int 	System.Int32	32位整数    	                    -21,4748,3648~21,4748,3647
+				long	System.Int64	64位整数	                        -922,3372,0368,5477,5808~922,3372,0368,5477,5807
+				nint	System.IntPtr	32位或64位整数	                取决于运行时的平台CPU架构
 			§无符号整数类型
-				byte	System.Byte   	8位整数     	0~255
-				ushort	System.UInt16	16位整数	    0~6,5535
-				uint	System.UInt32	32位整数	    0~42,9496,7295
-				ulong	System.UInt64	64位整数	    0~1,844,6744,0737,0955,1615
-				nuint	System.UIntPtr	3位2或64位整数	取决于运行时的平台CPU架构
+				byte	System.Byte   	8位整数     	                    0~255
+				ushort	System.UInt16	16位整数	                        0~6,5535
+				uint	System.UInt32	32位整数	                        0~42,9496,7295
+				ulong	System.UInt64	64位整数	                        0~1,844,6744,0737,0955,1615
+				nuint	System.UIntPtr	3位2或64位整数	                取决于运行时的平台CPU架构
 		○ 浮点数类型
-			float	System.Single	4个字节	精度有效数字6~9位	±1.5 x 10^−45 ~ ±3.4 x 10^38
-			double	System.Double	8个字节	精度有效数字15~17位	±5.0 × 10^−324 ~ ±1.7 × 10^30
-			decimal	System.Decimal	16个字节	精度有效数字28~29位	±1.0 x 10^-28 ~ ±7.9228 x 10^28
+			    float	System.Single	4个字节	    精度有效数字6~9位	    ±1.5 x 10^−45 ~ ±3.4 x 10^38
+			    double	System.Double	8个字节	    精度有效数字15~17位	±5.0 × 10^−324 ~ ±1.7 × 10^30
+			    decimal	System.Decimal	16个字节	    精度有效数字28~29位	±1.0 x 10^-28 ~ ±7.9228 x 10^28
 		○ 字符类型
-			char	System.Char	16位	U+0000~U+FFFF
+			    char	System.Char	16位	U+0000~U+FFFF
 		○ 布尔类型
-			bool	System.Boolean	32位	Ture/False
+			    bool	System.Boolean	32位	Ture/False
 		
  * 内置引用类型
 	• C#内置了一组预定义的简单引用类型，其类型关键字和对应.NET类型如下
