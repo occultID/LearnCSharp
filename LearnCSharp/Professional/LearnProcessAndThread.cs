@@ -1038,7 +1038,6 @@ namespace LearnCSharp.Professional
             Console.WriteLine("\n------示例：线程池------\n");
             int maxNumber = 5;//最大输出数字
             int taskCount = 10;//线程池任务数量
-            int participantCount = 4;//参与者数量
 
             int mainForLoopSleepTime = 500;//主线程循环执行业务的间隔时间
             int mainForLoopCount = 5;//主线程循环执行业务的次数

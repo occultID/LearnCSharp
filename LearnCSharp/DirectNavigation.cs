@@ -134,12 +134,13 @@ namespace LearnCSharp
             ["21011"] = LearnProcessAndThread.LearnBarrier,                                         //屏障
             ["21012"] = LearnProcessAndThread.LearnThreadPool,                                      //线程池
             ["21013"] = LearnProcessAndThread.LearnCancellationToken,                               //取消令牌
-            ["21101"] = LearnAsyncProgramming.LearnAsyncDelegate,                                   //异步委托
-            ["21102"] = LearnAsyncProgramming.LearnTask,                                            //Task
-            ["21103"] = LearnAsyncProgramming.LearnAsyncMethod,                                     //异步方法
-            ["21104"] = LearnAsyncProgramming.LearnSynchronizationContext,                          //同步上下文
-            ["21105"] = LearnAsyncProgramming.LearnConfigureAwait,                                  //ConfigureAwait
-            ["21106"] = LearnAsyncProgramming.LearnAsyncVoid,                                       //异步void方法
+            ["21101"] = LearnAsyncProgramming.LearnAsyncDelegate,                                   //AMP模式：基于AsyncResult的异步模式
+            ["21102"] = LearnAsyncProgramming.LearnAsyncByEvent,                                    //EAP模式：基于事件的异步模式
+            ["21103"] = LearnAsyncProgramming.LearnTask,                                            //Task
+            ["21104"] = LearnAsyncProgramming.LearnAsyncMethod,                                     //异步方法
+            ["21105"] = LearnAsyncProgramming.LearnSynchronizationContext,                          //同步上下文
+            ["21106"] = LearnAsyncProgramming.LearnConfigureAwait,                                  //ConfigureAwait
+            ["21107"] = LearnAsyncProgramming.LearnAsyncVoid,                                       //异步void方法
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 

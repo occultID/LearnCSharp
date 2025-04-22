@@ -1,4 +1,50 @@
 ﻿/*【211：异步编程】
+ * 异步编程概述
+	• 同步编程
+		○ 了解同步编程
+			§ 程序将按照用户写好的固定的代码严格按顺序依次执行每一条语句
+			§ 在执行顺序中的下一条语句总要等之前的语句依次执行完才能继续执行
+			§ 同步编程的方法都是先完成其工作再返回给调用者
+		○ 同步编程的优点
+			§ 代码总是按照用户书写规定的顺序执行
+			§ 代码的可读性较高，且逻辑上也易于理解
+		○ 同步编程的缺点
+			§ 只适合用于现实生活中逻辑上只能一步一步进行的行为的抽象
+			§ 可能会程序运行过程中出现线程阻塞导致程序长时间无响应
+				□ 比如当代码正在执行大量的文件读取扫描或下载大容量文件时，如果该步骤未完成，接下来的代码都无法得到执行
+		○ 我们平常编写和调用的大多数方法都是同步方法
+	• 异步编程
+		○ 了解异步编程
+			§ 异步编程即以异步的方式编写运行时间很长或者可能很长的函数
+				□ 该函数会在新的线程或任务上被调用，从而实现所需的并发性
+				□ 异步方法的不同点在于并发性是在长时间运行的方法内启动的，而不是从这个方法外启动的
+					® 优点一：I/O密集的并发性的实现不需要绑定线程，因此可以提高可伸缩性和效率
+					® 优点二：简化富客户端应用程序的线程安全性
+			§ 使用异步编程可以避免性能瓶颈并增强应用程序的总体响应能力
+			§ 程序代码不一定按照编写时的顺序严格执行
+				□ 当代码执行到需要进行长时间操作的代码时，异步实现可能会进行以下实现
+					® 程序可能会新建一个线程来执行耗时的操作代码
+						◊ 例如在拥有多个物理核心的计算机中运行程序，程序可以在不同核心处理器上执行任务
+					® 程序可能会改变代码的执行顺序来充分利用单个线程的能力
+						◊ 例如当只有一个核心处理器时，操作系统通过“时间分片”的方式来模拟多个核心
+			§ 异步表示代码可以分开执行，一段代码的执行不会导致另一端代码的执行被终止或阻塞
+				□ 异步代码不一定是同时执行，也不一定是在多线程上进行执行
+			§ 异步编程是并行编程或并发编程的基础
+			§ 异步编程的方法大部分工作都是在返回给调用者之后才完成的
+		○ 异步编程的场景
+			§ 如果需要大量的I/O绑定或者CPU绑定，异步编程是一个很好地方案
+				□ I/O绑定：关于数据的读写，例如网络请求数据、访问数据库等
+				□ CPU绑定：对数据的计算，例如执行成本高昂的计算
+		○ 异步编程的优点
+			§ 可以很大程度的避免线程阻塞
+			§ 可以很大程度的提升程序运行效率
+			§ 可以更灵活的执行需要同时处理多个任务的代码
+		○ 异步编程的缺点
+			§ 代码的执行过程不可控
+			§ 异步代码同时执行对同一资源的访问时可能造成资源争夺
+			§ 异步代码的可读性不一定好，在逻辑上也不一定易于理解
+            § 异步编程的传统技术可能比较复杂，且代码可能难以编写、调试和维护
+
  * 异步编程模式概述
 	• .NET提供了执行异步操作的三种模式
 		○ 基于任务的异步模式（TAP）
@@ -107,6 +153,7 @@
 
 using LearnCSharp.Professional.LeanrAsyncProgrammingSpace;
 using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace LearnCSharp.Professional
@@ -120,7 +167,6 @@ namespace LearnCSharp.Professional
             Console.ResetColor();
             foreach (var thread in threads)
             {
-
                 Console.WriteLine("----------------------------------------------");
                 var info = $">>>线程信息<<<\n线程名：      {thread.Name}\n" +
                     $"TID：         {thread.ManagedThreadId}\n" +
@@ -201,7 +247,81 @@ namespace LearnCSharp.Professional
             Console.WriteLine("异步任务完成执行！");
         }
 
-        /*【21102：Task】*/
+        /*【21102：基于事件的异步编程】*/
+        public static void LearnAsyncByEvent()
+        {
+            Console.WriteLine("\n------示例：基于事件的异步编程------\n");
+            //这里的代码用于演示基于事件的异步编程（EAP）模式，关于该模式的使用不建议在新的开发中使用
+            //EAP类的实现代码位于本页代码底部的LearnAsyncByEventSpace命名空间中
+
+            int maxNumber = 20;
+            var calculator = new CalculateInteger();//创建一个Calculator对象
+
+            using ManualResetEvent mre = new ManualResetEvent(false);//创建一个手动重置事件，用于等待异步操作完成
+
+            calculator.CalculateIntegerCompleted += (sender, e) =>
+            {
+                if (e.Cancelled)
+                {
+                    Console.WriteLine("操作已取消");
+                }
+                else if (e.Error != null)
+                {
+                    Console.WriteLine($"操作发生异常：{e.Error.Message}");
+                }
+                else
+                {
+                    Console.WriteLine($"异步操作完成，{maxNumber}的阶乘计算结果：{e.Result}");
+                }
+                mre.Set();//设置手动重置事件为已终止状态
+            };
+
+            calculator.CalculateIntegerCancelled += (sender, e) =>
+            {
+                Console.WriteLine("收到取消请求……");
+            };
+
+            calculator.CalculateIntegerProgressChanged += (sender, e) =>
+            {
+                Console.WriteLine($"异步操作进度：{e.CurrentProgress}% | 当前值：{e.CurrentValue}");
+            };
+
+            Thread current = Thread.CurrentThread;
+            current.Name = $"主线程 {current.ManagedThreadId:00}";
+            Console.WriteLine("》》》主线程信息《《《");
+            ShowThreadInfo(current);
+
+            Console.WriteLine($"》》》开始计算{maxNumber}的阶乘(同步方法)《《《");
+            Console.WriteLine("----------------------------------------------");
+
+            long result = calculator.CalculateFactorial(maxNumber);//同步调用计算阶乘方法
+
+            Console.WriteLine($"计算完成，{maxNumber}的阶乘计算结果：{result}");
+            Console.WriteLine("----------------------------------------------");
+
+            Console.WriteLine();
+
+            Console.WriteLine($"》》》开始计算{maxNumber}的阶乘(EAP异步)《《《");
+            Console.WriteLine("----------------------------------------------");
+
+            calculator.CalculateFactorialAsync(maxNumber);//异步调用计算阶乘方法
+            mre.WaitOne();//等待异步操作完成
+            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine();
+
+            mre.Reset();//重置手动重置事件
+            Console.WriteLine($"》》》开始计算{maxNumber}的阶乘，中途强制取消(EAP异步)《《《");
+            Console.WriteLine("----------------------------------------------");
+
+            calculator.CalculateFactorialAsync(maxNumber);//异步调用计算阶乘方法
+            Thread.Sleep(3000);//等待2秒钟
+            calculator.CancelAsync();//取消异步操作
+            mre.WaitOne();//等待异步操作完成
+            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine();
+        }
+
+        /*【21103：Task】*/
         public static void LearnTask()
         {
             Console.WriteLine("\n------示例：Task任务------\n");
@@ -211,21 +331,20 @@ namespace LearnCSharp.Professional
 
             void PrintNumber()
             {
-                Console.WriteLine("输出任务开始执行");
-                string name = $"线程 {Thread.CurrentThread.ManagedThreadId:00}";
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出任务开始执行");
                 for (int i = 0; i <= printMaxNumber; i++)
                 {
                     Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
-                    Console.WriteLine($"【{name}】输出数字{i:000}");
+                    Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出数字{i:000}");
                     Console.ResetColor();
                     Task.Delay(delayTime).Wait();
                 }
-                Console.WriteLine("输出任务结束执行");
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出任务结束执行");
             }
 
             async Task PrintNumberAsync()
             {
-                Console.WriteLine("输出任务开始执行");
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出任务开始执行");
 
                 for (int i = 0; i <= printMaxNumber; i++)
                 {
@@ -234,7 +353,8 @@ namespace LearnCSharp.Professional
                     Console.ResetColor();
                     await Task.Delay(delayTime);
                 }
-                Console.WriteLine("输出任务结束执行");
+
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出任务结束执行");
             }
 
             Thread current = Thread.CurrentThread;
@@ -303,7 +423,7 @@ namespace LearnCSharp.Professional
             Console.WriteLine();
         }
 
-        /*【21103：异步方法】*/
+        /*【21104：异步方法】*/
         public static void LearnAsyncMethod()
         {
             Console.WriteLine("\n------示例：异步方法------\n");
@@ -359,7 +479,7 @@ namespace LearnCSharp.Professional
             Thread.Sleep(maxNumber * delayTime + 1000);
         }
 
-        /*【21104：同步上下文】*/
+        /*【21105：同步上下文】*/
         public static void LearnSynchronizationContext()
         {
             Console.WriteLine("\n------示例：同步上下文------\n");
@@ -425,7 +545,7 @@ namespace LearnCSharp.Professional
             SynchronizationContext.SetSynchronizationContext(null);//清除当前线程的同步上下文
         }
 
-        /*【21105：ConfigureAwait】*/
+        /*【21106：ConfigureAwait】*/
         public static void LearnConfigureAwait()
         {
             Console.WriteLine("\n------示例：ConfigureAwait------\n");
@@ -493,7 +613,7 @@ namespace LearnCSharp.Professional
             SynchronizationContext.SetSynchronizationContext(null);//清除当前线程的同步上下文
         }
 
-        /*【21106：一发即忘---async void】
+        /*【21107：一发即忘---async void】
          * 通常不建议使用async void方法，除非是事件处理程序
          * async void方法不能被await关键字等待
          * async void方法不能返回Task对象
@@ -508,17 +628,16 @@ namespace LearnCSharp.Professional
 
             async void PrintNumberAsync(object sender,EventArgs e)
             {
-                string name = $"线程 {Thread.CurrentThread.ManagedThreadId:00}";
-                Console.WriteLine($"【{name}】输出任务开始执行");
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出任务开始执行");
                 for (int i = 0; i <= maxNumber; i++)
                 {
                     await Task.Delay(200).ConfigureAwait(false);
                     result = i;
                     Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
-                    Console.WriteLine($"【{name}】输出数字{result:000}");
+                    Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出数字{result:000}");
                     Console.ResetColor();
                 }
-                Console.WriteLine($"【{name}】输出任务结束执行");
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出任务结束执行");
 
                 //抛出异常测试，如果取消注释下面的代码，主线程无法捕获到异常
                 //throw new Exception("异常测试");
@@ -553,10 +672,10 @@ namespace LearnCSharp.Professional
 
         public static void StartLearnAsyncProgramming()
         {
-            string title = "001 进程：Process类代码示例\n" +
-                "002 线程：Thread类代码示例\n" +
-                "003 线程：线程传参\n" +
-                "004 线程：互斥锁\n" +
+            string title = "001 APM异步编程代码示例\n" +
+                "002 EAP异步编程代码示例\n" +
+                "003 初识Task\n" +
+                "004 \n" +
                 "005 进程：互斥体\n" +
                 "006 线程：信号量\n" +
                 "007 线程：读写锁\n" +
@@ -597,6 +716,214 @@ namespace LearnCSharp.Professional
 
 namespace LearnCSharp.Professional.LeanrAsyncProgrammingSpace
 {
+    #region 【21102：基于事件的异步编程】定义一系列事件和类来实现基于事件的异步编程
+    class CalculateIntegerCompelledEventArgs : AsyncCompletedEventArgs
+    {
+        public long Result { get; }
+
+        public CalculateIntegerCompelledEventArgs(long result, Exception error, bool cancelled, object? userState) : base(error, cancelled, userState)
+        {
+            Result = result;
+        }
+    }
+
+    class CalculateIntegerProgressReportEventArgs : ProgressChangedEventArgs
+    {
+        public int CurrentProgress { get; }
+        public long CurrentValue { get; }
+        public CalculateIntegerProgressReportEventArgs(int progressPercentage, long currentValue, object? userState) : base(progressPercentage, userState)
+        {
+            CurrentProgress = progressPercentage;
+            CurrentValue = currentValue;
+        }
+    }
+
+    delegate void CalculateIntegerCompelledEventHandler(object sender, CalculateIntegerCompelledEventArgs e);//定义事件委托
+    delegate void CalculateIntegerProgressReportEventHandler(object sender, CalculateIntegerProgressReportEventArgs e);//定义进度事件委托
+
+    class CalculateInteger
+    {
+        private readonly object objLock = new object();//锁对象
+        private CancellationTokenSource cts;
+
+        public event CalculateIntegerCompelledEventHandler? CalculateIntegerCompleted;//定义事件
+        public event CalculateIntegerProgressReportEventHandler? CalculateIntegerProgressChanged;//定义进度事件
+        public event EventHandler? CalculateIntegerCancelled;//定义进度事件
+
+        public bool IsBusy
+        {
+            get
+            {
+                lock (objLock)
+                {
+                    return cts != null && !cts.IsCancellationRequested;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 用于异步计算阶乘的计算方法
+        /// </summary>
+        /// <param name="maxNumber"></param>
+        /// <param name="ct"></param>
+        /// <param name="userState"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        private long CalculateFactorial(int maxNumber, CancellationToken ct, object userState)
+        {
+            if (maxNumber < 0)
+                throw new ArgumentException(nameof(maxNumber), "参数不能小于0");
+
+            Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】开始执行{maxNumber}的阶乘计算");
+            long result = 1;
+
+            for (int i = 1; i <= maxNumber; i++)
+            {
+                ct.ThrowIfCancellationRequested();//检查是否取消请求
+
+                result *= i;
+
+                Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】执行第{i}次计算");
+                Console.ResetColor();
+
+                int progressPercentage = (int)Math.Round((double)i / maxNumber * 100);
+                OnCalculateIntegerProgressChanged(new CalculateIntegerProgressReportEventArgs(progressPercentage, result, userState));//触发进度事件
+                Thread.Sleep(200);//模拟计算延迟
+            }
+
+            Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】完成执行{maxNumber}的阶乘计算");
+            
+            return result;
+        }
+
+        /// <summary>
+        /// 同步计算阶乘的方法
+        /// </summary>
+        /// <param name="maxNumber"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public long CalculateFactorial(int maxNumber)
+        {
+            if (maxNumber < 0)
+                throw new ArgumentException(nameof(maxNumber), "参数不能小于0");
+
+            Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】开始执行{maxNumber}的阶乘计算");
+            long result = 1;
+
+            for (int i = 1; i <= maxNumber; i++)
+            {
+                result *= i;
+
+                Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】执行第{i}次计算，当前结果：{result}");
+                Console.ResetColor();
+
+                Thread.Sleep(200);//模拟计算延迟
+            }
+
+            Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】完成执行{maxNumber}的阶乘计算");
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步计算阶乘的方法
+        /// </summary>
+        /// <param name="maxNumber"></param>
+        /// <param name="userState"></param>
+        public void CalculateFactorialAsync(int maxNumber, object? userState = null)
+        {
+            lock (objLock)
+            {
+                if (IsBusy)
+                    throw new InvalidOperationException("当前正在执行计算任务，请稍后再试");
+                cts = new CancellationTokenSource();
+            }
+
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                try
+                {
+                    long result = CalculateFactorial(maxNumber, cts.Token, userState);//调用计算方法
+                    OnCalculateIntegerCompleted(new CalculateIntegerCompelledEventArgs(result, null, false, userState));//触发完成事件
+                }
+                catch (OperationCanceledException)
+                {
+                    OnCalculateIntegerCancelled(EventArgs.Empty);//触发取消事件
+                    OnCalculateIntegerCompleted(new CalculateIntegerCompelledEventArgs(0, null, true, userState));//触发完成事件
+                }
+                catch (Exception ex)
+                {
+                    OnCalculateIntegerCompleted(new CalculateIntegerCompelledEventArgs(0, ex, false, userState));//触发异常事件
+                }
+                finally
+                {
+                    lock (objLock)
+                    {
+                        cts.Dispose();
+                        cts = null;
+                    }
+                }
+            });
+        }
+
+        public void CancelAsync()
+        {
+            lock (objLock)
+            {
+                if (IsBusy)
+                {
+                    cts.Cancel();
+                }
+            }
+        }
+
+        protected void OnCalculateIntegerCompleted(CalculateIntegerCompelledEventArgs e)
+        {
+            var handler = CalculateIntegerCompleted;//复制事件引用以避免多线程竞争问题
+            
+            if(handler != null)
+            {
+                SyncContextInvoke(() => handler(this, e));
+            }
+        }
+
+        protected void OnCalculateIntegerProgressChanged(CalculateIntegerProgressReportEventArgs e)
+        {
+            var handler = CalculateIntegerProgressChanged;//复制事件引用以避免多线程竞争问题
+            if (handler != null)
+            {
+                SyncContextInvoke(() => handler(this, e));
+            }
+        }
+
+        protected void OnCalculateIntegerCancelled(EventArgs e)
+        {
+            var handler = CalculateIntegerCancelled;//复制事件引用以避免多线程竞争问题
+            if (handler != null)
+            {
+                SyncContextInvoke(() => handler(this, e));
+            }
+        }
+
+        private void SyncContextInvoke(Action action)
+        {
+            if (SynchronizationContext.Current != null)
+            {
+                SynchronizationContext.Current.Post(_ => action(), null);//使用Post方法异步调用事件处理程序
+            }
+            else
+            {
+                action();//直接调用事件处理程序
+            }
+        }
+    }
+    #endregion
+
+    /// <summary>
+    /// 自定义同步上下文类，用于模拟实现同步上下文
+    /// </summary>
     class CustomSynchronizationContext : SynchronizationContext
     {
         private readonly BlockingCollection<(SendOrPostCallback Callback, object State, ManualResetEvent Mre)> queue = new();//阻塞集合
