@@ -1,4 +1,5 @@
-﻿using LearnCSharp.Basic.LearnPatternSpace;
+﻿/*【126：模式匹配】*/
+using LearnCSharp.Basic.LearnPatternSpace;
 
 namespace LearnCSharp.Basic
 {
@@ -48,7 +49,7 @@ namespace LearnCSharp.Basic
                         case 16:
                             goto default;//匹配到该标签可以使用goto显示跳转到default，但注意不要随意使用goto，以及避免造成循环，比如goto case 16
                         default:
-                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.ResetColor();
                             Console.WriteLine("暂无该颜色编码，已重置为灰色。");
                             break;
                     }
@@ -56,7 +57,7 @@ namespace LearnCSharp.Basic
                 }
             }
             Console.WriteLine("测试颜色：当前字符串颜色为：{0}", Console.ForegroundColor.ToString());
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ResetColor();
         }
 
         /*【12602：关系模式】 匹配标签可以为用于匹配变量和某个常量值的比较表达式
@@ -79,7 +80,7 @@ namespace LearnCSharp.Basic
                         case > 15:
                             goto default;
                         default:
-                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.ResetColor();
                             Console.WriteLine("暂无该颜色编码，已重置为灰色。");
                             break;
                     }
@@ -87,7 +88,7 @@ namespace LearnCSharp.Basic
                 }
             }
             Console.WriteLine("测试颜色：当前字符串颜色为：{0}", Console.ForegroundColor.ToString());
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ResetColor();
         }
 
         /*【12603：逻辑模式】 在关系模式基础上使用not、and、or关键字进行多条件判断*/
@@ -105,7 +106,7 @@ namespace LearnCSharp.Basic
                             Console.ForegroundColor = (ConsoleColor)number;
                             break;
                         default:
-                            Console.ForegroundColor = ConsoleColor.Gray;
+                            Console.ResetColor();
                             Console.WriteLine("暂无该颜色编码，已重置为灰色。");
                             break;
                     }
@@ -113,7 +114,7 @@ namespace LearnCSharp.Basic
                 }
             }
             Console.WriteLine("测试颜色：当前字符串颜色为：{0}", Console.ForegroundColor.ToString());
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ResetColor();
         }
 
         /*【12604：声明模式】 通过case标签声明变量，如果匹配变量能转换为该类型变量，则将匹配变量的值赋予该声明变量*/

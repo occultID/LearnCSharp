@@ -1,4 +1,4 @@
-﻿/*【学习语句】
+﻿/*【111：学习语句】
  * 语句的定义
 	• 语句是高级语言的语法
 		○ 编译语言和机器语言只有指令
@@ -62,6 +62,8 @@
 //string name = Console.ReadLine();
 //Console.WriteLine($"你好，{name}");
 
+
+using System.Threading;
 
 namespace LearnCSharp.Basic
 {
@@ -616,7 +618,7 @@ namespace LearnCSharp.Basic
 		 */
         private static object objLock = new object(); //定义一个静态对象用于演示锁定它来更改静态数据
         public static int countCalled = 0;//定义一个静态字段作为需要在lock中更改的数据
-        public static async void LearnLockStatement()
+        public static void LearnLockStatement()
         {
 			//
 			async void TestLock(Action action)
@@ -633,25 +635,38 @@ namespace LearnCSharp.Basic
 
             var lockDelegate = () =>
             {
+                Thread thread = Thread.CurrentThread;
                 lock (objLock)
                 {
                     countCalled++;
-                    Console.WriteLine("【lock】本次程序执行中调用了lock方法{0}次", countCalled);
+                    Console.ForegroundColor = (ConsoleColor)(thread.ManagedThreadId % 16);
+                    Console.WriteLine($"【线程 {thread.ManagedThreadId:00}】本次代码执行修改共享变量countCalled值(使用lock语句)：{countCalled}");
+                    Console.ResetColor();
                 }
             };//这是一个委托，现在不用作具体了解，只用知道它可以托管一个或多个兼容的方法
 
 			TestLock(lockDelegate);
-			await Task.Delay(1500);
+
+			Thread.Sleep(1500);
+
+            Console.WriteLine();
 
 			countCalled = 0;
 			var noLockDelegate = () =>
 			{
+                Thread thread = Thread.CurrentThread;
+
                 countCalled++;
-                Console.WriteLine("【no lock】本次程序执行中调用了nolock方法{0}次", countCalled);
+                Console.ForegroundColor = (ConsoleColor)(thread.ManagedThreadId % 16);
+                Console.WriteLine($"【线程 {thread.ManagedThreadId:00}】本次代码执行修改共享变量countCalled值(使用lock语句)：{countCalled}");
+                Console.ResetColor();
             };
 
 			TestLock(noLockDelegate);
-            await Task.Delay(1500);
+
+            Thread.Sleep(1500);
+            countCalled = 0;
+            Console.ResetColor();
         }
 
         /*【11116：空语句】
