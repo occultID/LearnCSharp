@@ -124,6 +124,7 @@ namespace LearnCSharp
             ["008"] = LearnReflection.StartLearnReflection,
             ["009"] = LearnDynamic.StartLearnDynamic,
             ["010"] = LearnProcessAndThread.StartLearnProcessAndThread,
+            ["011"] = LearnAsyncProgramming.StartLearnAsyncProgramming,
             ["012"] = LearnParallelProgramming.StartLearnParallelProgramming
         };
 

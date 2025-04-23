@@ -160,6 +160,7 @@ namespace LearnCSharp.Professional
 {
     class LearnAsyncProgramming
     {
+        private static readonly object objLock = new object();
         private static event EventHandler? PrintNumberEvent;
         //显示线程信息
         private static void ShowThreadInfo(params Thread[] threads)
@@ -321,7 +322,7 @@ namespace LearnCSharp.Professional
             Console.WriteLine();
         }
 
-        /*【21103：Task】*/
+        /*【21103：初识Task】*/
         public static void LearnTask()
         {
             Console.WriteLine("\n------示例：Task任务------\n");
@@ -670,21 +671,71 @@ namespace LearnCSharp.Professional
             Console.WriteLine( );
         }
 
+        /*【21108：多任务】*/
+        public static void LearnMultiTask()
+        {
+            Console.WriteLine("\n------示例：多任务的实现------\n");
+
+            async Task<long> CalculateNumber(int taskId, int maxNumber, Func<int,long,long> func)
+            {
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】计算任务 {taskId:00} 开始执行");
+                long result = 0;
+                for (int i = 1; i <= maxNumber; i++)
+                {
+                    await Task.Delay(300);
+                    //result += i;
+                    lock (objLock)
+                    {
+                        result = func.Invoke(i, result);
+                        Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
+                        Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】计算任务 {taskId:00} 执行第{i}次计算，当前输出结果：{result}");
+                        Console.ResetColor();
+                    }
+                }
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】计算任务 {taskId:00} 结束执行");
+                return result;
+            }
+
+            Func<int, long, long> funcAdd = (i, r) => r + i;
+            Func<int, long, long> funcMul = (i, r) => r == 0 ? 1 : r * i;
+
+            Thread current = Thread.CurrentThread;
+            current.Name = $"主线程";
+            Console.WriteLine("》》》主线程信息《《《");
+            ShowThreadInfo(Thread.CurrentThread);
+
+            Console.WriteLine("》》》创建多个任务用于计算数字（方案一）《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            Task<long> task1 = CalculateNumber(1, 20, funcAdd);
+            Task<long> task2 = CalculateNumber(2, 20, funcMul);
+            Task<long> task3 = CalculateNumber(3, 20, funcAdd);
+            Task<long> task4 = CalculateNumber(4, 20, funcMul);
+
+            long[] results = Task.WhenAll(task1, task2, task3, task4).Result;
+
+            Console.WriteLine("主线程持续执行");
+            Console.WriteLine();
+
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine();
+        }
+
         public static void StartLearnAsyncProgramming()
         {
             string title = "001 APM异步编程代码示例\n" +
                 "002 EAP异步编程代码示例\n" +
                 "003 初识Task\n" +
-                "004 \n" +
-                "005 进程：互斥体\n" +
-                "006 线程：信号量\n" +
-                "007 线程：读写锁\n" +
-                "008 等待句柄：AutoResetEvent\n" +
-                "009 等待句柄：ManualResetEvent\n" +
-                "010 CountdownEvent\n" +
-                "011 Barrier\n" +
-                "012 线程池\n" +
-                "013 CancellationToken";
+                "004 异步方法\n" +
+                "005 同步上下文\n" +
+                "006 ConfigureAwait\n" +
+                "007 异步void方法\n" +
+                "008 \n" +
+                "009 \n" +
+                "010 \n" +
+                "011 \n" +
+                "012 \n" +
+                "013 ";
 
 
             do
@@ -699,6 +750,13 @@ namespace LearnCSharp.Professional
 
                 switch (input)
                 {
+                    case "001": LearnAsyncDelegate(); break;
+                    case "002": LearnAsyncByEvent(); break;
+                    case "003": LearnTask(); break;
+                    case "004": LearnAsyncMethod(); break;
+                    case "005": LearnSynchronizationContext(); break;
+                    case "006": LearnConfigureAwait(); break;
+                    case "007": LearnAsyncVoid(); break;
                     default: Console.WriteLine("输入错误！"); break;
                 }
 
