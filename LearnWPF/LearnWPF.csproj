@@ -1,13 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinEXE</OutputType>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <LangVersion>preview</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HelperLibForLearnCSharp\HelperLibForLearnCSharp.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\LearnCSharp\LearnCSharp.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\TestProcessAndThread\TestProcessAndThread.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
 
 </Project>

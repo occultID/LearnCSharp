@@ -154,7 +154,9 @@
 using LearnCSharp.Professional.LeanrAsyncProgrammingSpace;
 using System.Collections.Concurrent;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Timers;
 
 namespace LearnCSharp.Professional
 {
@@ -696,8 +698,8 @@ namespace LearnCSharp.Professional
                 return result;
             }
 
-            Func<int, long, long> funcAdd = (i, r) => r + i;
-            Func<int, long, long> funcMul = (i, r) => r == 0 ? 1 : r * i;
+            Func<int, long, long> funcAdd = (i, r) => r + i;//计算整数顺序累加求和的委托
+            Func<int, long, long> funcMul = (i, r) => r == 0 ? 1 : r * i;//计算整数阶乘的委托
 
             Thread current = Thread.CurrentThread;
             current.Name = $"主线程";
@@ -707,16 +709,407 @@ namespace LearnCSharp.Professional
             Console.WriteLine("》》》创建多个任务用于计算数字（方案一）《《《");
             Console.WriteLine("-----------------------------------------------");
 
-            Task<long> task1 = CalculateNumber(1, 20, funcAdd);
-            Task<long> task2 = CalculateNumber(2, 20, funcMul);
+            Task<long> task1 = CalculateNumber(1, 10, funcAdd);
+            Task<long> task2 = CalculateNumber(2, 10, funcMul);
             Task<long> task3 = CalculateNumber(3, 20, funcAdd);
             Task<long> task4 = CalculateNumber(4, 20, funcMul);
 
             long[] results = Task.WhenAll(task1, task2, task3, task4).Result;
 
+            Console.WriteLine($"任务1计算结果：{results[0]}");
+            Console.WriteLine($"任务2计算结果：{results[1]}");
+            Console.WriteLine($"任务3计算结果：{results[2]}");
+            Console.WriteLine($"任务4计算结果：{results[3]}");
+
             Console.WriteLine("主线程持续执行");
             Console.WriteLine();
 
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine();
+
+            Console.WriteLine("》》》创建多个任务用于计算数字（方案二）《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            List<Task<long>> tasks = new List<Task<long>>()
+            {
+                CalculateNumber(1, 10, funcAdd),
+                CalculateNumber(2, 10, funcMul),
+                CalculateNumber(3, 20, funcAdd),
+                CalculateNumber(4, 20, funcMul)
+            };
+
+            results = Task.WhenAll(tasks).Result;
+
+            Console.WriteLine($"任务1计算结果：{results[0]}");
+            Console.WriteLine($"任务2计算结果：{results[1]}");
+            Console.WriteLine($"任务3计算结果：{results[2]}");
+            Console.WriteLine($"任务4计算结果：{results[3]}");
+
+            Console.WriteLine("主线程持续执行");
+            Console.WriteLine();
+
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine();
+        }
+
+        /*【21109：任务的取消】*/
+        public static void LearnCancelTask()
+        {
+            Console.WriteLine("\n------示例：取消任务的实现------\n");
+
+            int participantCount = 10;//参与者数量
+            bool isGameEnding = false;//比赛是否结束
+
+            using CancellationTokenSource cts = new CancellationTokenSource();//创建一个取消令牌源
+            CancellationToken cancellationToken = cts.Token;//获取取消令牌
+
+            //模拟选手比赛进度
+            //这里采用了异步方法来模拟选手的比赛进度，异步方法内异常捕获是为了模拟选手中断失败的进度，且该异常可以正常传递到调用任务的主线程
+            //不建议使用同步方法来模拟选手的比赛进度，因为将同步方法放入任务中可能会导致异常捕捉出问题而导致程序崩溃（因为任务可能会在不同的线程中执行）
+            async Task RunAsync(int id, int lineNumber, CancellationToken cancellationToken)
+            {  
+                var name = $"选手 {id:00}";//任务名称，表示选手编号
+                int sleepTime = Random.Shared.Next(100, 500);//随机睡眠时间
+
+                for (int i = 0; i <= 50; i++)
+                {
+                    lock (objLock)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();//检查是否请求取消
+
+                        Console.SetCursorPosition(0, lineNumber);
+                        Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
+                        Console.Write($"{name}: ");
+                        Console.ResetColor();
+                        Console.Write("[");
+                        Console.Write(new string('=', i));
+                        Console.SetCursorPosition(Console.GetCursorPosition().Left, lineNumber);
+                        Console.Write("]");
+                        Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
+                        Console.Write($"{i * 2}%");
+
+                        if (i == 50)
+                        {
+                            Console.Write($" 【{name}】获得胜利");
+                            isGameEnding = true;//比赛结束
+                        }
+
+                        Console.ResetColor();
+                    }
+                    await Task.Delay(sleepTime);
+                }
+            }
+
+            Console.WriteLine($"》》》创建{participantCount}个任务表示{participantCount}个选手的比赛过程《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            Console.Write("请输入参赛选手人数，如不输入默认为10：");
+
+            string? input = Console.ReadLine();
+            if (int.TryParse(input, out int count))
+            {
+                participantCount = count;
+            }
+            else
+            {
+                Console.WriteLine("输入错误，使用默认值10");
+            }
+
+            Console.WriteLine($"当前参赛选手信息：{participantCount}");
+
+            List<Task> tasks = new List<Task>(participantCount);//创建任务列表
+
+            Console.WriteLine($"共计{participantCount}名选手参加比赛，按任意键开始！");
+            Console.ReadKey(true);//等待用户输入
+
+            Console.Clear();
+            Console.CursorVisible = false;//隐藏光标
+
+            Console.WriteLine("》》》比赛开始《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            Thread.Sleep(1000);
+
+            //创建一个任务用于出现胜利者时取消其他选手的比赛进度
+            Task cancelTask = Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (isGameEnding)
+                    {
+                        cts.Cancel();
+                        break;
+                    }
+                }
+            });
+
+            //创建多个任务表示选手的比赛进度
+            for (int i = 0; i < participantCount; i++)
+            {
+                int id = i + 1;
+                tasks.Add(Task.Run(() => RunAsync(id, id + 1, cancellationToken)));//创建比赛任务并添加到列表中
+            }
+
+            try
+            {
+                Task.WaitAll(tasks);
+            }
+            catch
+            {
+                //这里捕获到异常是因为任务被取消了
+                //这里不写异常处理代码的原因是我们使用RunAsync方法模拟比赛进程，内部异常是用于模拟中断失败选手的进度，故不用处理
+            }
+            finally
+            {
+                cancelTask.Wait();
+            }
+
+            Console.SetCursorPosition(0, participantCount + 2);
+
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine("比赛完成！");
+            Console.CursorVisible = true;//显示光标
+
+            //因为上述代码中cts.Cancel()方法会导致所有任务都被标记取消，所以这里的代码不会被执行
+            Task.Run(() => Console.WriteLine("永远不会在运行后看到！"), cancellationToken);
+
+            Console.WriteLine();
+        }
+
+        /*【21110：WhenAll、WhenAny、ContinueWith】*/
+        public static void LearnWhenAllWhenAnyAndContinueWith()
+        {
+            Console.WriteLine("\n------示例：WhenAll、WhenAny、ContinueWith------\n");
+
+            int participantCount = 10;//参与者数量
+
+            using CancellationTokenSource cts = new CancellationTokenSource();//创建一个取消令牌源
+            CancellationToken cancellationToken = cts.Token;//获取取消令牌
+
+            //模拟选手比赛进度
+            //这里采用了异步方法来模拟选手的比赛进度，异步方法内异常捕获是为了模拟选手中断失败的进度，且该异常可以正常传递到调用任务的主线程
+            //不建议使用同步方法来模拟选手的比赛进度，因为将同步方法放入任务中可能会导致异常捕捉出问题而导致程序崩溃（因为任务可能会在不同的线程中执行，或者同步方法内部未处理异常）
+            async Task RunAsync(int id, int lineNumber, CancellationToken cancellationToken)
+            {
+                var name = $"选手 {id:00}";//任务名称，表示选手编号
+                int sleepTime = Random.Shared.Next(100, 500);//随机睡眠时间
+
+                for (int i = 0; i <= 50; i++)
+                {
+                    lock (objLock)
+                    {
+                        cancellationToken.ThrowIfCancellationRequested();//检查是否请求取消
+
+                        Console.SetCursorPosition(0, lineNumber);
+                        Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
+                        Console.Write($"{name}: ");
+                        Console.ResetColor();
+                        Console.Write("[");
+                        Console.Write(new string('=', i));
+                        Console.SetCursorPosition(Console.GetCursorPosition().Left, lineNumber);
+                        Console.Write("]");
+                        Console.ForegroundColor = (ConsoleColor)(lineNumber % 16);
+                        Console.Write($"{i * 2}%");
+
+                        if (i == 50)
+                        {
+                            Console.Write($" 【{name}】获得胜利");
+                        }
+
+                        Console.ResetColor();
+                    }
+                    await Task.Delay(sleepTime);
+                }
+            }
+
+            Console.WriteLine($"》》》创建{participantCount}个任务表示{participantCount}个选手的比赛过程《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            Console.Write("请输入参赛选手人数，如不输入默认为10：");
+
+            string? input = Console.ReadLine();
+            if (int.TryParse(input, out int count))
+            {
+                participantCount = count;
+            }
+            else
+            {
+                Console.WriteLine("输入错误，使用默认值10");
+            }
+
+            Console.WriteLine($"当前参赛选手信息：{participantCount}");
+
+            List<Task> tasks = new List<Task>(participantCount);//创建任务列表
+
+            Console.WriteLine($"共计{participantCount}名选手参加比赛，按任意键开始！");
+            Console.ReadKey(true);//等待用户输入
+
+            Console.Clear();
+            Console.CursorVisible = false;//隐藏光标
+
+            Console.WriteLine("》》》比赛开始《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            Thread.Sleep(1000);
+
+            //创建多个任务表示选手的比赛进度
+            for (int i = 0; i < participantCount; i++)
+            {
+                int id = i + 1;
+                tasks.Add(Task.Run(() => RunAsync(id, id + 1, cancellationToken)));//创建比赛任务并添加到列表中
+            }
+
+            try
+            {
+                //WhenAny方法会在第一个任务完成时返回该任务
+                //ContinueWith方法会在第一个任务完成后继续执行延续任务
+                Task.WhenAny(tasks).ContinueWith(_ => cts.Cancel()).Wait();
+            }
+            catch
+            {
+                //这里捕获到异常是因为任务被取消了
+                //这里不写异常处理代码的原因是我们使用RunAsync方法模拟比赛进程，内部异常是用于模拟中断失败选手的进度，故不用处理
+            }
+
+            //WhenAll方法会在所有任务完成后返回
+            //ContinueWith方法会在所有任务完成后继续执行延续任务
+            Task.WhenAll(tasks).ContinueWith(_ =>
+            {
+                Console.SetCursorPosition(0, participantCount + 2);
+
+                Console.WriteLine("-----------------------------------------------");
+                Console.WriteLine("比赛完成！");
+            }).Wait();
+
+
+            Console.CursorVisible = true;//显示光标
+
+            Console.WriteLine();
+        }
+
+        /*【21111：计时器】*/
+        public static void LearnTimer()
+        {
+            Console.WriteLine("\n------示例：计时器------\n");
+            
+            int breakLoopCount = 0;//循环次数
+            DateTime time = DateTime.Now;
+
+            Console.WriteLine($"》》》创建一个计时器(System.Timers.Timer)并注册事件处理程序，并激活该事件《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            var cursorPosition = Console.GetCursorPosition();
+            Console.CursorVisible = false;//隐藏光标
+
+            var line1 = Console.CursorTop;
+            var line2 = Console.CursorTop + 1;
+
+            using var sysTimer = new System.Timers.Timer(1000);//创建一个计时器
+            sysTimer.AutoReset = true;//设置计时器是否自动重置
+
+            //System.Timers.Timer的Elapsed事件会在计时器到达指定时间间隔时触发，且该事件会在计时器的线程池线程中执行
+            sysTimer.Elapsed += async(s,e)=> 
+            {
+                await Task.Delay(0);
+
+                lock(objLock)
+                {
+                    time = DateTime.Now;
+                    Console.SetCursorPosition(0, line1);
+                    Console.WriteLine($"计时器---【线程 {Thread.CurrentThread.ManagedThreadId:00}】获取时间：{time}");
+                }
+            };//注册事件处理程序
+
+            Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出时间：{time}");
+
+            sysTimer.Start();//开始计时器
+
+            while (breakLoopCount<=100)
+            {
+                lock(objLock)
+                {
+                    Console.SetCursorPosition(0, line2);
+                    Console.WriteLine($"主线程---【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出时间：{time}");
+                }
+
+                breakLoopCount++;
+                Thread.Sleep(200);
+            }
+
+            sysTimer.Stop();//停止计时器
+            breakLoopCount = 0;
+
+            Console.SetCursorPosition(0, line2 + 1);
+            Console.WriteLine("-----------------------------------------------");
+            Console.CursorVisible = true;//显示光标
+            Console.WriteLine();
+
+            Console.WriteLine($"》》》创建一个计时器(System.Threading.Timer)并添加回调执行的计时任务，并开始计时工作《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            cursorPosition = Console.GetCursorPosition();
+            Console.CursorVisible = false;//隐藏光标
+
+            line1 = Console.CursorTop;
+            line2 = Console.CursorTop + 1;
+
+
+            //System.Threading.Timer的回调方法会在计时器到达指定时间间隔时触发，且该事件会在计时器的线程池线程中执行
+            using var threadTimer = new System.Threading.Timer(async _ =>
+                {
+                    await Task.Delay(0);
+                    lock (objLock)
+                    {
+                        time = DateTime.Now;
+                        Console.SetCursorPosition(0, line1);
+                        Console.WriteLine($"计时器---【线程 {Thread.CurrentThread.ManagedThreadId:00}】获取时间：{time}");
+                    }
+                }, null, 0, 1000);//设置计时器的回调方法、状态对象、首次执行延迟时间和执行间隔时间
+
+            Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出时间：{time}");
+
+            while (breakLoopCount<=100)
+            {
+                lock (objLock)
+                {
+                    Console.SetCursorPosition(0, line2);
+                    Console.WriteLine($"主线程---【线程 {Thread.CurrentThread.ManagedThreadId:00}】输出时间：{time}");
+                }
+                
+                breakLoopCount++;
+                Thread.Sleep(200);
+            }
+
+            threadTimer.Change(Timeout.Infinite, Timeout.Infinite);//停止计时器
+            breakLoopCount = 0;
+
+            Console.SetCursorPosition(0, line2 + 1);
+            Console.WriteLine("-----------------------------------------------");
+            Console.CursorVisible = true;//显示光标
+            Console.WriteLine();
+
+            Console.WriteLine($"》》》创建一个计时器(Stopwatch)并开始监测代码运行耗时《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            //创建一个Stopwatch对象
+            Stopwatch stopwatch = new Stopwatch();
+
+            Console.WriteLine("开始耗时工作并计时：");
+
+            stopwatch.Start();//开始计时
+
+            while(breakLoopCount<=100)
+            {
+                Console.Write($"\r【线程 {Thread.CurrentThread.ManagedThreadId:00}】获取时间：{DateTime.Now}");
+                Thread.Sleep(200);
+                breakLoopCount++;
+            }
+
+            Console.WriteLine();
+
+            stopwatch.Stop();//停止计时
+
+            Console.WriteLine($"耗时工作完毕，用时：{stopwatch.Elapsed.TotalMilliseconds}毫秒");
             Console.WriteLine("-----------------------------------------------");
             Console.WriteLine();
         }

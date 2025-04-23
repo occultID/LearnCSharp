@@ -142,6 +142,9 @@ namespace LearnCSharp
             ["21106"] = LearnAsyncProgramming.LearnConfigureAwait,                                  //ConfigureAwait
             ["21107"] = LearnAsyncProgramming.LearnAsyncVoid,                                       //异步void方法
             ["21108"] = LearnAsyncProgramming.LearnMultiTask,                                       //多任务
+            ["21109"] = LearnAsyncProgramming.LearnCancelTask,                                      //取消任务
+            ["21110"] = LearnAsyncProgramming.LearnWhenAllWhenAnyAndContinueWith,                   //WhenAll、WhenAny和ContinueWith
+            ["21111"]=LearnAsyncProgramming.LearnTimer,                                             //定时器
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 

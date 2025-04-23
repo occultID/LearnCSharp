@@ -9,6 +9,39 @@ namespace LearnCSharp.Professional
 {
     internal class LearnParallelProgramming
     {
+        /*【21201：Parallel.For】*/
+        public static void LearnParallelFor()
+        {
+            
+        }
+
+        /*【21202：Parallel.ForEach】*/
+        public static void LearnParallelForEach()
+        {
+
+        }
+
+        /*【21203：Parallel.Invoke】*/
+        public static void LearnParallelInvoke()
+        {
+
+        }
+
+        /*【21204：ParallelLoopState】*/
+        public static void LearnParallelLoopState()
+        {
+        }
+
+        /*【21205：ParallelLoopResult】*/
+        public static void LearnParallelLoopResult()
+        {
+        }
+
+        /*【21206：ParallelOptions】*/
+        public static void LearnParallelOptions()
+        {
+        }
+
         public static void StartLearnParallelProgramming()
         {
             // 1. Parallel类

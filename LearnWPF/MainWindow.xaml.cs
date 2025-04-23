@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Windows;
+using LearnWPF.Pages;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -16,12 +17,18 @@ namespace LearnWPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private double progressValue = 0.0;
-        private bool isProgressing = false;
         public MainWindow()
         {
-            
+            InitializeComponent();
+            this.rbtCSharp.Checked+=(sender,e) =>
+            {
+                //this.frm.Source = new Uri("pack://application:,,,/LearnCSharp;component/Pages/PageCSharp.xaml", UriKind.Absolute);
+                this.frm.Navigate(new PageCSharp());
+            };
+            this.rbtCSharp.Unchecked += (sender, e) =>
+            {
+                this.frm.Navigate(null);
+            };
         }
-
-    }  
+    }
 }

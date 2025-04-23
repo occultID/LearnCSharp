@@ -5,9 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearnWPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <StackPanel Orientation="Vertical">
-        <ProgressBar x:Name="progressBar" Height="30" Margin="10" Minimum="0" Maximum="100"/>
-        <Button x:Name="btnProgress" Height="30" Width="200" Content="Start"/>
-    </StackPanel>
+        Title="MainWindow" MinHeight="450" MinWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" Margin="10">
+            <RadioButton Name="rbtCSharp" Content="Learn C#" />
+        </StackPanel>
+        <Frame Name="frm" Grid.Column="1" Margin="10"/>
+    </Grid>
 </Window>
