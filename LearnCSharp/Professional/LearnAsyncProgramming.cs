@@ -1123,10 +1123,10 @@ namespace LearnCSharp.Professional
                 "005 同步上下文\n" +
                 "006 ConfigureAwait\n" +
                 "007 异步void方法\n" +
-                "008 \n" +
-                "009 \n" +
-                "010 \n" +
-                "011 \n" +
+                "008 多任务\n" +
+                "009 取消任务\n" +
+                "010 WhenAll、WhenAny、ContinueWith\n" +
+                "011 计时器\n" +
                 "012 \n" +
                 "013 ";
 
@@ -1150,6 +1150,10 @@ namespace LearnCSharp.Professional
                     case "005": LearnSynchronizationContext(); break;
                     case "006": LearnConfigureAwait(); break;
                     case "007": LearnAsyncVoid(); break;
+                    case "008": LearnMultiTask(); break;
+                    case "009": LearnCancelTask(); break;
+                    case "010": LearnWhenAllWhenAnyAndContinueWith(); break;
+                    case "011": LearnTimer(); break;
                     default: Console.WriteLine("输入错误！"); break;
                 }
 
