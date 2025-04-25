@@ -90,11 +90,15 @@
 		○ 竞态条件具有不确定性，且难以重现
  */
 extern alias Helper;//引入外部程序集，并且为其创建一个别名
+
+using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Xml.Linq;
 using static Helper.HelperLibForLearnCSharp.SharedData;
+using LearnCSharp.Professional.LearnProcessAndThreadSpace;
 
 namespace LearnCSharp.Professional
 {
@@ -382,6 +386,11 @@ namespace LearnCSharp.Professional
         {
             Console.WriteLine("\n------示例：互斥锁------\n");
 
+            Console.WriteLine("点击任意按键开始演示Lock、InterLocked、Monitor基本用法示例代码");
+            Console.ReadKey(true);//等待用户输入任意按键
+            Console.WriteLine();
+
+            #region lock、interlocked、monitor 基本用法
             int count = 0;
             //定义一个局部方法用于互斥锁的示例
             void PrintNumber(object obj)
@@ -558,6 +567,300 @@ namespace LearnCSharp.Professional
             Console.WriteLine("-----------------------------------------------");
             Console.WriteLine();
             count = 0;//重置count变量
+            #endregion
+
+            Console.WriteLine("点击任意按键开始演示死锁与死锁规避示例代码");
+            Console.ReadKey(true);//等待用户输入任意按键
+            Console.WriteLine();
+
+            #region 死锁演示与解决
+            //定义一个局部方法用于演示死锁
+            void DeadLock()
+            {
+                Console.WriteLine("死锁演示");
+
+                object obj1 = new object();
+                object obj2 = new object();
+
+                //创建两个手动重置事件，用于在下述两个线程中达成强制出现死锁的条件
+                using ManualResetEvent mreThread1 = new ManualResetEvent(false);
+                using ManualResetEvent mreThread2 = new ManualResetEvent(false);
+
+                Thread thread1 = new Thread(() =>
+                {
+                    lock (obj1)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("线程1获取到锁1");
+                        Console.ResetColor();
+                        mreThread1.Set(); // 释放线程2
+                        mreThread2.WaitOne(); // 等待线程2释放锁2
+                        Thread.Sleep(100);
+                        lock (obj2)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("线程1获取到锁2");
+                            Console.ResetColor();
+                        }
+                    }
+                });
+
+                Thread thread2 = new Thread(() =>
+                {
+                    lock (obj2)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("线程2获取到锁2");
+                        Console.ResetColor();
+                        mreThread2.Set(); // 释放线程1
+                        mreThread1.WaitOne(); // 等待线程1释放锁1
+                        Thread.Sleep(100);
+                        lock (obj1)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine("线程2获取到锁1");
+                            Console.ResetColor();
+                        }
+                    }
+                });
+
+                thread1.Start();
+                thread2.Start();
+                thread1.Join(20000);
+                thread2.Join(20000);
+
+                Console.WriteLine("线程死锁僵持！");
+            }
+
+            //定义一个局部方法用于演示死锁解决
+            void SolveDeadLock()
+            {
+                Console.WriteLine("规避死锁（超时释放重试）");
+                object obj1 = new object();
+                object obj2 = new object();
+                Random rand = new Random();
+
+                Thread thread1 = new Thread(() =>
+                {
+                    while (true)
+                    {
+                        // 第一阶段：尝试获取obj1
+                        if (Monitor.TryEnter(obj1, TimeSpan.FromMilliseconds(100)))
+                        {
+                            try
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.WriteLine("线程1获取到锁1");
+                                Console.ResetColor();
+                                Thread.Sleep(100);
+
+                                // 第二阶段：尝试获取obj2（带超时）
+                                if (Monitor.TryEnter(obj2, TimeSpan.FromMilliseconds(100)))
+                                {
+                                    try
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Red;
+                                        Console.WriteLine("线程1获取到锁2");
+                                        Console.ResetColor();
+                                        return; // 成功获取两个锁
+                                    }
+                                    finally
+                                    {
+                                        Monitor.Exit(obj2);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.WriteLine("线程1获取锁2失败，准备释放锁1重试");
+                                    Console.ResetColor();
+                                }
+                            }
+                            finally
+                            {
+                                Monitor.Exit(obj1); // 主动释放第一个锁
+                            }
+                        }
+                        Thread.Sleep(rand.Next(50, 200)); // 随机等待避免活锁
+                    }
+                });
+
+                Thread thread2 = new Thread(() =>
+                {
+                    while (true)
+                    {
+                        // 第一阶段：尝试获取obj2
+                        if (Monitor.TryEnter(obj2, TimeSpan.FromMilliseconds(100)))
+                        {
+                            try
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine("线程2获取到锁2");
+                                Console.ResetColor();
+                                Thread.Sleep(100);
+
+                                // 第二阶段：尝试获取obj1（带超时）
+                                if (Monitor.TryEnter(obj1, TimeSpan.FromMilliseconds(100)))
+                                {
+                                    try
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        Console.WriteLine("线程2获取到锁1");
+                                        Console.ResetColor();
+                                        return; // 成功获取两个锁
+                                    }
+                                    finally
+                                    {
+                                        Monitor.Exit(obj1);
+                                    }
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.WriteLine("线程2获取锁1失败，准备释放锁2重试");
+                                    Console.ResetColor();
+                                }
+                            }
+                            finally
+                            {
+                                Monitor.Exit(obj2); // 主动释放第一个锁
+                            }
+                        }
+                        Thread.Sleep(rand.Next(50, 200)); // 随机等待避免活锁
+                    }
+                });
+
+                thread1.Start();
+                thread2.Start();
+                thread1.Join();
+                thread2.Join();
+
+                Console.WriteLine("所有线程通过重试机制完成操作！");
+            }
+
+            Console.WriteLine("》》》演示死锁《《《");
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine("》》》创建两个线程分别同时执行死锁方法");
+            DeadLock();
+            Console.WriteLine();
+            Console.WriteLine("》》》创建两个线程分别同时执行规避了死锁的方法");
+            SolveDeadLock();
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine();
+            #endregion
+
+            Console.WriteLine("点击任意按键开始演示单例模式基本用法示例代码");
+            Console.ReadKey(true);//等待用户输入任意按键
+            Console.WriteLine();
+
+            #region 单例模式示例
+            Thread[] threads = new Thread[20];//定义一个线程数组用于演示单例模式
+            List<Singleton> singletons = new List<Singleton>(threads.Length);
+
+            //定义一个局部方法用于演示单例模式
+            void SingletonUnsafe()
+            {
+                for (int i = 0; i < threads.Length; i++)
+                {
+                    Thread thread = new Thread(() =>
+                    {
+                        Singleton singleton = Singleton.GetSingleton();
+                        lock(objLock)
+                        {
+                            singletons.Add(singleton);
+                        }
+                        Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】获取到单例对象：{singleton.GetHashCode()}");
+                    });
+                    threads[i] = thread;
+                }
+
+                Array.ForEach(threads, thread => thread.Start());//启动所有线程
+                Array.ForEach(threads, thread => thread.Join());//等待所有线程执行完成
+                singletons.ForEach(singleton =>
+                {
+                    if (singleton is not null)
+                    {
+                        singleton.Dispose();
+                        singleton = null;
+                    }
+                });//测试完成，释放单例
+                singletons.Clear();
+            }
+
+            //定义一个局部方法用于演示单例模式
+            void SingletonBySingleCheck()
+            {
+                for (int i = 0; i < threads.Length; i++)
+                {
+                    Thread thread = new Thread(() =>
+                    {
+                        Singleton singleton = Singleton.GetSingletonBySingleCheck();
+                        lock (objLock)
+                        {
+                            singletons.Add(singleton);
+                        }
+                        Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】获取到单例对象：{singleton.GetHashCode()}");
+                    });
+                    threads[i] = thread;
+                }
+
+                Array.ForEach(threads, thread => thread.Start());//启动所有线程
+                Array.ForEach(threads, thread => thread.Join());//等待所有线程执行完成
+                singletons.ForEach(singleton =>
+                {
+                    if (singleton is not null)
+                    {
+                        singleton.Dispose();
+                        singleton = null;
+                    }
+                });//测试完成，释放单例
+                singletons.Clear();
+            }
+
+            //定义一个局部方法用于演示单例模式
+            void SingletonByDoubleCheck()
+            {
+                for (int i = 0; i < threads.Length; i++)
+                {
+                    Thread thread = new Thread(() =>
+                    {
+                        Singleton singleton = Singleton.GetSingletonByDoubleCheck();
+                        lock (objLock)
+                        {
+                            singletons.Add(singleton);
+                        }
+                        Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】获取到单例对象：{singleton.GetHashCode()}");
+                    });
+                    threads[i] = thread;
+                }
+
+                Array.ForEach(threads, thread => thread.Start());//启动所有线程
+                Array.ForEach(threads, thread => thread.Join());//等待所有线程执行完成
+                singletons.ForEach(singleton =>
+                {
+                    if (singleton is not null)
+                    {
+                        singleton.Dispose();
+                        singleton = null;
+                    }
+                });//测试完成，释放单例
+                singletons.Clear();
+            }
+
+            Console.WriteLine("》》》演示单例类创建《《《");
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine("》》》创建多个线程分别同时获取单例对象（单例类提供单线程安全但多线程不安全）");
+            SingletonUnsafe();
+            Console.WriteLine();
+            Console.WriteLine("》》》创建多个线程分别同时获取单例对象（单例类提供单检）");
+            SingletonBySingleCheck();
+            Console.WriteLine();
+            Console.WriteLine("》》》创建多个线程分别同时获取单例对象（单例类提供双检）");
+            SingletonByDoubleCheck();
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine();
+
+            #endregion
         }
 
         /*【21005：Mutex互斥体】*/
@@ -1373,3 +1676,46 @@ namespace LearnCSharp.Professional
         }
     }
 }
+
+namespace LearnCSharp.Professional.LearnProcessAndThreadSpace
+{
+    //定义一个单例类用于演示加锁单例模式
+    class Singleton
+    {
+        private static Singleton? instance;
+        private static readonly object lockObj = new object();
+        private Singleton() { }
+
+        public static Singleton GetSingleton()
+        {
+            return instance ??= new Singleton();
+        }
+
+        public static Singleton GetSingletonBySingleCheck()
+        {
+            lock (lockObj)
+            {
+                instance ??= new Singleton();
+            }
+            return instance;
+        }
+
+        public static Singleton GetSingletonByDoubleCheck()
+        {
+            if (instance == null)
+            {
+                lock (lockObj)
+                {
+                    instance ??= new Singleton();
+                }
+            }
+            return instance;
+        }
+
+        public void Dispose()
+        {
+            instance = null;
+        }
+    }
+}
+
