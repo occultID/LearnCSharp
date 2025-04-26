@@ -18,7 +18,59 @@ class Test
     //static int count1 = 0;
     internal static void TestFunc()
     {
-        #region 单例模式示例
+        int count = 0;
+        Stopwatch sw = new Stopwatch();
+
+        sw.Start();
+        for (int i = 0; i < 500; i++) 
+        {
+            count += i;
+            Thread.Sleep(10);
+        }
+        sw.Stop();
+        Console.WriteLine($"count:{count} | time:{sw.Elapsed.TotalMilliseconds}");
+        Console.WriteLine();
+        count = 0;
+
+        sw.Restart();
+        Parallel.For(0, 500, i =>
+        {
+            lock (objLock)
+            {
+                count += i;
+            }
+            Thread.Sleep(10);
+        });
+        sw.Stop();
+        Console.WriteLine($"count:{count} | time:{sw.Elapsed.TotalMilliseconds}");
+        Console.WriteLine();
+        count = 0;
+
+        Thread[] threads = new Thread[10];
+        for (int i = 0; i < 10; i++)
+        {
+            int temp = i;
+            threads[i] =new Thread(() =>
+            {
+                for (int j = temp * 50; j < temp * 50 + 50; j++)
+                {
+                    lock(objLock)
+                    {
+                        count += j;
+                    }
+                    Thread.Sleep(10);
+                }
+            }
+            );
+        }
+
+        sw.Restart();
+        Array.ForEach(threads, thread => thread.Start());
+        Array.ForEach(threads, thread => thread.Join());
+        sw.Stop();
+        Console.WriteLine($"count:{count} | time:{sw.Elapsed.TotalMilliseconds}");
+        Console.WriteLine();
+
     }
     static void TestTaskThread()
     {

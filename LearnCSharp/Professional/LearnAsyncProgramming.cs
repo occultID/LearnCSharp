@@ -155,6 +155,7 @@ using LearnCSharp.Professional.LeanrAsyncProgrammingSpace;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Channels;
 using System.Runtime.CompilerServices;
 using System.Timers;
 
@@ -680,7 +681,7 @@ namespace LearnCSharp.Professional
 
             async Task<long> CalculateNumber(int taskId, int maxNumber, Func<int,long,long> func)
             {
-                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】计算任务 {taskId:00} 开始执行");
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】开始执行 [任务 {taskId:00}]");
                 long result = 0;
                 for (int i = 1; i <= maxNumber; i++)
                 {
@@ -690,11 +691,11 @@ namespace LearnCSharp.Professional
                     {
                         result = func.Invoke(i, result);
                         Console.ForegroundColor = (ConsoleColor)(Thread.CurrentThread.ManagedThreadId % 16);
-                        Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】计算任务 {taskId:00} 执行第{i}次计算，当前输出结果：{result}");
+                        Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】执行 [任务 {taskId:00}] 第{i}次计算，当前输出结果：{result}");
                         Console.ResetColor();
                     }
                 }
-                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】计算任务 {taskId:00} 结束执行");
+                Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】完成执行 [任务 {taskId:00}]");
                 return result;
             }
 
@@ -1112,6 +1113,62 @@ namespace LearnCSharp.Professional
             Console.WriteLine($"耗时工作完毕，用时：{stopwatch.Elapsed.TotalMilliseconds}毫秒");
             Console.WriteLine("-----------------------------------------------");
             Console.WriteLine();
+        }
+
+        /*【21112：Channel】*/
+        public static void LearnChannel()
+        {
+            Console.WriteLine("\n------示例：Channel------\n");
+
+            //创建的channel是一个有消息上限的通道
+            var channel1 = Channel.CreateBounded<string>(10);
+            var channel2 = Channel.CreateBounded<string>(new BoundedChannelOptions(10)
+            {
+                FullMode = BoundedChannelFullMode.Wait
+                //Wait：当通道已满时，写操作会等待直到队列中有空间来写入新的数据
+                //DropOldest：如果通道已满，会删除最旧的数据————最早进入通道但还未被读取的数据
+                //DropNewest：如果通道已满，会删除最新的数据————最新进入通道但还未被读取的数据
+                //DropWrite：直接删除当前正在尝试写入的数据
+            });
+
+            //创建的channel是一个无消息上限的通道
+            var channel3 = Channel.CreateUnbounded<string>();
+
+            var producer = Task.Run(async () =>
+            {
+                for (int i = 1; i <= 20; i++)
+                {
+                    await Task.Delay(200);
+                    string str =$"---数据：{i:000} | 写入线程：{Thread.CurrentThread.ManagedThreadId:00} | 写入任务：01";
+                    
+                    //使用WriteAsync方法将数据写入通道；
+                    await channel1.Writer.WriteAsync(str);
+                    
+                    Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】执行 [任务 01] 写入数据：{str}");
+                }
+                //标记通道为已完成写入，不再接受新数据
+                channel1.Writer.Complete();
+            }
+            );
+
+            var consumer = Task.Run(async () => 
+            {
+                await Task.Delay(300);
+
+                //ReadAllAsync：允许从通道阅读所有数据
+                //ReadAsync：从通道异步读取项
+                //TryRead：尝试从通道中读取项
+                //WaitToReadAsync：当数据可供读取时，该值将完成
+                while(await channel1.Reader.WaitToReadAsync())
+                {
+                    if(channel1.Reader.TryRead(out string str))
+                    {
+                        Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】执行 [任务 02] 读取数据：{str}");
+                    }
+                }
+            });
+
+            Task.WaitAll(producer, consumer);
         }
 
         public static void StartLearnAsyncProgramming()

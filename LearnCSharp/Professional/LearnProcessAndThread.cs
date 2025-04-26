@@ -381,7 +381,7 @@ namespace LearnCSharp.Professional
             ShowThreadInfo(current, thread1, thread2);
         }
 
-        /*【21004：互斥锁】*/
+        /*【21004：锁】*/
         public static void LearnLockAndMonitor()
         {
             Console.WriteLine("\n------示例：互斥锁------\n");
