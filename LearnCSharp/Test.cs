@@ -3,7 +3,6 @@
 using Microsoft.VisualBasic;
 using System;
 using System.Diagnostics;
-using static Helper.HelperLibForLearnCSharp.SharedData;
 using LearnCSharp.Professional.LeanrAsyncProgrammingSpace;
 using LearnCSharp.Professional.LearnProcessAndThreadSpace;
 
@@ -15,8 +14,68 @@ class Test
     // 同步锁，防止多线程输出时文字交错
     private static readonly object objLock = new object();
 
-    //static int count1 = 0;
     internal static void TestFunc()
+    {
+        Console.WriteLine("\n------示例：互斥体------\n");
+        int processCount = 4;//子进程数量
+
+        ProcessStartInfo GetPsi(string arg) => new ProcessStartInfo
+        {
+            FileName = "TestProcessAndThread.exe",
+            Arguments = arg,
+            UseShellExecute = true,
+            RedirectStandardOutput = false,
+            CreateNoWindow = true
+        };
+
+        Console.WriteLine($"》》》同时执行 {processCount} 个子进程创建单例对象（无互斥体），输出单例对象哈希值《《《");
+        Console.WriteLine("-----------------------------------------------");
+
+        Process[] processes = new Process[processCount];
+
+        for (int i = 0; i < processCount; i++)
+        {
+            processes[i] = Process.Start(GetPsi($"2 子进程{i + 1}")!)!;
+        }
+
+        for (int i = 0; i < processCount; i++)
+        {
+            processes[i].WaitForExit();
+            processes[i].Exited += (sender, e) => processes[i].Dispose();
+        }
+
+        Console.WriteLine("运行结束");
+        Console.ReadKey();
+
+        Console.WriteLine("-----------------------------------------------");
+        Console.WriteLine();
+
+        Thread.Sleep(2000);//等待子进程结束，确保共享资源值被重置
+
+        Console.WriteLine($"》》》同时执行 {processCount} 个子进程创建单例对象（互斥体），输出单例对象哈希值《《《");
+        Console.WriteLine("-----------------------------------------------");
+
+        for (int i = 0; i < processCount; i++)
+        {
+            processes[i] = Process.Start(GetPsi($"2 子进程{i + 1} Mutex")!)!;
+        }
+
+        for (int i = 0; i < processCount; i++)
+        {
+            processes[i].WaitForExit();
+            processes[i].Exited += (sender, e) => processes[i].Dispose();
+        }
+
+        Console.WriteLine("运行结束");
+        Console.ReadKey();
+
+        Console.WriteLine("-----------------------------------------------");
+        Console.WriteLine();
+
+        Helper.HelperLibForLearnCSharp.SharedData.Dispose();
+    }
+
+    internal static void TestActionInvoke()
     {
         int count = 0;
         Stopwatch sw = new Stopwatch();
@@ -70,7 +129,90 @@ class Test
         sw.Stop();
         Console.WriteLine($"count:{count} | time:{sw.Elapsed.TotalMilliseconds}");
         Console.WriteLine();
+        count = 0;
 
+        Task[] tasks = new Task[10];
+        for (int i = 0; i < 10; i++)
+        {
+            int temp = i;
+            tasks[i] = new Task(() =>
+            {
+                for (int j = temp * 50; j < temp * 50 + 50; j++)
+                {
+                    lock (objLock)
+                    {
+                        count += j;
+                    }
+                    Thread.Sleep(10);
+                }
+            }
+            );
+        }
+
+        sw.Restart();
+        Array.ForEach(tasks, task => task.Start());
+        Task.WaitAll(tasks);
+        sw.Stop();
+        Console.WriteLine($"count:{count} | time:{sw.Elapsed.TotalMilliseconds}");
+        Console.WriteLine();
+        count = 0;
+
+        sw.Restart();
+        Task.Run(() =>
+        {
+            for (int i = 0; i < 500; i++)
+            {
+                count += i;
+                Thread.Sleep(10);
+            }
+        }).Wait();
+        sw.Stop();
+        Console.WriteLine($"count:{count} | time:{sw.Elapsed.TotalMilliseconds}");
+        Console.WriteLine();
+        count = 0;
+
+        using ManualResetEvent mre = new ManualResetEvent( false );
+        sw.Restart();
+        ThreadPool.QueueUserWorkItem(_ =>
+        {
+            for (int i = 0; i < 500; i++)
+            {
+                count += i;
+                Thread.Sleep(10);
+            }
+            mre.Set();
+        },null);
+        mre.WaitOne();
+        sw.Stop();
+        Console.WriteLine($"count:{count} | time:{sw.Elapsed.TotalMilliseconds}");
+        Console.WriteLine();
+        count = 0;
+
+        using CountdownEvent cde = new CountdownEvent(10);
+        ThreadPool.SetMinThreads(10, 10);
+        ThreadPool.SetMaxThreads(10, 10);
+        sw.Restart();
+        for (int i = 0; i < 10; i++)
+        {
+            int temp = i;
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                for (int j = temp*50; j < temp*50+50; j++)
+                {
+                    lock (objLock)
+                    {
+                        count += j;
+                    }
+                    Thread.Sleep(10);
+                }
+                cde.Signal();
+            }, null);
+        }
+        cde.Wait();
+        sw.Stop();
+        Console.WriteLine($"count:{count} | time:{sw.Elapsed.TotalMilliseconds}");
+        Console.WriteLine();
+        count = 0;
     }
     static void TestTaskThread()
     {

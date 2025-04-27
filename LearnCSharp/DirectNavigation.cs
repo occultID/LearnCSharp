@@ -4,6 +4,7 @@
  */
 
 using LearnCSharp.Basic;
+using LearnCSharp.DesignPattern;
 using LearnCSharp.Professional;
 
 namespace LearnCSharp
@@ -148,6 +149,15 @@ namespace LearnCSharp
             ["21112"] = LearnAsyncProgramming.LearnChannel,                                         //通道
             ["21201"] = LearnParallelProgramming.LearnParallelForAndForEach,                        //并行迭代
             ["21202"] = LearnParallelProgramming.LearnParallelInvoke,                               //并行调用
+            ["30101"] = LearnSingleton.LearnSingletonByEager,                                       //单例模式-饿汉式
+            ["30102"] = LearnSingleton.LearnSingletonByEagerByMultiThread,                          //单例模式-饿汉式
+            ["30103"] = LearnSingleton.LearnSingletonByLazyUnsafe,                                  //单例模式-懒汉式
+            ["30104"] = LearnSingleton.LearnSingletonByLazySingleCheck,                             //单例模式-懒汉式
+            ["30105"] = LearnSingleton.LearnSingletonByLazyDoubleCheck,                             //单例模式-懒汉式
+            ["30106"] = LearnSingleton.LearnSingletonByInnerStaitcClass,                            //单例模式-内部静态类
+            ["30107"] = LearnSingleton.LearnSingletonByInnerStaitcClassByMultiThread,               //单例模式-内部静态类
+            ["30108"] = LearnSingleton.LearnSingletonByDotNetLazy,                                  //单例模式-使用Lazy<T>
+            ["30109"] = LearnSingleton.LearnSingletonByDotNetLazyByMultiThread,                     //单例模式-使用Lazy<T>
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 

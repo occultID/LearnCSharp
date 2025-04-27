@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -14,11 +15,15 @@ namespace LearnWPF
         private static Mutex mutex;
 
         // 引入Win32 API
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        [LibraryImport("user32.dll")]
+        [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvStdcall) })]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool SetForegroundWindow(IntPtr hWnd);
 
-        [DllImport("user32.dll")]
-        private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        [LibraryImport("user32.dll")]
+        [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvStdcall) })]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         private const int SW_RESTORE = 9;
         private const string mutexName = @"Global\LearnWPF"; // 互斥体名称

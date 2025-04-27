@@ -905,7 +905,7 @@ namespace LearnCSharp.Professional
 
             for (int i = 0; i < processCount; i++)
             {
-                using (Process process = Process.Start(GetPsi($"子进程{i + 1} {(i % 2 == 0 ? "++" : "--")}")!)!) 
+                using (Process process = Process.Start(GetPsi($"1 子进程{i + 1} {(i % 2 == 0 ? "++" : "--")}")!)!) 
                 {
                     //string output = process1.StandardOutput.ReadToEnd();
                     process.WaitForExit();
@@ -937,7 +937,7 @@ namespace LearnCSharp.Professional
 
             for (int i = 0; i < processCount; i++)
             {
-                processes[i] = Process.Start(GetPsi($"子进程{i + 1} {(i % 2 == 0 ? "++" : "--")}")!)!;
+                processes[i] = Process.Start(GetPsi($"1 子进程{i + 1} {(i % 2 == 0 ? "++" : "--")}")!)!;
             }
 
             for(int i = 0; i < processCount; i++)
@@ -962,7 +962,7 @@ namespace LearnCSharp.Professional
 
             for (int i = 0; i < processCount; i++)
             {
-                processes[i] = Process.Start(GetPsi($"子进程{i + 1} {(i % 2 == 0 ? "++" : "--")} Mutex")!)!;
+                processes[i] = Process.Start(GetPsi($"1 子进程{i + 1} {(i % 2 == 0 ? "++" : "--")} Mutex")!)!;
             }
 
             for (int i = 0; i < processCount; i++)

@@ -1,16 +1,29 @@
 ﻿using HelperLibForLearnCSharp;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using static HelperLibForLearnCSharp.SharedData; 
 
 namespace TestProcessAndThread
 {
     internal class Program
     {
+        private static readonly object objLock = new object();
         static void Main(string[] args)
         {
-            Console.Title = $"{args[0]}：竞争测试";
+            if (args.Length < 2) 
+            {
+                throw new ArgumentException("本程序至少提供功能指定参数和进程命名参数才能启动");
+            }
+
+            Console.Title = args[1] + " " + args[0] switch
+            {
+                "1" => "竞争测试",
+                _=> "参数错误"
+            };
+
+            Thread.Sleep(1500);
+
             Process current = Process.GetCurrentProcess();
-            int counter = 0;
 
             Console.WriteLine("----------------------------------------------");
             Console.WriteLine(">>>进程信息<<<");
@@ -28,6 +41,27 @@ namespace TestProcessAndThread
             Console.WriteLine(pInfo);
             Console.WriteLine("----------------------------------------------");
             Console.WriteLine();
+
+            string[] newArgs = new string[args.Length - 1];
+            for (int i = 0; i < args.Length - 1; i++)
+            {
+                newArgs[i] = args[i + 1];
+            }
+
+            switch (args[0])
+            {
+                case "1":
+                    ProcessTest(newArgs);
+                    break;
+                default:
+                    Console.WriteLine("参数错误，请检查参数是否正确");
+                    break;
+            }
+        }
+
+        private static void ProcessTest(params string[] args)
+        {
+            int counter = 0;
 
             if (args.Length == 3 && args[2] == "Mutex")
             {
