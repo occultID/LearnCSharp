@@ -158,6 +158,8 @@ namespace LearnCSharp
             ["30107"] = LearnSingleton.LearnSingletonByInnerStaitcClassByMultiThread,               //单例模式-内部静态类
             ["30108"] = LearnSingleton.LearnSingletonByDotNetLazy,                                  //单例模式-使用Lazy<T>
             ["30109"] = LearnSingleton.LearnSingletonByDotNetLazyByMultiThread,                     //单例模式-使用Lazy<T>
+            ["30110"] = LearnSingleton.LearnSingletonGeneric,                                       //泛型单例模式-使用Lazy<T>
+            ["30111"] = LearnSingleton.LearnSingletonGenericByMultiThread,                          //泛型单例模式-使用Lazy<T>
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 

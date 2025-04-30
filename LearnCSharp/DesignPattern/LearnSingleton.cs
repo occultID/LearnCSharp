@@ -1,11 +1,5 @@
-﻿using LearnCSharp.DesignPattern.LearnSingletonSpace;
-using LearnCSharp.Professional.LearnProcessAndThreadSpace;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿/*【单例模式】*/
+using LearnCSharp.DesignPattern.LearnSingletonSpace;
 
 namespace LearnCSharp.DesignPattern
 {
@@ -401,6 +395,69 @@ namespace LearnCSharp.DesignPattern
             RestartToTestSingleton();
         }
 
+        /*【30110：泛型单例模式-懒加载模式-单线程示例】
+         * 每次测试请重启程序，避免已存在的单例对象影响测试结果
+         */
+        public static void LearnSingletonGeneric()
+        {
+            if (isRestart)
+            {
+                Console.WriteLine("\n------示例：懒加载式单例(单线程)------\n");
+
+                Console.WriteLine("》》》单线程创建多个单例对象《《《");
+                Console.WriteLine("-----------------------------------------------");
+
+                for (int i = 0; i < 15; i++)
+                {
+                    var instace = Singleton<object>.GetInstance();//获取单例对象
+                    Console.WriteLine($"主线程 第{i:00}次 获取单例对象{i + 1:00}：{instace.GetHashCode()}");
+                }
+
+                Console.WriteLine("-----------------------------------------------");
+            }
+            else
+                Console.WriteLine("请重启程序后再进行测试");
+
+            Console.WriteLine();
+            RestartToTestSingleton();
+
+        }
+
+        /*【30111：泛型单例模式-懒加载模式-多线程示例】
+         * 每次测试请重启程序，避免已存在的单例对象影响测试结果
+         */
+        public static void LearnSingletonGenericByMultiThread()
+        {
+            if (isRestart)
+            {
+                Console.WriteLine("\n------示例：懒加载式单例(多线程)------\n");
+
+                Console.WriteLine("》》》多线程创建多个单例对象《《《");
+                Console.WriteLine("-----------------------------------------------");
+
+                Thread[] threads = new Thread[20];
+
+                for (int i = 0; i < 20; i++)
+                {
+                    int index = i;
+                    threads[i] = new Thread(() =>
+                    {
+                        var instace = Singleton<object>.GetInstance();//获取单例对象
+                        Console.WriteLine($"【线程 {Thread.CurrentThread.ManagedThreadId:00}】获取单例对象{index + 1:00}：{instace.GetHashCode()}");
+                    });
+                }
+                Array.ForEach(threads, t => t.Start());//启动线程
+                Array.ForEach(threads, t => t.Join());//等待线程结束
+
+                Console.WriteLine("-----------------------------------------------");
+            }
+            else
+                Console.WriteLine("请重启程序后再进行测试");
+
+            Console.WriteLine();
+            RestartToTestSingleton();
+        }
+
         private static void RestartToTestSingleton()
         {
             while (true)
@@ -511,4 +568,16 @@ namespace LearnCSharp.DesignPattern.LearnSingletonSpace
             return instance.Value;
         }
     }
+
+    public sealed class Singleton<T> where T : new()
+    {
+        private Singleton() { }
+
+        private static readonly Lazy<T> instance = new Lazy<T>(() => new T());
+
+        public static T GetInstance()
+        {
+            return instance.Value;
+        }
+    } 
 }
