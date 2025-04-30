@@ -160,6 +160,15 @@ namespace LearnCSharp
             ["30109"] = LearnSingleton.LearnSingletonByDotNetLazyByMultiThread,                     //单例模式-使用Lazy<T>
             ["30110"] = LearnSingleton.LearnSingletonGeneric,                                       //泛型单例模式-使用Lazy<T>
             ["30111"] = LearnSingleton.LearnSingletonGenericByMultiThread,                          //泛型单例模式-使用Lazy<T>
+            ["30201"] = LearnFactory.LearnSimpleFactory,                                            //简单工厂模式
+            ["30202"] = LearnFactory.LearnFactoryMethod,                                            //工厂方法模式
+            ["30203"] = LearnFactory.LearnAbstractFactory,                                          //抽象工厂模式
+            ["30301"] = LearnBuilder.LearnBasicBuilder,                                             //建造者模式
+            ["30302"] = LearnBuilder.LearnFluentBuilder,                                            //流式建造者模式
+            ["30303"] = LearnBuilder.LearnValidatedFluentBuilder,                                   //带验证的流式建造者模式
+            ["30401"] = LearnPrototype.LearnShallowCopyPrototype,                                   //浅拷贝原型模式
+            ["30402"] = LearnPrototype.LearnDeepCopyPrototype,                                      //深拷贝原型模式
+            ["30403"] = LearnPrototype.LearnSerializableDeepCopyPrototype,                          //序列化深拷贝原型模式
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LearnCSharp.DesignPattern
 {
-    internal class LearnAbstractFactory
+    internal class LearnAdapter
     {
     }
 }

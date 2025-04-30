@@ -14,65 +14,34 @@ class Test
     // 同步锁，防止多线程输出时文字交错
     private static readonly object objLock = new object();
 
+    private static readonly List<int> list = new List<int>(5) { 1, 2, 3, 4, 5 };
+
+    public static List<int> IntList1 => list;
+
+    public static List<int> IntList2 => new List<int>(5) { 1, 2, 3, 4, 5 };
+
+    public static List<int> IntList3 { get => new List<int>(5) { 1, 2, 3, 4, 5 }; }
+
+    public static List<int> IntList4 { get; set; }= new List<int>(5) { 1, 2, 3, 4, 5 };
+
     internal static void TestFunc()
     {
-        Console.WriteLine("\n------示例：互斥体------\n");
-        int processCount = 4;//子进程数量
+            Console.WriteLine(string.Join(' ', IntList1));
 
-        ProcessStartInfo GetPsi(string arg) => new ProcessStartInfo
-        {
-            FileName = "TestProcessAndThread.exe",
-            Arguments = arg,
-            UseShellExecute = true,
-            RedirectStandardOutput = false,
-            CreateNoWindow = true
-        };
+            Console.WriteLine(string.Join(' ', IntList2));
 
-        Console.WriteLine($"》》》同时执行 {processCount} 个子进程创建单例对象（无互斥体），输出单例对象哈希值《《《");
-        Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine(string.Join(' ', IntList3));
+        Console.WriteLine(string.Join(' ', IntList4));
 
-        Process[] processes = new Process[processCount];
+        IntList1.Add(6);
+        IntList2.Add(6);
+        IntList3.Add(6);
+        IntList4.Add(6);
 
-        for (int i = 0; i < processCount; i++)
-        {
-            processes[i] = Process.Start(GetPsi($"2 子进程{i + 1}")!)!;
-        }
-
-        for (int i = 0; i < processCount; i++)
-        {
-            processes[i].WaitForExit();
-            processes[i].Exited += (sender, e) => processes[i].Dispose();
-        }
-
-        Console.WriteLine("运行结束");
-        Console.ReadKey();
-
-        Console.WriteLine("-----------------------------------------------");
-        Console.WriteLine();
-
-        Thread.Sleep(2000);//等待子进程结束，确保共享资源值被重置
-
-        Console.WriteLine($"》》》同时执行 {processCount} 个子进程创建单例对象（互斥体），输出单例对象哈希值《《《");
-        Console.WriteLine("-----------------------------------------------");
-
-        for (int i = 0; i < processCount; i++)
-        {
-            processes[i] = Process.Start(GetPsi($"2 子进程{i + 1} Mutex")!)!;
-        }
-
-        for (int i = 0; i < processCount; i++)
-        {
-            processes[i].WaitForExit();
-            processes[i].Exited += (sender, e) => processes[i].Dispose();
-        }
-
-        Console.WriteLine("运行结束");
-        Console.ReadKey();
-
-        Console.WriteLine("-----------------------------------------------");
-        Console.WriteLine();
-
-        Helper.HelperLibForLearnCSharp.SharedData.Dispose();
+        Console.WriteLine(string.Join(' ', IntList1));
+            Console.WriteLine(string.Join(' ', IntList2));
+            Console.WriteLine(string.Join(' ', IntList3));
+        Console.WriteLine(string.Join(' ', IntList4));
     }
 
     internal static void TestActionInvoke()

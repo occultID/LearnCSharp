@@ -420,7 +420,6 @@ namespace LearnCSharp.DesignPattern
 
             Console.WriteLine();
             RestartToTestSingleton();
-
         }
 
         /*【30111：泛型单例模式-懒加载模式-多线程示例】
@@ -482,7 +481,23 @@ namespace LearnCSharp.DesignPattern
 
 namespace LearnCSharp.DesignPattern.LearnSingletonSpace
 {
-    //饿汉式单例
+    /*【30100：单例模式的使用】
+     * 单例模式的使用场景：
+     * 1. 需要确保类只有一个实例时
+     * 2. 需要提供全局访问点时
+     * 3. 需要控制实例数量时
+     * 4. 需要延迟加载时
+     * 5. 需要共享资源时
+     */
+    // 例如：数据库连接池、线程池、日志记录器等
+    //--------------------------------------------------------------------------------------
+
+
+    /*【30101：饿汉式单例】
+     * 饿汉式单例模式在类加载时就创建实例，确保线程安全。
+     * 优点：简单易用，线程安全。
+     * 缺点：如果实例创建开销大，可能会浪费资源。
+     */
     public sealed class SingletonByEager
     {
         //私有构造函数，防止外部实例化
@@ -494,7 +509,11 @@ namespace LearnCSharp.DesignPattern.LearnSingletonSpace
         public static SingletonByEager GetSingleton() { return instance; }
     }
 
-    //懒汉式单例
+    /*【30102：懒汉式单例】
+     * 懒汉式单例模式在第一次使用时创建实例，确保线程安全。
+     * 优点：节省资源，只有在需要时才创建实例。
+     * 缺点：实现复杂，可能会出现线程安全问题。
+     */
     public sealed class SingletonByLazy
     {
         private static readonly object objLock = new object();
@@ -540,7 +559,11 @@ namespace LearnCSharp.DesignPattern.LearnSingletonSpace
         }
     }
 
-    //静态内部类单例，优化的饿汉式单例，运行时有需求才创建实例
+    /*【30103：内部静态类单例】
+     * 内部静态类单例模式在第一次使用时创建实例，确保线程安全。
+     * 优点：简单易用，线程安全。
+     * 缺点：如果实例创建开销大，可能会浪费资源。
+     */
     public sealed class SingletonByInnerStaticClass
     {
         private SingletonByInnerStaticClass() { }
@@ -556,7 +579,11 @@ namespace LearnCSharp.DesignPattern.LearnSingletonSpace
         }
     }
 
-    //懒汉式单例，使用Lazy<T>类实现线程安全
+    /*【30104：懒加载式单例】
+     * 懒加载式单例模式在第一次使用时创建实例，确保线程安全。
+     * 优点：节省资源，只有在需要时才创建实例。
+     * 
+     */
     public sealed class SingletonByDotNetLazy
     {
         private SingletonByDotNetLazy() { }
@@ -569,6 +596,13 @@ namespace LearnCSharp.DesignPattern.LearnSingletonSpace
         }
     }
 
+    /*【30105：泛型单例模式】
+     * 泛型单例模式在第一次使用时创建实例，确保线程安全。
+     * 优点：节省资源，只有在需要时才创建实例。
+     *      可以创建多个不同类型的单例对象。
+     *      可以为本身未提供单例模式的类提供单例模式。
+     * 
+     */
     public sealed class Singleton<T> where T : new()
     {
         private Singleton() { }
