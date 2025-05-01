@@ -169,6 +169,15 @@ namespace LearnCSharp
             ["30401"] = LearnPrototype.LearnShallowCopyPrototype,                                   //浅拷贝原型模式
             ["30402"] = LearnPrototype.LearnDeepCopyPrototype,                                      //深拷贝原型模式
             ["30403"] = LearnPrototype.LearnSerializableDeepCopyPrototype,                          //序列化深拷贝原型模式
+            ["30501"] = LearnAdapter.LearnClassAdapter,                                             //类适配器模式
+            ["30502"] = LearnAdapter.LearnObjectAdapter,                                            //对象适配器模式
+            ["30503"] = LearnAdapter.LearnInterfaceAdapter,                                         //接口适配器模式
+            ["30601"] = LearnDecorator.LearnDecoratorDesignPattern,                                 //装饰器模式
+            ["30701"] = LearnBridge.LearnBridgeDesignPattern,                                       //桥接模式
+            ["30801"] = LearnComposite.LearnTransparentCompositePattern,                            //透明式组合模式
+            ["30802"] = LearnComposite.LearnSafeCompositePattern,                                   //安全式组合模式
+            ["30901"] = LearnFlyweight.LearnBasicFlyweight,                                         //基本享元模式
+            ["30902"] = LearnFlyweight.LearnCompositeFlyweight,                                     //复合享元模式
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 

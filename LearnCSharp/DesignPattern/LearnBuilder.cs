@@ -1,4 +1,4 @@
-﻿/*【303：建造者模式】*/
+﻿/*【303：创建型————建造者模式】*/
 using LearnCSharp.DesignPattern.LearnBuilderSpace;
 
 namespace LearnCSharp.DesignPattern

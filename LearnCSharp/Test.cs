@@ -6,9 +6,6 @@ using System.Diagnostics;
 using LearnCSharp.Professional.LeanrAsyncProgrammingSpace;
 using LearnCSharp.Professional.LearnProcessAndThreadSpace;
 
-class Print
-{
-}
 class Test
 {
     // 同步锁，防止多线程输出时文字交错
@@ -16,32 +13,10 @@ class Test
 
     private static readonly List<int> list = new List<int>(5) { 1, 2, 3, 4, 5 };
 
-    public static List<int> IntList1 => list;
-
-    public static List<int> IntList2 => new List<int>(5) { 1, 2, 3, 4, 5 };
-
-    public static List<int> IntList3 { get => new List<int>(5) { 1, 2, 3, 4, 5 }; }
-
-    public static List<int> IntList4 { get; set; }= new List<int>(5) { 1, 2, 3, 4, 5 };
 
     internal static void TestFunc()
     {
-            Console.WriteLine(string.Join(' ', IntList1));
-
-            Console.WriteLine(string.Join(' ', IntList2));
-
-            Console.WriteLine(string.Join(' ', IntList3));
-        Console.WriteLine(string.Join(' ', IntList4));
-
-        IntList1.Add(6);
-        IntList2.Add(6);
-        IntList3.Add(6);
-        IntList4.Add(6);
-
-        Console.WriteLine(string.Join(' ', IntList1));
-            Console.WriteLine(string.Join(' ', IntList2));
-            Console.WriteLine(string.Join(' ', IntList3));
-        Console.WriteLine(string.Join(' ', IntList4));
+       
     }
 
     internal static void TestActionInvoke()

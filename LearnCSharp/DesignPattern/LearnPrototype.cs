@@ -1,4 +1,4 @@
-﻿/*【304：原型模式】*/
+﻿/*【304：创建型————原型模式】*/
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
