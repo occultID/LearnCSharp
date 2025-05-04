@@ -1,4 +1,4 @@
-﻿/*【：结构型————享元模式】
+﻿/*【309：结构型————享元模式】
  * 享元模式（Flyweight Pattern）是一种结构型设计模式，旨在通过共享相似的对象来减少内存使用和提高性能。
  * 享元模式的核心思想是将对象的状态分为内部状态和外部状态。
  * 享元对象存储内部状态，而外部状态则由客户端传递。
@@ -172,10 +172,10 @@ namespace LearnCSharp.DesignPattern.LearnFlyweightSpace
 
     public class Player : IPlayer
     {
-        public string Name { get; } //玩家名称
-        public string Type { get; } //玩家类型
-        public (float positionX, float positionY) BirthPosition { get; } //出生位置
-        public (float positionX, float positionY) Position { get; private set; } //玩家位置
+        public string Name { get; } //内部状态 共享 玩家名称
+        public string Type { get; } //内部状态 共享 玩家类型
+        public (float positionX, float positionY) BirthPosition { get; } //内部状态 共享 出生位置
+        public (float positionX, float positionY) Position { get; private set; } //非共享 用于存储外部动态 玩家位置
         
         public Player(string name, string type)
         {

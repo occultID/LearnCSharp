@@ -178,6 +178,12 @@ namespace LearnCSharp
             ["30802"] = LearnComposite.LearnSafeCompositePattern,                                   //安全式组合模式
             ["30901"] = LearnFlyweight.LearnBasicFlyweight,                                         //基本享元模式
             ["30902"] = LearnFlyweight.LearnCompositeFlyweight,                                     //复合享元模式
+            ["31001"] = LearnProxy.LearnVirtualProxy,                                               //虚拟代理
+            ["31002"] = LearnProxy.LearnProtectionProxy,                                            //保护代理
+            ["31003"] = LearnProxy.LearnRemoteProxy,                                                //远程代理
+            ["31004"] = LearnProxy.LearnSmartProxy,                                                 //智能代理
+            ["31101"] = LearnFacade.LearnBasicFacadePattern,                                        //基础外观模式
+            ["31102"] = LearnFacade.LearnConfigFacadePattern,                                       //可配置外观模式
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 
