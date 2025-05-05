@@ -184,6 +184,10 @@ namespace LearnCSharp
             ["31004"] = LearnProxy.LearnSmartProxy,                                                 //智能代理
             ["31101"] = LearnFacade.LearnBasicFacadePattern,                                        //基础外观模式
             ["31102"] = LearnFacade.LearnConfigFacadePattern,                                       //可配置外观模式
+            ["31103"] = LearnFacade.LearnLayeredFacadePattern,                                      //分层外观模式
+            ["31201"] = LearnObserver.LearnPushModelObserver,                                       //推模型观察者模式
+            ["31202"] = LearnObserver.LearnPullModelObserver,                                       //拉模型观察者模式
+            ["31203"] = LearnObserver.LearnDotNetObserver,                                          //DotNet观察者模式
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 

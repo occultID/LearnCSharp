@@ -58,6 +58,25 @@ namespace LearnCSharp.DesignPattern
             Console.WriteLine("-----------------------------------------------");
             Console.WriteLine();
         }
+
+        /*【31103：分层外观模式】*/
+        public static void LearnLayeredFacadePattern()
+        {
+            Console.WriteLine("\n------示例：分层外观模式------\n");
+            Console.WriteLine("》》》通过外观模式创建智能家居系统《《《");
+            Console.WriteLine("-----------------------------------------------");
+
+            // 创建一个智能家居顶层外观类
+            SmartHomeControlFacade smartHome = new SmartHomeControlFacade();
+
+            // 客户端使用外观类来访问子系统
+            smartHome.LeaveHome();  // 离家
+            Console.WriteLine();
+            smartHome.ArriveHome(); // 到家
+
+            Console.WriteLine("-----------------------------------------------");
+            Console.WriteLine();
+        }
     }
 }
 
@@ -234,6 +253,110 @@ namespace LearnCSharp.DesignPattern.LearnFacadeSpace
                 securitySystem.DisarmSystem();
             }
             Console.WriteLine("欢迎回家！");
+        }
+    }
+    #endregion
+
+    #region 分层外观模式
+    /*【31103：分层外观模式】*
+     * 外观模式的分层实现
+     * 特点：将外观类分为多个层次，每个层次负责不同的子系统
+     *      客户端可以根据需要选择不同的外观类
+     */
+    public class BedroomLightSystem //卧室灯光系统
+    {
+        public void TurnOn()
+        {
+            Console.WriteLine("卧室灯光已经打开");
+        }
+        public void TurnOff()
+        {
+            Console.WriteLine("卧室灯光已经关闭");
+        }
+    }
+
+    public class LivingRoomLightSystem //客厅灯光系统
+    {
+        public void TurnOn()
+        {
+            Console.WriteLine("客厅灯光已经打开");
+        }
+        public void TurnOff()
+        {
+            Console.WriteLine("客厅灯光已经关闭");
+        }
+    }
+
+    public class BathroomLightSystem //卫生间灯光系统
+    {
+        public void TurnOn()
+        {
+            Console.WriteLine("卫生间灯光已经打开");
+        }
+        public void TurnOff()
+        {
+            Console.WriteLine("卫生间灯光已经关闭");
+        }
+    }
+
+    public class KitchenLightSystem //厨房灯光系统
+    {
+        public void TurnOn()
+        {
+            Console.WriteLine("厨房灯光已经打开");
+        }
+        public void TurnOff()
+        {
+            Console.WriteLine("厨房灯光已经关闭");
+        }
+    }
+
+    public class LightSystemFacade //灯光系统子外观类
+    {
+        private BedroomLightSystem bedroomLightSystem;
+        private LivingRoomLightSystem livingRoomLightSystem;
+        private BathroomLightSystem bathroomLightSystem;
+        private KitchenLightSystem kitchenLightSystem;
+        public LightSystemFacade()
+        {
+            bedroomLightSystem = new BedroomLightSystem();
+            livingRoomLightSystem = new LivingRoomLightSystem();
+            bathroomLightSystem = new BathroomLightSystem();
+            kitchenLightSystem = new KitchenLightSystem();
+        }
+        public void TurnOnAllLights()
+        {
+            bedroomLightSystem.TurnOn();
+            livingRoomLightSystem.TurnOn();
+            bathroomLightSystem.TurnOn();
+            kitchenLightSystem.TurnOn();
+        }
+        public void TurnOffAllLights()
+        {
+            bedroomLightSystem.TurnOff();
+            livingRoomLightSystem.TurnOff();
+            bathroomLightSystem.TurnOff();
+            kitchenLightSystem.TurnOff();
+        }
+    }
+
+    public class SmartHomeControlFacade //智能家居顶层外观类
+    {
+        private LightSystemFacade lightSystemFacade;
+
+        public SmartHomeControlFacade()
+        {
+            lightSystemFacade = new LightSystemFacade();
+        }
+        public void ArriveHome()
+        {
+            lightSystemFacade.TurnOnAllLights();
+            Console.WriteLine("欢迎回家！");
+        }
+        public void LeaveHome()
+        {
+            lightSystemFacade.TurnOffAllLights();
+            Console.WriteLine("再见，祝你有美好的一天！");
         }
     }
     #endregion
