@@ -176,18 +176,23 @@ namespace LearnCSharp
             ["30701"] = LearnBridge.LearnBridgeDesignPattern,                                       //桥接模式
             ["30801"] = LearnComposite.LearnTransparentCompositePattern,                            //透明式组合模式
             ["30802"] = LearnComposite.LearnSafeCompositePattern,                                   //安全式组合模式
-            ["30901"] = LearnFlyweight.LearnBasicFlyweight,                                         //基本享元模式
+            ["30901"] = LearnFlyweight.LearnBasicFlyweight,                                         //享元模式
             ["30902"] = LearnFlyweight.LearnCompositeFlyweight,                                     //复合享元模式
             ["31001"] = LearnProxy.LearnVirtualProxy,                                               //虚拟代理
             ["31002"] = LearnProxy.LearnProtectionProxy,                                            //保护代理
             ["31003"] = LearnProxy.LearnRemoteProxy,                                                //远程代理
             ["31004"] = LearnProxy.LearnSmartProxy,                                                 //智能代理
-            ["31101"] = LearnFacade.LearnBasicFacadePattern,                                        //基础外观模式
+            ["31101"] = LearnFacade.LearnBasicFacadePattern,                                        //外观模式
             ["31102"] = LearnFacade.LearnConfigFacadePattern,                                       //可配置外观模式
             ["31103"] = LearnFacade.LearnLayeredFacadePattern,                                      //分层外观模式
             ["31201"] = LearnObserver.LearnPushModelObserver,                                       //推模型观察者模式
             ["31202"] = LearnObserver.LearnPullModelObserver,                                       //拉模型观察者模式
             ["31203"] = LearnObserver.LearnDotNetObserver,                                          //DotNet观察者模式
+            ["31301"] = LearnVisitor.LearnVisitorDesignPattern,                                     //访问者模式
+            ["31401"] = LearnStrategy.LearnBasicStrategy,                                           //策略模式
+            ["31402"] = LearnStrategy.LearnStrategyFactory,                                         //策略工厂模式
+            ["31403"] = LearnStrategy.LearnDotNetStrategy,                                          //委托策略模式
+            ["31501"] = LearnTemplateMethod.LearnTemplateMethodDesignPattern,                       //模板方法模式
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 

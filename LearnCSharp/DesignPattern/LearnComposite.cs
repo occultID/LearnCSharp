@@ -7,6 +7,15 @@
  *  2. 叶子对象（Leaf）：实现了抽象组件接口，表示树形结构中的叶子节点。
  *  3. 组合对象（Composite）：实现了抽象组件接口，表示树形结构中的组合节点，可以包含叶子节点和其他组合节点。
  *  4. 客户端（Client）：使用组合对象和叶子对象的代码。
+ * 组合模式的实现步骤：
+ *  1. 定义一个抽象组件类，表示组合对象和叶子对象的共同接口。
+ *  2. 定义一个叶子对象类，继承抽象组件类，实现具体的功能。
+ *  3. 定义一个组合对象类，继承抽象组件类，实现组合对象的功能。
+ *  4. 在组合对象类中，维护一个列表，用于存储子组件（叶子对象和其他组合对象）。
+ *  5. 实现添加、删除和获取子组件的方法。
+ *  6. 实现显示方法，用于递归显示组合结构。
+ *  7. 客户端代码使用组合对象和叶子对象的接口来操作组合结构。
+ *  8. 可以根据需要扩展新的叶子对象和组合对象，只需实现抽象组件类的方法，而不需要修改现有代码。
  */
 
 using LearnCSharp.DesignPattern.LearnCompositeSpace;
@@ -76,12 +85,6 @@ namespace LearnCSharp.DesignPattern
 
 namespace LearnCSharp.DesignPattern.LearnCompositeSpace
 {
-    // 组合模式
-    // 组合模式是一种结构型设计模式，它允许你将对象组合成树形结构来表示部分-整体的层次结构。组合模式使得客户端对单个对象和组合对象的使用具有一致性。
-    // 组合模式通常用于表示树形结构，例如文件系统、组织结构等。
-
-    //---------------------------------
-
     #region 透明式组合模式
     /*【30801：透明式组合模式 标准实现】*
      * 透明式组合模式（Transparent Composite Pattern）是一种组合模式的实现方式，它允许客户端使用相同的接口来处理单个对象和组合对象。透明式组合模式的主要优点是简化了客户端代码，因为客户端可以使用相同的接口来处理单个对象和组合对象。
@@ -123,7 +126,7 @@ namespace LearnCSharp.DesignPattern.LearnCompositeSpace
         }
     }
 
-    public class NPCTypeInfo : NPCInfo //容器节点 可包含子项
+    public class NPCTypeInfo : AbsNPCInfo //容器节点 可包含子项
     {
         private readonly List<AbsNPCInfo> children = new List<AbsNPCInfo>();
 

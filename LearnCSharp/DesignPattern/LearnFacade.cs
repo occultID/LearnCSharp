@@ -92,6 +92,53 @@ namespace LearnCSharp.DesignPattern.LearnFacadeSpace
 
     //---------------------------------
 
+    #region 外观模式基础结构
+    /*【31100：外观模式基础结构】*/
+    public class SubsystemA //子系统A
+    {
+        public void OperationA()
+        {
+            Console.WriteLine("子系统A的操作");
+        }
+    }
+
+    public class SubsystemB //子系统B
+    {
+        public void OperationB()
+        {
+            Console.WriteLine("子系统B的操作");
+        }
+    }
+
+    public class SubsystemC //子系统C
+    {
+        public void OperationC()
+        {
+            Console.WriteLine("子系统C的操作");
+        }
+    }
+
+    public class Facade //外观类
+    {
+        private SubsystemA subsystemA;
+        private SubsystemB subsystemB;
+        private SubsystemC subsystemC;
+        public Facade()
+        {
+            subsystemA = new SubsystemA();
+            subsystemB = new SubsystemB();
+            subsystemC = new SubsystemC();
+        }
+        public void Operation()
+        {
+            Console.WriteLine("外观类的操作");
+            subsystemA.OperationA();
+            subsystemB.OperationB();
+            subsystemC.OperationC();
+        }
+    }
+    #endregion
+
     #region 基础外观模式
     /*【31101：基础外观模式】*
      * 外观模式的基础实现

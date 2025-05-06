@@ -114,16 +114,8 @@ namespace LearnCSharp.DesignPattern.LearnFlyweightSpace
     // 6. Context（上下文）：表示外部状态的对象，通常由客户端传递给享元对象。
 
     //--------------------------------------------------------
-
-    #region 基础享元模式
-    /*【30901：基础享元模式】
-     * 享元模式的基础实现
-     * 特点：内部状态和外部状态分离
-     *      内部状态被共享
-     *      外部状态由客户端维护
-     *      工厂确保唯一实例
-     */
     #region 享元模式基础结构
+    /*【30900：享元模式基础结构】*/
     public interface IFlyweight //享元接口 定义共享对象的操作
     {
         void Operation(string extrinsicState);
@@ -146,7 +138,7 @@ namespace LearnCSharp.DesignPattern.LearnFlyweightSpace
     public class FlyweightFactory //享元工厂类 负责创建和管理享元对象
     {
         private Dictionary<string, IFlyweight> flyweights = new Dictionary<string, IFlyweight>();
-        
+
         public IFlyweight GetFlyweight(string key)
         {
             if (!flyweights.TryGetValue(key, out var flyweight))
@@ -164,6 +156,14 @@ namespace LearnCSharp.DesignPattern.LearnFlyweightSpace
     }
     #endregion
 
+    #region 基础享元模式
+    /*【30901：基础享元模式】
+     * 享元模式的基础实现
+     * 特点：内部状态和外部状态分离
+     *      内部状态被共享
+     *      外部状态由客户端维护
+     *      工厂确保唯一实例
+     */
     #region 基础享元模式示例
     public interface IPlayer
     {
