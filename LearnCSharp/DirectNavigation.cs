@@ -193,6 +193,8 @@ namespace LearnCSharp
             ["31402"] = LearnStrategy.LearnStrategyFactory,                                         //策略工厂模式
             ["31403"] = LearnStrategy.LearnDotNetStrategy,                                          //委托策略模式
             ["31501"] = LearnTemplateMethod.LearnTemplateMethodDesignPattern,                       //模板方法模式
+            ["31601"] = LearnIterator.LearnIteratorDesignPattern,                                   //迭代器模式
+            ["31602"] = LearnIterator.LearnDotNetIteratorDesignPattern,                             //DotNet迭代器模式
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 
