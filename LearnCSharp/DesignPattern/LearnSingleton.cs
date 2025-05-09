@@ -1,4 +1,5 @@
-﻿/*【301：创建型————单例模式】*/
+﻿/*【301：创建型————单例模式】
+ */
 using LearnCSharp.DesignPattern.LearnSingletonSpace;
 
 namespace LearnCSharp.DesignPattern
