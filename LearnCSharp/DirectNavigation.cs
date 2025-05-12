@@ -197,6 +197,8 @@ namespace LearnCSharp
             ["31602"] = LearnIterator.LearnDotNetIteratorDesignPattern,                             //DotNet迭代器模式
             ["31701"] = LearnCommand.LearnCommandDesignPattern,                                     //命令模式
             ["31801"] = LearnChainOfResponsibility.LearnChainOfResponsibilityDesignPattern,         //责任链模式
+            ["31901"] = LearnStateMachine.LearnStateMachineDesignPattern,                           //状态机模式
+            ["31902"] = LearnStateMachine.LearnStateTableDrivenStateMachine,                        //状态表驱动状态机模式
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 
