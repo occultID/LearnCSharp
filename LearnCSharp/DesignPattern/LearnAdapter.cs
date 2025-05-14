@@ -31,7 +31,6 @@
  */
 
 using LearnCSharp.DesignPattern.LearnAdapterSpace;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace LearnCSharp.DesignPattern

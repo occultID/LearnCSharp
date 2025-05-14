@@ -196,10 +196,10 @@ namespace LearnCSharp.DesignPattern.LearnFlyweightSpace
         private Dictionary<string, IPlayer> players = new Dictionary<string, IPlayer>();
         public IPlayer GetPlayer(string name, string type)
         {
-            if (!players.TryGetValue(type, out var player))
+            if (!players.TryGetValue(name, out var player))
             {
                 player = new Player(name, type);
-                players.Add(type, player);
+                players.Add(name, player);
             }
             return player;
         }
