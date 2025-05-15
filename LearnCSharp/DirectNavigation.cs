@@ -201,6 +201,7 @@ namespace LearnCSharp
             ["31902"] = LearnStateMachine.LearnStateTableDrivenStateMachine,                        //状态表驱动状态机模式
             ["32001"] = LearnMediator.LearnMediatorDesignPattern,                                   //中介者模式
             ["32101"] = LearnMemento.LearnMementoDesignPattern,                                     //备忘录模式
+            ["32201"] = LearnInterpreter.LearnInterpreterDesignPattern,                             //解释器模式
             ["00000"] = Test.TestFunc                                                               //测试函数
         };
 
